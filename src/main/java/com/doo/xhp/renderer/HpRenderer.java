@@ -78,7 +78,6 @@ public class HpRenderer {
                     HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
             // 满血槽 * healthScale
             textureManager.bindTexture(isFriend ? YELLOW_HEART_ID : HEART_ID);
-            client.gameRenderer.getLightmapTextureManager().enable();
             DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
                     (int) (healScale * HpUtil.HEALTH), HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
             RenderSystem.enableDepthTest();
