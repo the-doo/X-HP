@@ -15,8 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRenderMixin {
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"), method = "render")
-    private void renderR(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
+    @Inject(at = @At(value = "TAIL"), method = "render")
+    private void renderR(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack,
+                         VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
         Entity camera = MinecraftClient.getInstance().cameraEntity;
         double distance;
         boolean canRender = camera != null && livingEntity.canSee(camera)

@@ -29,7 +29,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    @Inject(at = @At(value = "TAIL"), method = "damage", cancellable = true)
+    @Inject(at = @At(value = "TAIL"), method = "damage")
     private void setDamageT(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
         if (XHP.option.damage && this.lastDamageTaken > 0) {
             HpUtil.set(getEntityId(), getWidth(), getHeight(), source.getAttacker(), this.lastDamageTaken, this.lastDamageTime);

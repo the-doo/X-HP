@@ -16,8 +16,6 @@ import net.minecraft.world.World;
 
 import java.awt.*;
 
-import static com.doo.xhp.util.HpUtil.BASE_HEIGHT;
-
 public class HpRenderer {
 
     private static final Identifier HEART_ID =
@@ -36,9 +34,9 @@ public class HpRenderer {
         // 基本参数
         int id = e.getEntityId();
         float health = e.getHealth();
-        float scale = 0.04F;
+        float scale = HpUtil.getScale(e.isBaby());
         int x = 0;
-        int y = (int) (- e.getHeight() * BASE_HEIGHT);
+        int y = -HpUtil.getShowY(e.getHeight(), e.isBaby());
         long time = world.getTime();
         boolean isFriend = !(e instanceof HostileEntity)
                 && !HpUtil.isAttacker(id, camera.getEntityId(), time)
@@ -49,12 +47,14 @@ public class HpRenderer {
         // 缩小倍数
         matrixStack.scale(scale, scale, scale);
         // 始终正对玩家
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(camera.yaw - 180 - e.bodyYaw));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-camera.yaw));
+        // 翻转 --- 如果已经是翻转的，则跳过
+        matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
         if (XHP.option.hp) {
             DrawableHelper.drawCenteredString(
                     matrixStack, client.textRenderer, String.format("%.1f", health), x, y, color);
-            y = y - BASE_HEIGHT;
+            y = y - HpUtil.BASE_HEIGHT;
         }
         // 画伤害
         if (XHP.option.damage) {
@@ -63,7 +63,7 @@ public class HpRenderer {
                     return;
                 }
                 DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
-                        d.x, d.y, Color.RED.getRGB());
+                        d.x, -d.y, Color.RED.getRGB());
             });
         }
         // 画图片
