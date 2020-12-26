@@ -80,7 +80,7 @@ public class HpRenderer {
             textureManager.bindTexture(isFriend ? YELLOW_HEART_ID : HEART_ID);
             DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
                     (int) (healScale * HpUtil.HEALTH), HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
-            RenderSystem.enableDepthTest();
+            RenderSystem.disableDepthTest();
         }
         // 矩阵操作退栈
         matrixStack.pop();
