@@ -1,5 +1,7 @@
 {
     "xhp.menu.option.hp": "show hp",
     "xhp.menu.option.heart": "show heart",
-    "xhp.menu.option.damage": "show damage"
+    "xhp.menu.option.damage": "show damage",
+    "xhp.menu.option.distance": "max distance"
+
 }

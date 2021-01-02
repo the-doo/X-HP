@@ -20,6 +20,11 @@ public class Option {
      */
     public boolean damage = true;
 
+    /**
+     * 距离 --- 不保存此字段
+     */
+    public int distance = 128;
+
     public boolean clickHp() {
         return hp = !hp;
     }
@@ -30,5 +35,9 @@ public class Option {
 
     public boolean clickDamage() {
         return damage = !damage;
+    }
+
+    public int clickDistance() {
+        return (distance <<= 1) > 1024 ? distance = 8 : distance;
     }
 }

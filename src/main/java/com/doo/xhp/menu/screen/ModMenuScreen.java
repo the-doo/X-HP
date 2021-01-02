@@ -17,6 +17,7 @@ public class ModMenuScreen extends Screen {
     private static final TranslatableText HP_TEXT = new TranslatableText("xhp.menu.option.hp");
     private static final TranslatableText HEART_TEXT = new TranslatableText("xhp.menu.option.heart");
     private static final TranslatableText DAMAGE_TEXT = new TranslatableText("xhp.menu.option.damage");
+    private static final TranslatableText DISTANCE_TEXT = new TranslatableText("xhp.menu.option.distance");
 
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
@@ -24,7 +25,6 @@ public class ModMenuScreen extends Screen {
 
     private ModMenuScreen() {
         super(new LiteralText(XHP.ID));
-        init();
     }
 
     @Override
@@ -41,6 +41,10 @@ public class ModMenuScreen extends Screen {
         this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28 * 3, 150, 20,
                 DAMAGE_TEXT.copy().append(": " + XHP.option.damage),
                 b -> b.setMessage(DAMAGE_TEXT.copy().append(": " + XHP.option.clickDamage()))));
+        // 显示默认距离
+        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28 * 4, 150, 20,
+                DISTANCE_TEXT.copy().append(": " + XHP.option.distance),
+                b -> b.setMessage(DISTANCE_TEXT.copy().append(": " + XHP.option.clickDistance()))));
         // 返回按钮
         this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
                 ScreenTexts.BACK, b -> INSTANCE.close()));

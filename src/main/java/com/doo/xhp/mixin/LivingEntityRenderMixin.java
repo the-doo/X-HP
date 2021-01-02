@@ -1,5 +1,6 @@
 package com.doo.xhp.mixin;
 
+import com.doo.xhp.XHP;
 import com.doo.xhp.renderer.HpRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -22,7 +23,7 @@ public abstract class LivingEntityRenderMixin {
         double distance;
         boolean canRender = camera != null && livingEntity.canSee(camera)
                 && (distance = camera.getPos().distanceTo(livingEntity.getPos())) > 1
-                && distance < 128;
+                && distance < XHP.option.distance;
         if (canRender) {
             HpRenderer.render(matrixStack, livingEntity, camera);
         }

@@ -1,5 +1,6 @@
 {
     "xhp.menu.option.hp": "显示hp",
     "xhp.menu.option.heart": "显示血量",
-    "xhp.menu.option.damage": "显示伤害"
+    "xhp.menu.option.damage": "显示伤害",
+    "xhp.menu.option.distance": "最大距离"
 }
