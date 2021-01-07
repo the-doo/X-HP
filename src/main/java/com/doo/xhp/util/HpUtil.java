@@ -2,6 +2,8 @@ package com.doo.xhp.util;
 
 import com.doo.xhp.XHP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -32,9 +34,12 @@ public abstract class HpUtil {
 		}
 		// 添加当前伤害对象
 		Deque<DamageTaken> result = LAST_DAMAGE_TAKEN_MAP.get(id);
-		result.push(new DamageTaken(attackerId, damage, age, x, y));
+		// 如果是暴击
+		boolean isCritic = attacker instanceof ServerPlayerEntity
+				&& damage > ((ServerPlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+		result.push(new DamageTaken(attackerId, isCritic, damage, age, x, y));
 		// 移除多余对象
-		if (result.size() > 10) {
+		if (result.size() > 5) {
 			result.pollLast();
 		}
 	}
@@ -49,7 +54,7 @@ public abstract class HpUtil {
 
 	public static boolean isAttacker(int id, int attacker, long now) {
 		return LAST_DAMAGE_TAKEN_MAP.getOrDefault(id, new ConcurrentLinkedDeque<>())
-				.stream().anyMatch(d -> attacker == d.attacker && now - d.time <= 100);
+				.stream().anyMatch(d -> attacker == d.attackerId && now - d.time <= 100);
 	}
 
 	public static int getShowY(float height, boolean isBaby) {
@@ -62,15 +67,17 @@ public abstract class HpUtil {
 
 	public static class DamageTaken {
 
+		public final int attackerId;
 		public final float damage;
-		public final int attacker;
+		public final boolean isCritic;
 		public final long time;
 		public final int x;
 		public final int y;
 
-		private DamageTaken(int attacker, float damage, long time, int x, int y) {
-			this.attacker = attacker;
+		private DamageTaken(int attackerId, boolean isCritic, float damage, long time, int x, int y) {
+			this.attackerId = attackerId;
 			this.damage = damage;
+			this.isCritic = isCritic;
 			this.time = time;
 			this.x = x;
 			this.y = y;

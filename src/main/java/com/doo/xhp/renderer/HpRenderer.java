@@ -63,7 +63,7 @@ public class HpRenderer {
                     return;
                 }
                 DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
-                        d.x, -d.y, Color.RED.getRGB());
+                        d.x, -d.y, d.isCritic ? Color.MAGENTA.getRGB() : Color.RED.getRGB());
             });
         }
         // 画图片
