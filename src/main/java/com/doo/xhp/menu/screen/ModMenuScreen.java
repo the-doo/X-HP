@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import org.apache.logging.log4j.Level;
 
 /**
  * mod menu 配置界面
@@ -18,6 +19,8 @@ public class ModMenuScreen extends Screen {
     private static final TranslatableText HEART_TEXT = new TranslatableText("xhp.menu.option.heart");
     private static final TranslatableText DAMAGE_TEXT = new TranslatableText("xhp.menu.option.damage");
     private static final TranslatableText DISTANCE_TEXT = new TranslatableText("xhp.menu.option.distance");
+    private static final TranslatableText SCALE_TEXT = new TranslatableText("xhp.menu.option.scale");
+    private static final TranslatableText HEIGHT_TEXT = new TranslatableText("xhp.menu.option.height");
 
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
@@ -30,24 +33,36 @@ public class ModMenuScreen extends Screen {
     @Override
     protected void init() {
         // 显示hp
-        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28, 150, 20,
+        int buttonX = this.width / 2 - 150 / 2;
+        int buttonY = 25;
+        int count = 1;
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
                 HP_TEXT.copy().append(": " + XHP.option.hp),
                 b -> b.setMessage(HP_TEXT.copy().append(": " + XHP.option.clickHp()))));
         // 显示血量
-        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28 * 2, 150, 20,
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
                 HEART_TEXT.copy().append(": " + XHP.option.heart),
                 b -> b.setMessage(HEART_TEXT.copy().append(": " + XHP.option.clickHeart()))));
         // 显示伤害
-        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28 * 3, 150, 20,
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
                 DAMAGE_TEXT.copy().append(": " + XHP.option.damage),
                 b -> b.setMessage(DAMAGE_TEXT.copy().append(": " + XHP.option.clickDamage()))));
         // 显示默认距离
-        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, 28 * 4, 150, 20,
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
                 DISTANCE_TEXT.copy().append(": " + XHP.option.distance),
                 b -> b.setMessage(DISTANCE_TEXT.copy().append(": " + XHP.option.clickDistance()))));
+        // 显示缩放比例
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
+                SCALE_TEXT.copy().append(": " + String.format("%.3f", XHP.option.scale)),
+                b -> b.setMessage(SCALE_TEXT.copy().append(": " + String.format("%.3f", XHP.option.clickScale())))));
+        // 显示基础高度
+        this.addButton(new ButtonWidget(buttonX, buttonY * count ++, 150, 20,
+                HEIGHT_TEXT.copy().append(": " + XHP.option.height),
+                b -> b.setMessage(HEIGHT_TEXT.copy().append(": " + XHP.option.clickHeight()))));
         // 返回按钮
-        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
+        this.addButton(new ButtonWidget(buttonX, this.height - buttonY, 150, 20,
                 ScreenTexts.BACK, b -> INSTANCE.close()));
+        Config.LOGGER.log(Level.INFO, "加载了{}个按键(add {} button)", count, count);
     }
 
     public static ModMenuScreen get(Screen pre) {

@@ -1,5 +1,6 @@
 package com.doo.xhp.util;
 
+import com.doo.xhp.XHP;
 import net.minecraft.entity.Entity;
 
 import java.util.*;
@@ -52,11 +53,11 @@ public abstract class HpUtil {
 	}
 
 	public static int getShowY(float height, boolean isBaby) {
-		return (int) ((height + 0.5) / getScale(isBaby));
+		return XHP.option.height + (int) ((height + 0.5) / getScale(isBaby));
 	}
 
 	public static float getScale(boolean isBaby) {
-		return isBaby ? 0.02F : 0.04F;
+		return XHP.option.scale * (isBaby ? 1 : 2);
 	}
 
 	public static class DamageTaken {

@@ -21,9 +21,19 @@ public class Option {
     public boolean damage = true;
 
     /**
-     * 距离 --- 不保存此字段
+     * 距离
      */
     public int distance = 128;
+
+    /**
+     * 缩放比例
+     */
+    public float scale = 0.02F;
+
+    /**
+     * 基础高度
+     */
+    public int height = 0;
 
     public boolean clickHp() {
         return hp = !hp;
@@ -39,5 +49,13 @@ public class Option {
 
     public int clickDistance() {
         return (distance <<= 1) > 1024 ? distance = 8 : distance;
+    }
+
+    public float clickScale() {
+        return (scale -= 0.001F) < 0.02F ? scale = 0.04F : scale;
+    }
+
+    public int clickHeight() {
+        return (height += 1) > 20 ? height = 0 : height;
     }
 }

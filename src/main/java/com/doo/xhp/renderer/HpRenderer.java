@@ -68,18 +68,20 @@ public class HpRenderer {
         }
         // 画图片
         if (XHP.option.heart) {
-            x = x - HpUtil.HEALTH / 2;
-            float healScale = Math.min(health / e.getMaxHealth(), 1);
-            TextureManager textureManager = client.getTextureManager();
-           // 空血槽
-            textureManager.bindTexture(EMPTY_HEART_ID);
             RenderSystem.enableDepthTest();
-            DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
-                    HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
-            // 满血槽 * healthScale
+            x = x - HpUtil.HEALTH / 2;
+            int healWidth = (int) (Math.min(health / e.getMaxHealth(), 1) * HpUtil.HEALTH);
+            TextureManager textureManager = client.getTextureManager();
+            // 空血槽
+            if (healWidth < HpUtil.HEALTH) {
+                textureManager.bindTexture(EMPTY_HEART_ID);
+                DrawableHelper.drawTexture(matrixStack, x + healWidth, y, healWidth, 0,
+                        HpUtil.HEALTH - healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+            }
+            // 血槽
             textureManager.bindTexture(isFriend ? YELLOW_HEART_ID : HEART_ID);
             DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
-                    (int) (healScale * HpUtil.HEALTH), HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+                    healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
             RenderSystem.disableDepthTest();
         }
         // 矩阵操作退栈
