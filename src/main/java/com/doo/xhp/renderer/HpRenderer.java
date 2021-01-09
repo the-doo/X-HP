@@ -48,7 +48,7 @@ public class HpRenderer {
         matrixStack.scale(scale, scale, scale);
         // 始终正对玩家
         matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-camera.yaw));
-        // 翻转 --- 如果已经是翻转的，则跳过
+        // 翻转
         matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
         if (XHP.option.hp) {
