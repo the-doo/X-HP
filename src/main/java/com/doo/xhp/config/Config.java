@@ -43,7 +43,7 @@ public class Config {
      * 读取配置
      *
      * @param key key（modId）
-     * @param t T.class
+     * @param t   T.class
      * @return T
      */
     public static <T> T read(String key, Class<T> t, T defaultValue) {
@@ -94,7 +94,7 @@ public class Config {
     /**
      * 保存配置
      *
-     * @param key key
+     * @param key   key
      * @param value value
      */
     public static void write(String key, Object value) {

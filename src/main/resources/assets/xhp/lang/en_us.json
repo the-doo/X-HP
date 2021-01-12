@@ -1,6 +1,9 @@
 {
     "xhp.menu.option.hp": "show hp",
     "xhp.menu.option.heart": "show heart",
+    "xhp.menu.option.bar_or_icon": "bar or icon",
+    "xhp.menu.option.bar_length": "set bar length",
+    "xhp.menu.option.bar_height": "set bar height",
     "xhp.menu.option.damage": "show damage",
     "xhp.menu.option.distance": "max distance",
     "xhp.menu.option.scale": "text and image scale",

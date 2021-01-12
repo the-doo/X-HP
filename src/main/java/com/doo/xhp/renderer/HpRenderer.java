@@ -18,12 +18,9 @@ import java.awt.*;
 
 public class HpRenderer {
 
-    private static final Identifier HEART_ID =
-            new Identifier(XHP.ID, "textures/heart/heart.png");
-    private static final Identifier YELLOW_HEART_ID =
-            new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
-    private static final Identifier EMPTY_HEART_ID =
-            new Identifier(XHP.ID, "textures/heart/empty_heart.png");
+    private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
+    private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
+    private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
 
     public static void render(MatrixStack matrixStack, LivingEntity e, Entity camera) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -35,7 +32,6 @@ public class HpRenderer {
         int id = e.getEntityId();
         float health = e.getHealth();
         float scale = HpUtil.getScale(e.isBaby());
-        int x = 0;
         int y = -HpUtil.getShowY(e.getHeight(), e.isBaby());
         long time = world.getTime();
         boolean isFriend = !(e instanceof HostileEntity)
@@ -51,10 +47,11 @@ public class HpRenderer {
         // 翻转
         matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
+        boolean isBar = XHP.option.isBar();
         if (XHP.option.hp) {
             DrawableHelper.drawCenteredString(
-                    matrixStack, client.textRenderer, String.format("%.1f", health), x, y, color);
-            y = y - HpUtil.BASE_HEIGHT;
+                    matrixStack, client.textRenderer, String.format("%.1f", health), 0, y, color);
+            y = y - HpUtil.BASE_HEIGHT / (isBar ? 3 : 1);
         }
         // 画伤害
         if (XHP.option.damage) {
@@ -63,28 +60,68 @@ public class HpRenderer {
                     return;
                 }
                 DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
-                        d.x, -d.y, d.isCritic ? Color.MAGENTA.getRGB() : Color.RED.getRGB());
+                        d.x, -d.y, d.rgb);
             });
         }
         // 画图片
         if (XHP.option.heart) {
+            float healScale = Math.min(health / e.getMaxHealth(), 1);
             RenderSystem.enableDepthTest();
-            x = x - HpUtil.HEALTH / 2;
-            int healWidth = (int) (Math.min(health / e.getMaxHealth(), 1) * HpUtil.HEALTH);
-            TextureManager textureManager = client.getTextureManager();
-            // 空血槽
-            if (healWidth < HpUtil.HEALTH) {
-                textureManager.bindTexture(EMPTY_HEART_ID);
-                DrawableHelper.drawTexture(matrixStack, x + healWidth, y, healWidth, 0,
-                        HpUtil.HEALTH - healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+            if (isBar) {
+                drawBar(matrixStack, y, color, healScale);
+            } else {
+                drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
             }
-            // 血槽
-            textureManager.bindTexture(isFriend ? YELLOW_HEART_ID : HEART_ID);
-            DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
-                    healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
             RenderSystem.disableDepthTest();
         }
         // 矩阵操作退栈
         matrixStack.pop();
+    }
+
+    /**
+     * 画血条
+     *
+     * @param matrixStack 矩阵
+     * @param y           坐标y
+     * @param color       颜色
+     * @param healScale   比例
+     */
+    private static void drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
+        // 总长度
+        int len = XHP.option.barLength;
+        // 当前血量长度
+        int healLen = (int) (healScale * len);
+        int x1 = -(len / 2);
+        int x2 = x1 + healLen;
+        int y2 = y - XHP.option.barHeight;
+        DrawableHelper.fill(matrixStack, x1, y, x2, y2, color);
+        if (healLen < len) {
+            DrawableHelper.fill(matrixStack, x2, y, x1 + len, y2, Color.DARK_GRAY.getRGB());
+        }
+    }
+
+    /**
+     * 画图标
+     *
+     * @param matrixStack 矩阵
+     * @param client      客户端
+     * @param y           坐标y
+     * @param texture     需要画的icon
+     * @param healScale   比例
+     */
+    private static void drawIcon(MatrixStack matrixStack, MinecraftClient client, int y, Identifier texture, float healScale) {
+        int x = -HpUtil.HEALTH / 2;
+        int healWidth = (int) (healScale * HpUtil.HEALTH);
+        TextureManager textureManager = client.getTextureManager();
+        // 空血槽
+        if (healWidth < HpUtil.HEALTH) {
+            textureManager.bindTexture(EMPTY_HEART_ID);
+            DrawableHelper.drawTexture(matrixStack, x + healWidth, y, healWidth, 0,
+                    HpUtil.HEALTH - healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+        }
+        // 血槽
+        textureManager.bindTexture(texture);
+        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
+                healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
     }
 }

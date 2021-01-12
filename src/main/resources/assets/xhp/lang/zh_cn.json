@@ -1,6 +1,9 @@
 {
     "xhp.menu.option.hp": "显示hp",
     "xhp.menu.option.heart": "显示血量",
+    "xhp.menu.option.bar_or_icon": "选择bar或icon",
+    "xhp.menu.option.bar_length": "血条长度",
+    "xhp.menu.option.bar_height": "血条高度",
     "xhp.menu.option.damage": "显示伤害",
     "xhp.menu.option.distance": "最大距离",
     "xhp.menu.option.scale": "缩放比例",

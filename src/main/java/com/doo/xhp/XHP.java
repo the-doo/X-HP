@@ -6,14 +6,14 @@ import net.fabricmc.api.ModInitializer;
 
 public class XHP implements ModInitializer {
 
-	public static final String ID = "xhp";
+    public static final String ID = "xhp";
 
-	public static Option option = new Option();
+    public static Option option = new Option();
 
 
-	@Override
-	public void onInitialize() {
-		// 加载配置
-		option = Config.read(ID, Option.class, option);
-	}
+    @Override
+    public void onInitialize() {
+        // 加载配置
+        option = Config.read(ID, Option.class, option);
+    }
 }
