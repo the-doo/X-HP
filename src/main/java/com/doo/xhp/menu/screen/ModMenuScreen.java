@@ -35,10 +35,10 @@ public class ModMenuScreen extends Screen {
 
     @Override
     protected void init() {
-        // 显示hp
         int buttonX = this.width / 2 - 150 / 2;
         int buttonY = 20;
         int count = 1;
+        // 显示hp
         this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
                 HP_TEXT.copy().append(": " + XHP.option.hp),
                 b -> b.setMessage(HP_TEXT.copy().append(": " + XHP.option.clickHp()))));
