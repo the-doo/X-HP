@@ -136,10 +136,10 @@ public class HpRenderer {
      * 画栅栏
      *
      * @param matrixStack 矩阵
-     * @param client 客户端
-     * @param y 坐标y
-     * @param color 颜色
-     * @param healScale 比例
+     * @param client      客户端
+     * @param y           坐标y
+     * @param color       颜色
+     * @param healScale   比例
      */
     private static void drawFence(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
         matrixStack.scale(0.5F, 0.5F, 0.5F);
