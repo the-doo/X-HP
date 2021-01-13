@@ -18,7 +18,7 @@ public class Option {
     /**
      * 血条还是图片
      */
-    public String barOrIcon = "bar";
+    public String style = "bar";
 
     /**
      * 血条长度
@@ -74,8 +74,8 @@ public class Option {
         return (height += 1) > 20 ? height = 0 : height;
     }
 
-    public String clickBarOrIcon() {
-        return barOrIcon = (isBar() ? "icon" : "bar");
+    public String clickStyle() {
+        return style = (isBar() ? "fence" : isIcon() ? "bar" : "icon");
     }
 
     public int clickBarLength() {
@@ -87,6 +87,10 @@ public class Option {
     }
 
     public boolean isBar() {
-        return "bar".equals(barOrIcon);
+        return "bar".equals(style);
+    }
+
+    public boolean isIcon() {
+        return "icon".equals(style);
     }
 }

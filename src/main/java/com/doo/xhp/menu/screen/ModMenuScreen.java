@@ -17,7 +17,7 @@ public class ModMenuScreen extends Screen {
 
     private static final TranslatableText HP_TEXT = new TranslatableText("xhp.menu.option.hp");
     private static final TranslatableText HEART_TEXT = new TranslatableText("xhp.menu.option.heart");
-    private static final TranslatableText BAR_OR_ICON_TEXT = new TranslatableText("xhp.menu.option.bar_or_icon");
+    private static final TranslatableText STYLE_TEXT = new TranslatableText("xhp.menu.option.style");
     private static final TranslatableText BAR_LENGTH_TEXT = new TranslatableText("xhp.menu.option.bar_length");
     private static final TranslatableText BAR_HEIGHT_TEXT = new TranslatableText("xhp.menu.option.bar_height");
     private static final TranslatableText DAMAGE_TEXT = new TranslatableText("xhp.menu.option.damage");
@@ -48,16 +48,19 @@ public class ModMenuScreen extends Screen {
                 b -> b.setMessage(HEART_TEXT.copy().append(": " + XHP.option.clickHeart()))));
         // 显示barOrIcon
         this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                BAR_OR_ICON_TEXT.copy().append(": " + XHP.option.barOrIcon),
-                b -> b.setMessage(BAR_OR_ICON_TEXT.copy().append(": " + XHP.option.clickBarOrIcon()))));
-        // 显示bar长度
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                BAR_LENGTH_TEXT.copy().append(": " + XHP.option.barLength),
-                b -> b.setMessage(BAR_LENGTH_TEXT.copy().append(": " + XHP.option.clickBarLength()))));
-        // 显示bar高度
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.barHeight),
-                b -> b.setMessage(BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.clickBarHeight()))));
+                STYLE_TEXT.copy().append(": " + XHP.option.style),
+                b -> b.setMessage(STYLE_TEXT.copy().append(": " + XHP.option.clickStyle()))));
+        // 如果是bar
+        if (XHP.option.isBar()) {
+            // 显示bar长度
+            this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
+                    BAR_LENGTH_TEXT.copy().append(": " + XHP.option.barLength),
+                    b -> b.setMessage(BAR_LENGTH_TEXT.copy().append(": " + XHP.option.clickBarLength()))));
+            // 显示bar高度
+            this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
+                    BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.barHeight),
+                    b -> b.setMessage(BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.clickBarHeight()))));
+        }
         // 显示伤害
         this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
                 DAMAGE_TEXT.copy().append(": " + XHP.option.damage),

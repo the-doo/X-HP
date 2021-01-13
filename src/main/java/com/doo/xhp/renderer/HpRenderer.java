@@ -11,6 +11,9 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -21,6 +24,8 @@ public class HpRenderer {
     private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
     private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
     private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
+
+    private static final int[] COLORS = {Color.RED.getRGB(), Color.ORANGE.getRGB(), Color.DARK_GRAY.getRGB()};
 
     public static void render(MatrixStack matrixStack, LivingEntity e, Entity camera) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -37,7 +42,7 @@ public class HpRenderer {
         boolean isFriend = !(e instanceof HostileEntity)
                 && !HpUtil.isAttacker(id, camera.getEntityId(), time)
                 || e.isTeammate(camera);
-        int color = isFriend ? Color.ORANGE.getRGB() : Color.RED.getRGB();
+        int color = isFriend ? COLORS[1] : COLORS[0];
         // 矩阵操作
         matrixStack.push();
         // 缩小倍数
@@ -47,11 +52,11 @@ public class HpRenderer {
         // 翻转
         matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
-        boolean isBar = XHP.option.isBar();
+        boolean isIcon = XHP.option.isIcon();
         if (XHP.option.hp) {
             DrawableHelper.drawCenteredString(
                     matrixStack, client.textRenderer, String.format("%.1f", health), 0, y, color);
-            y = y - HpUtil.BASE_HEIGHT / (isBar ? 3 : 1);
+            y = (int) (y - HpUtil.BASE_HEIGHT / (isIcon ? 1 : 2.5));
         }
         // 画伤害
         if (XHP.option.damage) {
@@ -67,37 +72,17 @@ public class HpRenderer {
         if (XHP.option.heart) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
             RenderSystem.enableDepthTest();
-            if (isBar) {
+            if (isIcon) {
+                drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
+            } else if (XHP.option.isBar()) {
                 drawBar(matrixStack, y, color, healScale);
             } else {
-                drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
+                drawFence(matrixStack, client, y, color, healScale);
             }
             RenderSystem.disableDepthTest();
         }
         // 矩阵操作退栈
         matrixStack.pop();
-    }
-
-    /**
-     * 画血条
-     *
-     * @param matrixStack 矩阵
-     * @param y           坐标y
-     * @param color       颜色
-     * @param healScale   比例
-     */
-    private static void drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
-        // 总长度
-        int len = XHP.option.barLength;
-        // 当前血量长度
-        int healLen = (int) (healScale * len);
-        int x1 = -(len / 2);
-        int x2 = x1 + healLen;
-        int y2 = y - XHP.option.barHeight;
-        DrawableHelper.fill(matrixStack, x1, y, x2, y2, color);
-        if (healLen < len) {
-            DrawableHelper.fill(matrixStack, x2, y, x1 + len, y2, Color.DARK_GRAY.getRGB());
-        }
     }
 
     /**
@@ -123,5 +108,48 @@ public class HpRenderer {
         textureManager.bindTexture(texture);
         DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
                 healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+    }
+
+    /**
+     * 画血条
+     *
+     * @param matrixStack 矩阵
+     * @param y           坐标y
+     * @param color       颜色
+     * @param healScale   比例
+     */
+    private static void drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
+        // 总长度
+        int len = XHP.option.barLength;
+        // 当前血量长度
+        int healLen = (int) (healScale * len);
+        int x1 = -(len / 2);
+        int x2 = x1 + healLen;
+        int y2 = y - XHP.option.barHeight;
+        DrawableHelper.fill(matrixStack, x1, y, x2, y2, color);
+        if (healLen < len) {
+            DrawableHelper.fill(matrixStack, x2, y, x1 + len, y2, COLORS[2]);
+        }
+    }
+
+    /**
+     * 画栅栏
+     *
+     * @param matrixStack 矩阵
+     * @param client 客户端
+     * @param y 坐标y
+     * @param color 颜色
+     * @param healScale 比例
+     */
+    private static void drawFence(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+        matrixStack.scale(0.5F, 0.5F, 0.5F);
+        String fenceStr = "||||||||||||||||||||";
+        int len = (int) (fenceStr.length() * healScale);
+        LiteralText heal = new LiteralText(fenceStr.substring(0, len));
+        LiteralText empty = new LiteralText(fenceStr.substring(len));
+        heal.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)));
+        empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(Color.DARK_GRAY.getRGB())));
+        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, heal.append(empty), 0, y * 2, color);
+        matrixStack.scale(2, 2, 2);
     }
 }
