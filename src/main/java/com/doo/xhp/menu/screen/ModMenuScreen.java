@@ -2,30 +2,110 @@ package com.doo.xhp.menu.screen;
 
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.Config;
+import com.doo.xhp.config.XOption;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.options.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import org.apache.logging.log4j.Level;
 
 /**
  * mod menu 配置界面
  */
 public class ModMenuScreen extends Screen {
 
-    private static final TranslatableText HP_TEXT = new TranslatableText("xhp.menu.option.hp");
-    private static final TranslatableText HEART_TEXT = new TranslatableText("xhp.menu.option.heart");
-    private static final TranslatableText STYLE_TEXT = new TranslatableText("xhp.menu.option.style");
-    private static final TranslatableText BAR_LENGTH_TEXT = new TranslatableText("xhp.menu.option.bar_length");
-    private static final TranslatableText BAR_HEIGHT_TEXT = new TranslatableText("xhp.menu.option.bar_height");
-    private static final TranslatableText DAMAGE_TEXT = new TranslatableText("xhp.menu.option.damage");
-    private static final TranslatableText DISTANCE_TEXT = new TranslatableText("xhp.menu.option.distance");
-    private static final TranslatableText SCALE_TEXT = new TranslatableText("xhp.menu.option.scale");
-    private static final TranslatableText HEIGHT_TEXT = new TranslatableText("xhp.menu.option.height");
+    private static final Option NAME = new BooleanOption("xhp.menu.option.name",
+            o -> XHP.XOption.name, (o, v) -> XHP.XOption.name = v);
+
+    private static final Option HP = new BooleanOption("xhp.menu.option.hp",
+            o -> XHP.XOption.hp, (o, v) -> XHP.XOption.hp = v);
+
+    private static final Option VISUALIZATION = new BooleanOption("xhp.menu.option.visualization",
+            o -> XHP.XOption.visualization, (o, v) -> XHP.XOption.visualization = v);
+
+    private static final Option DAMAGE = new BooleanOption("xhp.menu.option.damage",
+            o -> XHP.XOption.damage, (o, v) -> XHP.XOption.damage = v);
+
+    private static final Option DISTANCE = new DoubleOption("xhp.menu.option.distance", 2, 128, 1,
+            v -> (double) XHP.XOption.distance,
+            (o, d) -> XHP.XOption.distance = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.distance", XHP.XOption.distance));
+
+    private static final Option SCALE = new DoubleOption("xhp.menu.option.scale", 10, 40, 1,
+            v -> (double) XHP.XOption.scale * 1000,
+            (o, d) -> XHP.XOption.scale = d.intValue() / 1000F,
+            (g, o) -> new TranslatableText("xhp.menu.option.scale", XHP.XOption.scale * 1000));
+
+    private static final Option HEIGHT = new DoubleOption("xhp.menu.option.height", 0, 20, 1,
+            v -> (double) XHP.XOption.height,
+            (o, d) -> XHP.XOption.height = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.height", XHP.XOption.height));
+
+    private static final Option STYLE = new CyclingOption("xhp.menu.option.style",
+            (o, v) -> XHP.XOption.style = XOption.StyleEnum.get(XHP.XOption.style.ordinal() + 1),
+            (g, o) -> new TranslatableText(XHP.XOption.style.key));
+
+    private static final Option BAR_LENGTH = new DoubleOption("xhp.menu.option.bar_length", 1, 20, 1,
+            v -> (double) XHP.XOption.barLength,
+            (o, d) -> XHP.XOption.barLength = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.bar_length", XHP.XOption.barLength));
+
+    private static final Option BAR_HEIGHT = new DoubleOption("xhp.menu.option.bar_height", 1, 20, 1,
+            v -> (double) XHP.XOption.barHeight,
+            (o, d) -> XHP.XOption.barHeight = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.bar_height", XHP.XOption.barHeight));
+
+    private static final Option FRIEND_COLOR = new Option("xhp.menu.option.friend_color") {
+        @Override
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.friendColor = v, XHP.XOption.friendColor, INSTANCE));
+                }
+            });
+        }
+    };
+
+    private static final Option MOB_COLOR = new Option("xhp.menu.option.mob_color") {
+        @Override
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.mobColor = v, XHP.XOption.mobColor, INSTANCE));
+                }
+            });
+        }
+    };
+
+    private static final Option DAMAGE_COLOR = new Option("xhp.menu.option.damage_color") {
+        @Override
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.damageColor = v, XHP.XOption.damageColor, INSTANCE));
+                }
+            });
+        }
+    };
+
+    private static final Option CRITIC_DAMAGE_COLOR = new Option("xhp.menu.option.critic_damage_color") {
+        @Override
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.criticDamageColor = v, XHP.XOption.criticDamageColor, INSTANCE));
+                }
+            });
+        }
+    };
 
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
+
+    private ButtonListWidget list;
 
     private Screen pre;
 
@@ -35,52 +115,17 @@ public class ModMenuScreen extends Screen {
 
     @Override
     protected void init() {
-        int buttonX = this.width / 2 - 150 / 2;
-        int buttonY = 20;
-        int count = 1;
-        // 显示hp
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                HP_TEXT.copy().append(": " + XHP.option.hp),
-                b -> b.setMessage(HP_TEXT.copy().append(": " + XHP.option.clickHp()))));
-        // 显示血量
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                HEART_TEXT.copy().append(": " + XHP.option.heart),
-                b -> b.setMessage(HEART_TEXT.copy().append(": " + XHP.option.clickHeart()))));
-        // 显示barOrIcon
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                STYLE_TEXT.copy().append(": " + XHP.option.style),
-                b -> b.setMessage(STYLE_TEXT.copy().append(": " + XHP.option.clickStyle()))));
-        // 如果是bar
-        if (XHP.option.isBar()) {
-            // 显示bar长度
-            this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                    BAR_LENGTH_TEXT.copy().append(": " + XHP.option.barLength),
-                    b -> b.setMessage(BAR_LENGTH_TEXT.copy().append(": " + XHP.option.clickBarLength()))));
-            // 显示bar高度
-            this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                    BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.barHeight),
-                    b -> b.setMessage(BAR_HEIGHT_TEXT.copy().append(": " + XHP.option.clickBarHeight()))));
-        }
-        // 显示伤害
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                DAMAGE_TEXT.copy().append(": " + XHP.option.damage),
-                b -> b.setMessage(DAMAGE_TEXT.copy().append(": " + XHP.option.clickDamage()))));
-        // 显示默认距离
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                DISTANCE_TEXT.copy().append(": " + XHP.option.distance),
-                b -> b.setMessage(DISTANCE_TEXT.copy().append(": " + XHP.option.clickDistance()))));
-        // 显示缩放比例
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                SCALE_TEXT.copy().append(": " + String.format("%.3f", XHP.option.scale)),
-                b -> b.setMessage(SCALE_TEXT.copy().append(": " + String.format("%.3f", XHP.option.clickScale())))));
+        Option[] options = {
+                NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
+                STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
+        };
+        list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         // 显示基础高度
-        this.addButton(new ButtonWidget(buttonX, buttonY * count++, 150, 20,
-                HEIGHT_TEXT.copy().append(": " + XHP.option.height),
-                b -> b.setMessage(HEIGHT_TEXT.copy().append(": " + XHP.option.clickHeight()))));
+        list.addAll(options);
+        this.addChild(list);
         // 返回按钮
-        this.addButton(new ButtonWidget(buttonX, this.height - buttonY, 150, 20,
+        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
                 ScreenTexts.BACK, b -> INSTANCE.close()));
-        Config.LOGGER.log(Level.INFO, "加载了{}个按键(add {} button)", count, count);
     }
 
     public static ModMenuScreen get(Screen pre) {
@@ -95,7 +140,7 @@ public class ModMenuScreen extends Screen {
             // 返回上个页面
             client.currentScreen = this.pre;
             // 保存设置的配置
-            Config.write(XHP.ID, XHP.option);
+            Config.write(XHP.ID, XHP.XOption);
         }
     }
 
@@ -104,6 +149,7 @@ public class ModMenuScreen extends Screen {
         // 画背景
         super.renderBackground(matrices);
         // 画其他
+        list.render(matrices, mouseX, mouseY, delta);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }

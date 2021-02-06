@@ -1,12 +1,25 @@
 {
-    "xhp.menu.option.hp": "show hp",
-    "xhp.menu.option.heart": "show heart",
-    "xhp.menu.option.style": "choose style",
-    "xhp.menu.option.bar_length": "set bar length",
-    "xhp.menu.option.bar_height": "set bar height",
-    "xhp.menu.option.damage": "show damage",
-    "xhp.menu.option.distance": "max distance",
-    "xhp.menu.option.scale": "text and image scale",
-    "xhp.menu.option.height": "base height"
+    "xhp.menu.option.name": "Show Name",
+    "xhp.menu.option.hp": "Show HP",
+    "xhp.menu.option.visualization": "Show Visualization",
+    "xhp.menu.option.damage": "Show Damage",
+    "xhp.menu.option.distance": "Max Distance: %d",
+    "xhp.menu.option.scale": "Text And Image Scale: %d",
+    "xhp.menu.option.height": "Base Height: %d",
+    "xhp.menu.option.bar_length": "Bar Length: %d",
+    "xhp.menu.option.bar_height": "Bar Height: %d",
+    "xhp.menu.option.style": "Choose Style",
+    "xhp.menu.option.mob_color": "Mob Color",
+    "xhp.menu.option.friend_color": "Friend Color",
+    "xhp.menu.option.damage_color": "Damage Font Color",
+    "xhp.menu.option.critic_damage_color": "Critic Damage Font Color",
+
+    "xhp.menu.color.red": "Red: %d",
+    "xhp.menu.color.green": "Green: %d",
+    "xhp.menu.color.blue": "Blue: %d",
+
+    "xhp.menu.style.bar": "Bar Style",
+    "xhp.menu.style.icon": "Icon Style",
+    "xhp.menu.style.fence": "Fence Style"
 
 }

@@ -5,17 +5,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.awt.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 public abstract class HpUtil {
 
     private static final Map<Integer, Deque<DamageTaken>> LAST_DAMAGE_TAKEN_MAP = new HashMap<>();
-
-    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(5);
 
     private static final Random random = new Random();
 
@@ -38,7 +35,7 @@ public abstract class HpUtil {
         // 如果是暴击
         boolean isCritic = attacker instanceof ServerPlayerEntity
                 && damage > ((ServerPlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-        int rgb = isCritic ? Color.MAGENTA.getRGB() : Color.RED.getRGB();
+        int rgb = isCritic ? XHP.XOption.criticDamageColor : XHP.XOption.damageColor;
         result.push(new DamageTaken(attackerId, rgb, damage, age, x, y));
         // 移除多余对象
         if (result.size() > 5) {
@@ -51,7 +48,14 @@ public abstract class HpUtil {
     }
 
     public static void remove(int id) {
-        executor.schedule(() -> LAST_DAMAGE_TAKEN_MAP.remove(id), 1, TimeUnit.SECONDS);
+        ForkJoinPool.commonPool().execute(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            LAST_DAMAGE_TAKEN_MAP.remove(id);
+        });
     }
 
     public static boolean isAttacker(int id, int attacker, long now) {
@@ -60,11 +64,11 @@ public abstract class HpUtil {
     }
 
     public static int getShowY(float height, boolean isBaby) {
-        return XHP.option.height + (int) ((height + 0.5) / getScale(isBaby));
+        return XHP.XOption.height + (int) ((height + 0.5) / getScale(isBaby));
     }
 
     public static float getScale(boolean isBaby) {
-        return XHP.option.scale * (isBaby ? 1 : 2);
+        return XHP.XOption.scale * (isBaby ? 1 : 2);
     }
 
     public static class DamageTaken {

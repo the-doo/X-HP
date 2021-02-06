@@ -23,7 +23,7 @@ public abstract class LivingEntityRenderMixin {
         double distance;
         boolean canRender = camera != null && livingEntity.canSee(camera)
                 && (distance = camera.getPos().distanceTo(livingEntity.getPos())) > 1
-                && distance < XHP.option.distance;
+                && distance < XHP.XOption.distance;
         if (canRender) {
             HpRenderer.render(matrixStack, livingEntity, camera);
         }

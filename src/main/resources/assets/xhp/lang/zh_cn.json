@@ -1,11 +1,24 @@
 {
-    "xhp.menu.option.hp": "显示hp",
-    "xhp.menu.option.heart": "显示血量",
-    "xhp.menu.option.style": "样式选择",
-    "xhp.menu.option.bar_length": "血条长度",
-    "xhp.menu.option.bar_height": "血条高度",
+    "xhp.menu.option.name": "显示名字",
+    "xhp.menu.option.hp": "显示HP",
+    "xhp.menu.option.visualization": "显示可视化",
     "xhp.menu.option.damage": "显示伤害",
-    "xhp.menu.option.distance": "最大距离",
-    "xhp.menu.option.scale": "缩放比例",
-    "xhp.menu.option.height": "基础高度"
+    "xhp.menu.option.distance": "最大距离: %d",
+    "xhp.menu.option.scale": "缩放比例: %d",
+    "xhp.menu.option.height": "基础高度: %d",
+    "xhp.menu.option.bar_length": "血条长度: %d",
+    "xhp.menu.option.bar_height": "血条高度: %d",
+    "xhp.menu.option.style": "样式选择",
+    "xhp.menu.option.mob_color": "敌人血条颜色",
+    "xhp.menu.option.friend_color": "中立血条颜色",
+    "xhp.menu.option.damage_color": "伤害颜色",
+    "xhp.menu.option.critic_damage_color": "暴击伤害颜色",
+
+    "xhp.menu.color.red": "红: %d",
+    "xhp.menu.color.green": "绿: %d",
+    "xhp.menu.color.blue": "蓝: %d",
+
+    "xhp.menu.style.bar": "血条样式",
+    "xhp.menu.style.icon": "图标样式",
+    "xhp.menu.style.fence": "栅栏样式"
 }
