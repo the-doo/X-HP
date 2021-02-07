@@ -1,7 +1,6 @@
 package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
-import com.doo.xhp.config.XOption;
 import com.doo.xhp.util.HpUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +11,7 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
@@ -38,7 +38,10 @@ public class HpRenderer {
         int id = e.getEntityId();
         float health = e.getHealth();
         float scale = HpUtil.getScale(e.isBaby());
-        int y = -HpUtil.getShowY((float) (e.getHeight() - e.getHeightOffset()), e.isBaby());
+        int y = -HpUtil.getShowY(e.getHeight(), e.isBaby());
+        if (e instanceof WitchEntity) {
+            y -= 8;
+        }
         long time = world.getTime();
         boolean isFriend = !(e instanceof HostileEntity)
                 && !HpUtil.isAttacker(id, camera.getEntityId(), time)
@@ -53,10 +56,8 @@ public class HpRenderer {
         // 翻转
         matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
-        boolean isIcon = XOption.StyleEnum.ICON == XHP.XOption.style;
         if (XHP.XOption.hp) {
-            drawText(matrixStack, client, y, color, String.format("%.1f", health));
-            y = (int) (y - HpUtil.BASE_HEIGHT / (isIcon ? 1 : 2.5));
+            y -= drawText(matrixStack, client, y, color, String.format("%.1f", health));
         }
         // 画伤害
         if (XHP.XOption.damage) {
@@ -74,17 +75,16 @@ public class HpRenderer {
             RenderSystem.enableDepthTest();
             switch (XHP.XOption.style) {
                 case BAR:
-                    drawBar(matrixStack, y, color, healScale);
+                    y -= drawBar(matrixStack, y, color, healScale);
                     break;
                 case ICON:
-                    drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
+                    y -= drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
                     break;
                 case FENCE:
-                    drawFence(matrixStack, client, y, color, healScale);
+                    y -= drawFence(matrixStack, client, y, color, healScale);
                 default:
             }
             RenderSystem.disableDepthTest();
-            y = y - HpUtil.BASE_HEIGHT / 3;
         }
         // 画名字
         if (XHP.XOption.name) {
@@ -96,31 +96,33 @@ public class HpRenderer {
 
     /**
      * 画名字
-     *
-     * @param matrixStack 矩阵
+     *  @param matrixStack 矩阵
      * @param client 客户端
      * @param y y坐标
      * @param color 颜色
      * @param string 名字
+     * @return height
      */
-    private static void drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, String string) {
+    private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, String string) {
         matrixStack.push();
         matrixStack.scale(0.5F, 0.5F, 0.5F);
         DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, string, 0, y * 2, color);
         matrixStack.pop();
+        return client.textRenderer.fontHeight;
     }
 
     /**
      * 画图标
-     *
-     * @param matrixStack 矩阵
+     *  @param matrixStack 矩阵
      * @param client      客户端
      * @param y           坐标y
      * @param texture     需要画的icon
      * @param healScale   比例
+     * @return height
      */
-    private static void drawIcon(MatrixStack matrixStack, MinecraftClient client, int y, Identifier texture, float healScale) {
+    private static int drawIcon(MatrixStack matrixStack, MinecraftClient client, int y, Identifier texture, float healScale) {
         matrixStack.push();
+        y -= 2;
         int x = -HpUtil.HEALTH / 2;
         int healWidth = (int) (healScale * HpUtil.HEALTH);
         TextureManager textureManager = client.getTextureManager();
@@ -135,18 +137,20 @@ public class HpRenderer {
         DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
                 healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
         matrixStack.pop();
+        return 7;
     }
 
     /**
      * 画血条
-     *
-     * @param matrixStack 矩阵
+     *  @param matrixStack 矩阵
      * @param y           坐标y
      * @param color       颜色
      * @param healScale   比例
+     * @return height
      */
-    private static void drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
+    private static int drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
         matrixStack.push();
+        y += 7;
         // 总长度
         int len = XHP.XOption.barLength;
         // 当前血量长度
@@ -159,20 +163,22 @@ public class HpRenderer {
             DrawableHelper.fill(matrixStack, x2, y, x1 + len, y2, EMPTY_COLOR);
         }
         matrixStack.pop();
+        return 1;
     }
 
     /**
      * 画栅栏
-     *
-     * @param matrixStack 矩阵
+     *  @param matrixStack 矩阵
      * @param client      客户端
      * @param y           坐标y
      * @param color       颜色
      * @param healScale   比例
+     * @return height
      */
-    private static void drawFence(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+    private static int drawFence(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
         matrixStack.push();
         matrixStack.scale(0.5F, 0.5F, 0.5F);
+        y += 4;
         String fenceStr = "||||||||||||||||||||";
         int len = (int) (fenceStr.length() * healScale);
         LiteralText heal = new LiteralText(fenceStr.substring(0, len));
@@ -181,5 +187,6 @@ public class HpRenderer {
         empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(EMPTY_COLOR)));
         DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, heal.append(empty), 0, y * 2, color);
         matrixStack.pop();
+        return 1;
     }
 }
