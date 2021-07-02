@@ -28,7 +28,7 @@ public abstract class HpUtil {
         int attackerId = attacker == null ? -1 : attacker.getEntityId();
         // 添加队列
         if (!LAST_DAMAGE_TAKEN_MAP.containsKey(id)) {
-            LAST_DAMAGE_TAKEN_MAP.put(id, new LinkedList<>());
+            LAST_DAMAGE_TAKEN_MAP.put(id, new ConcurrentLinkedDeque<>());
         }
         // 添加当前伤害对象
         Deque<DamageTaken> result = LAST_DAMAGE_TAKEN_MAP.get(id);
