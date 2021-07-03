@@ -14,6 +14,8 @@ public abstract class HpUtil {
 
     private static final Map<Integer, Deque<DamageTaken>> LAST_DAMAGE_TAKEN_MAP = new HashMap<>();
 
+    private static final ConcurrentLinkedDeque<DamageTaken> EMPTY = new ConcurrentLinkedDeque<>();
+
     private static final Random random = new Random();
 
     public static final int BASE_HEIGHT = 15;
@@ -44,7 +46,7 @@ public abstract class HpUtil {
     }
 
     public static Deque<DamageTaken> get(int id) {
-        return LAST_DAMAGE_TAKEN_MAP.getOrDefault(id, new ConcurrentLinkedDeque<>());
+        return LAST_DAMAGE_TAKEN_MAP.getOrDefault(id, EMPTY);
     }
 
     public static void remove(int id) {

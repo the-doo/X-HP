@@ -96,11 +96,12 @@ public class HpRenderer {
 
     /**
      * 画名字
-     *  @param matrixStack 矩阵
-     * @param client 客户端
-     * @param y y坐标
-     * @param color 颜色
-     * @param string 名字
+     *
+     * @param matrixStack 矩阵
+     * @param client      客户端
+     * @param y           y坐标
+     * @param color       颜色
+     * @param string      名字
      * @return height
      */
     private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, String string) {
@@ -113,7 +114,8 @@ public class HpRenderer {
 
     /**
      * 画图标
-     *  @param matrixStack 矩阵
+     *
+     * @param matrixStack 矩阵
      * @param client      客户端
      * @param y           坐标y
      * @param texture     需要画的icon
@@ -142,7 +144,8 @@ public class HpRenderer {
 
     /**
      * 画血条
-     *  @param matrixStack 矩阵
+     *
+     * @param matrixStack 矩阵
      * @param y           坐标y
      * @param color       颜色
      * @param healScale   比例
@@ -168,7 +171,8 @@ public class HpRenderer {
 
     /**
      * 画栅栏
-     *  @param matrixStack 矩阵
+     *
+     * @param matrixStack 矩阵
      * @param client      客户端
      * @param y           坐标y
      * @param color       颜色
