@@ -5,7 +5,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +30,7 @@ public abstract class HpUtil {
         int y = getShowY(height, false);
         x = random.nextBoolean() ? -x : x;
         y = random.nextInt(y / 2) + y / 4;
-        int attackerId = attacker == null ? -1 : attacker.getEntityId();
+        int attackerId = attacker == null ? -1 : attacker.getId();
         // 添加队列
         if (!LAST_DAMAGE_TAKEN_MAP.containsKey(id)) {
             LAST_DAMAGE_TAKEN_MAP.put(id, new ConcurrentLinkedDeque<>());

@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.HostileEntity;
@@ -16,6 +15,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import java.awt.*;
@@ -35,7 +35,7 @@ public class HpRenderer {
             return;
         }
         // 基本参数
-        int id = e.getEntityId();
+        int id = e.getId();
         float health = e.getHealth();
         float scale = HpUtil.getScale(e.isBaby());
         int y = -HpUtil.getShowY(e.getHeight(), e.isBaby());
@@ -44,7 +44,7 @@ public class HpRenderer {
         }
         long time = world.getTime();
         boolean isFriend = !(e instanceof HostileEntity)
-                && !HpUtil.isAttacker(id, camera.getEntityId(), time)
+                && !HpUtil.isAttacker(id, camera.getId(), time)
                 || e.isTeammate(camera);
         int color = isFriend ? XHP.XOption.friendColor : XHP.XOption.mobColor;
         // 矩阵操作
@@ -52,9 +52,9 @@ public class HpRenderer {
         // 缩小倍数
         matrixStack.scale(scale, scale, scale);
         // 始终正对玩家
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-camera.yaw));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-camera.getYaw()));
         // 翻转
-        matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
         if (XHP.XOption.hp) {
             y -= drawText(matrixStack, client, y, color, String.format("%.1f", health));
@@ -65,7 +65,7 @@ public class HpRenderer {
                 if (time - d.time > 20) {
                     return;
                 }
-                DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
+                DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
                         d.x, -d.y, d.rgb);
             });
         }
@@ -107,7 +107,7 @@ public class HpRenderer {
     private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, String string) {
         matrixStack.push();
         matrixStack.scale(0.5F, 0.5F, 0.5F);
-        DrawableHelper.drawCenteredString(matrixStack, client.textRenderer, string, 0, y * 2, color);
+        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, string, 0, y * 2, color);
         matrixStack.pop();
         return client.textRenderer.fontHeight;
     }

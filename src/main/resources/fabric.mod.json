@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "xhp",
-  "version": "1.0.7",
+  "version": "1.0.8",
 
   "name": "xhp",
   "description": "HP展示\n(show HP)",
@@ -30,7 +30,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.16.x"
+    "minecraft": ["1.16.X","1.17.X"]
   },
   "recommends": {
     "modmenu": "*"

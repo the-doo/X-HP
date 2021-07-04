@@ -32,14 +32,14 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(at = @At(value = "TAIL"), method = "damage")
     private void setDamageT(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
         if (XHP.XOption.damage && !world.isClient() && this.lastDamageTaken > 0) {
-            HpUtil.set(getEntityId(), getWidth(), (float) (getHeight() - getHeightOffset()), source.getAttacker(), this.lastDamageTaken, this.lastDamageTime);
+            HpUtil.set(getId(), getWidth(), (float) (getHeight() - getHeightOffset()), source.getAttacker(), this.lastDamageTaken, this.lastDamageTime);
         }
     }
 
     @Inject(at = @At(value = "HEAD"), method = "tick")
     private void tickH(CallbackInfo info) {
         if (XHP.XOption.damage && !world.isClient() && EntityPose.DYING.equals(this.getPose())) {
-            HpUtil.remove(getEntityId());
+            HpUtil.remove(getId());
         }
     }
 }
