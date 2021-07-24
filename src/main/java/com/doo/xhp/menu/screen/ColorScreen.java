@@ -81,7 +81,7 @@ public class ColorScreen extends Screen {
     private void close() {
         if (client != null) {
             setter.apply(getValue());
-            client.openScreen(pre);
+            client.setScreen(pre);
         }
     }
 

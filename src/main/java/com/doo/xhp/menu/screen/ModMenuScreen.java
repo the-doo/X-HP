@@ -71,7 +71,7 @@ public class ModMenuScreen extends Screen {
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.friendColor = v, XHP.XOption.friendColor, INSTANCE));
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.friendColor = v, XHP.XOption.friendColor, INSTANCE));
                 }
             });
         }
@@ -82,7 +82,7 @@ public class ModMenuScreen extends Screen {
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.mobColor = v, XHP.XOption.mobColor, INSTANCE));
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.mobColor = v, XHP.XOption.mobColor, INSTANCE));
                 }
             });
         }
@@ -93,7 +93,7 @@ public class ModMenuScreen extends Screen {
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.damageColor = v, XHP.XOption.damageColor, INSTANCE));
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.damageColor = v, XHP.XOption.damageColor, INSTANCE));
                 }
             });
         }
@@ -104,7 +104,7 @@ public class ModMenuScreen extends Screen {
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.openScreen(new ColorScreen(v -> XHP.XOption.criticDamageColor = v, XHP.XOption.criticDamageColor, INSTANCE));
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.criticDamageColor = v, XHP.XOption.criticDamageColor, INSTANCE));
                 }
             });
         }
