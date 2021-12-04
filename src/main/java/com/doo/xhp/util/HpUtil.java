@@ -76,22 +76,7 @@ public abstract class HpUtil {
         return XHP.XOption.scale * (isBaby ? 1 : 2);
     }
 
-    public static class DamageTaken {
+    public record DamageTaken(int attackerId, int rgb, float damage, long time, int x, int y) {
 
-        public final int attackerId;
-        public final float damage;
-        public final int rgb;
-        public final long time;
-        public final int x;
-        public final int y;
-
-        private DamageTaken(int attackerId, int rgb, float damage, long time, int x, int y) {
-            this.attackerId = attackerId;
-            this.damage = damage;
-            this.rgb = rgb;
-            this.time = time;
-            this.x = x;
-            this.y = y;
-        }
     }
 }

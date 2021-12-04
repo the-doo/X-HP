@@ -5,7 +5,6 @@ import com.doo.xhp.util.HpUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +16,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -62,29 +62,31 @@ public class HpRenderer {
         // 画伤害
         if (XHP.XOption.damage) {
             HpUtil.get(id).forEach(d -> {
-                if (time - d.time > 20) {
+                if (time - d.time() > 20) {
                     return;
                 }
-                DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, String.format("%.1f", d.damage),
-                        d.x, -d.y, d.rgb);
+                DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, String.format("%.1f", d.damage()),
+                        d.x(), -d.y(), d.rgb());
             });
         }
         // 画图片
         if (XHP.XOption.visualization) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
             RenderSystem.enableDepthTest();
+            RenderSystem.enableBlend();
+            RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE,
+                    GL11.GL_ZERO);
             switch (XHP.XOption.style) {
                 case BAR:
                     y -= drawBar(matrixStack, y, color, healScale);
                     break;
                 case ICON:
-                    y -= drawIcon(matrixStack, client, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
+                    y -= drawIcon(matrixStack, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
                     break;
                 case FENCE:
                     y -= drawFence(matrixStack, client, y, color, healScale);
                 default:
             }
-            RenderSystem.disableDepthTest();
         }
         // 画名字
         if (XHP.XOption.name) {
@@ -116,26 +118,24 @@ public class HpRenderer {
      * 画图标
      *
      * @param matrixStack 矩阵
-     * @param client      客户端
      * @param y           坐标y
      * @param texture     需要画的icon
      * @param healScale   比例
      * @return height
      */
-    private static int drawIcon(MatrixStack matrixStack, MinecraftClient client, int y, Identifier texture, float healScale) {
+    private static int drawIcon(MatrixStack matrixStack, int y, Identifier texture, float healScale) {
         matrixStack.push();
         y -= 2;
         int x = -HpUtil.HEALTH / 2;
         int healWidth = (int) (healScale * HpUtil.HEALTH);
-        TextureManager textureManager = client.getTextureManager();
         // 空血槽
         if (healWidth < HpUtil.HEALTH) {
-            textureManager.bindTexture(EMPTY_HEART_ID);
+            RenderSystem.setShaderTexture(0, EMPTY_HEART_ID);
             DrawableHelper.drawTexture(matrixStack, x + healWidth, y, healWidth, 0,
                     HpUtil.HEALTH - healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
         }
         // 血槽
-        textureManager.bindTexture(texture);
+        RenderSystem.setShaderTexture(0, texture);
         DrawableHelper.drawTexture(matrixStack, x, y, 0, 0,
                 healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
         matrixStack.pop();
