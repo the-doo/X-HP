@@ -13,6 +13,7 @@
     "xhp.menu.option.friend_color": "Friend Color",
     "xhp.menu.option.damage_color": "Damage Font Color",
     "xhp.menu.option.critic_damage_color": "Critic Damage Font Color",
+    "xhp.menu.option.ignore_armor_stand_entity": "Ignore Show Armor Stand Entity HP",
 
     "xhp.menu.color.red": "Red: %d",
     "xhp.menu.color.green": "Green: %d",

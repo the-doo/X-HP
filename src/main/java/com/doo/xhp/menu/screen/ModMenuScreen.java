@@ -110,6 +110,9 @@ public class ModMenuScreen extends Screen {
         }
     };
 
+    private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.hp",
+            o -> XHP.XOption.ignoreArmorStandEntity, (g, o, v) -> XHP.XOption.ignoreArmorStandEntity = v);
+
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
     private ButtonListWidget list;
@@ -124,7 +127,7 @@ public class ModMenuScreen extends Screen {
     protected void init() {
         Option[] options = {
                 NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
-                STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
+                STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         // 显示基础高度

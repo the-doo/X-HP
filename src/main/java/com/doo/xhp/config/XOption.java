@@ -96,4 +96,9 @@ public class XOption {
      * 基础高度
      */
     public int height = 0;
+
+    /**
+     *  忽略盔甲架
+     */
+    public boolean ignoreArmorStandEntity = true;
 }

@@ -8,7 +8,9 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -34,6 +36,10 @@ public class HpRenderer {
         if (world == null) {
             return;
         }
+        // todo 待改为过滤列表
+        if (e instanceof ArmorStandEntity && XHP.XOption.ignoreArmorStandEntity) {
+            return;
+        }
         // 基本参数
         int id = e.getId();
         float health = e.getHealth();
@@ -43,7 +49,8 @@ public class HpRenderer {
             y -= 8;
         }
         long time = world.getTime();
-        boolean isFriend = !(e instanceof HostileEntity)
+        // 判断 --- !(敌对/史莱姆/)
+        boolean isFriend = !(e instanceof HostileEntity || e instanceof  SlimeEntity)
                 && !HpUtil.isAttacker(id, camera.getId(), time)
                 || e.isTeammate(camera);
         int color = isFriend ? XHP.XOption.friendColor : XHP.XOption.mobColor;

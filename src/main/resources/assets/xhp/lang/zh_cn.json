@@ -13,6 +13,7 @@
     "xhp.menu.option.friend_color": "中立血条颜色",
     "xhp.menu.option.damage_color": "伤害颜色",
     "xhp.menu.option.critic_damage_color": "暴击伤害颜色",
+    "xhp.menu.option.ignore_armor_stand_entity": "忽略显示盔甲架HP",
 
     "xhp.menu.color.red": "红: %d",
     "xhp.menu.color.green": "绿: %d",
