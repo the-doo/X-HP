@@ -7,10 +7,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.SlimeEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -40,6 +41,7 @@ public class HpRenderer {
         if (e instanceof ArmorStandEntity && XHP.XOption.ignoreArmorStandEntity) {
             return;
         }
+        boolean isDead = EntityPose.DYING.equals(e.getPose());
         // 基本参数
         int id = e.getId();
         float health = e.getHealth();
@@ -50,9 +52,7 @@ public class HpRenderer {
         }
         long time = world.getTime();
         // 判断 --- !(敌对/史莱姆/)
-        boolean isFriend = !(e instanceof HostileEntity || e instanceof  SlimeEntity)
-                && !HpUtil.isAttacker(id, camera.getId(), time)
-                || e.isTeammate(camera);
+        boolean isFriend = isFriend(e, camera, time);
         int color = isFriend ? XHP.XOption.friendColor : XHP.XOption.mobColor;
         // 矩阵操作
         matrixStack.push();
@@ -63,7 +63,7 @@ public class HpRenderer {
         // 翻转
         matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
         // 画生命值
-        if (XHP.XOption.hp) {
+        if (XHP.XOption.hp && !isDead) {
             y -= drawText(matrixStack, client, y, color, String.format("%.1f", health));
         }
         // 画伤害
@@ -77,7 +77,7 @@ public class HpRenderer {
             });
         }
         // 画图片
-        if (XHP.XOption.visualization) {
+        if (XHP.XOption.visualization && !isDead) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
@@ -101,6 +101,23 @@ public class HpRenderer {
         }
         // 矩阵操作退栈
         matrixStack.pop();
+    }
+
+    /**
+     * 如果不是敌对实体，且目标人物不是玩家，且玩家没有伤害过
+     *
+     * @param e      渲染实体
+     * @param camera 当前摄像机对象
+     * @param time   渲染的时间
+     * @return 是否
+     */
+    private static boolean isFriend(LivingEntity e, Entity camera, long time) {
+        // 被攻击过
+        if (HpUtil.isAttacker(e.getId(), camera.getId(), time)) {
+            return false;
+        }
+        // 如果不是mob or monster
+        return !(e instanceof Monster || e instanceof MobEntity);
     }
 
     /**
