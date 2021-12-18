@@ -9,10 +9,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class NetworkUtil {
@@ -26,8 +24,7 @@ public abstract class NetworkUtil {
             buf.writeInt(id);
             buf.writeFloat(damage);
             buf.writeBoolean(HpUtil.isCritic(attacker, damage));
-            buf.writeLong(NumberUtils.LONG_ZERO);
-            Optional.ofNullable(attacker).ifPresent(e -> buf.writeLong(e.getId()));
+            buf.writeInt(attacker == null ? 0 : attacker.getId());
 
             players.forEach(p -> ServerPlayNetworking.send(p, XHP.ON_DAMAGE_PACKET, buf));
         };
@@ -48,7 +45,7 @@ public abstract class NetworkUtil {
             int id = buf.readInt();
             float damage = buf.readFloat();
             boolean isCritic = buf.readBoolean();
-            int attacker = (int) buf.readLong();
+            int attacker = buf.readInt();
 
             // 获取当前id的对象
             Entity entity = world.getEntityById(id);

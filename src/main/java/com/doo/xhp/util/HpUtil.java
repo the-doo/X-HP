@@ -36,6 +36,7 @@ public abstract class HpUtil {
         int y = getShowY(height, false);
         x = random.nextBoolean() ? -x : x;
         y = random.nextInt(y / 2) + y / 4;
+
         // 添加队列
         if (!LAST_DAMAGE_TAKEN_MAP.containsKey(id)) {
             LAST_DAMAGE_TAKEN_MAP.put(id, new ConcurrentLinkedDeque<>());
