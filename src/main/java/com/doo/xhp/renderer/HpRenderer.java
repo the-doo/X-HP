@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.WitchEntity;
@@ -117,7 +118,7 @@ public class HpRenderer {
             return false;
         }
         // 如果不是mob or monster
-        return !(e instanceof Monster || e instanceof MobEntity);
+        return !(e instanceof Monster);
     }
 
     /**
