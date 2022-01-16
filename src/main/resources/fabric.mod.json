@@ -9,8 +9,8 @@
     "doo"
   ],
   "contact": {
-    "homepage": "",
-    "sources": ""
+    "sources": "https://github.com/the-doo/x-hp",
+    "issues": "https://github.com/the-doo/x-hp/issues"
   },
 
   "license": "CC0-1.0",
