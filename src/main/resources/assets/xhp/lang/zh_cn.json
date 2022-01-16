@@ -1,4 +1,10 @@
 {
+    "xhp.menu.option.enabled": "启用",
+    "xhp.menu.option.trigger": "触发方式",
+    "xhp.menu.option.tips": "开启提示",
+    "xhp.menu.option.tips_color": "提示颜色",
+    "xhp.menu.option.tips_x": "提示坐标x: %d",
+    "xhp.menu.option.tips_y": "提示坐标y: %d",
     "xhp.menu.option.name": "显示名字",
     "xhp.menu.option.hp": "显示HP",
     "xhp.menu.option.visualization": "显示可视化",
@@ -21,5 +27,8 @@
 
     "xhp.menu.style.bar": "血条样式",
     "xhp.menu.style.icon": "图标样式",
-    "xhp.menu.style.fence": "栅栏样式"
+    "xhp.menu.style.fence": "栅栏样式",
+
+    "xhp.menu.trigger.focus": "聚焦时",
+    "xhp.menu.trigger.distance": "按距离"
 }

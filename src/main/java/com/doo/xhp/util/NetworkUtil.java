@@ -20,6 +20,10 @@ public abstract class NetworkUtil {
      */
     public static Consumer<Collection<ServerPlayerEntity>> packetSender(int id, float damage, Entity attacker) {
         return players -> {
+            if (players == null || players.isEmpty()) {
+                return;
+            }
+
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeInt(id);
             buf.writeFloat(damage);

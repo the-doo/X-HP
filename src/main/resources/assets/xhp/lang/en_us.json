@@ -1,4 +1,10 @@
 {
+    "xhp.menu.option.enabled": "Enabled",
+    "xhp.menu.option.trigger": "Trigger",
+    "xhp.menu.option.tips": "Enabled Tips",
+    "xhp.menu.option.tips_color": "Tips Color",
+    "xhp.menu.option.tips_x": "Tips Location X: %d",
+    "xhp.menu.option.tips_y": "Tips Location Y: %d",
     "xhp.menu.option.name": "Show Name",
     "xhp.menu.option.hp": "Show HP",
     "xhp.menu.option.visualization": "Show Visualization",
@@ -21,6 +27,9 @@
 
     "xhp.menu.style.bar": "Bar Style",
     "xhp.menu.style.icon": "Icon Style",
-    "xhp.menu.style.fence": "Fence Style"
+    "xhp.menu.style.fence": "Fence Style",
+
+    "xhp.menu.trigger.focus": "On Focus",
+    "xhp.menu.trigger.distance": "In Around"
 
 }
