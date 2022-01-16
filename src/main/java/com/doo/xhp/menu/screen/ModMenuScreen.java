@@ -3,6 +3,7 @@ package com.doo.xhp.menu.screen;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.Config;
 import com.doo.xhp.config.XOption;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonListWidget;
@@ -46,6 +47,16 @@ public class ModMenuScreen extends Screen {
             });
         }
     };
+
+    private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getScaledWidth(), 1,
+            v -> (double) XHP.XOption.tipsLocation[0],
+            (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.tips_x", XHP.XOption.tipsLocation[0]));
+
+    private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getScaledHeight(), 1,
+            v -> (double) XHP.XOption.tipsLocation[1],
+            (o, d) -> XHP.XOption.tipsLocation[1] = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.tips_y", XHP.XOption.tipsLocation[1]));
 
     private static final Option NAME = CyclingOption.create(
             "xhp.menu.option.name",
@@ -152,7 +163,7 @@ public class ModMenuScreen extends Screen {
     @Override
     protected void init() {
         Option[] options = {
-                ENABLED, TRIGGER, TIPS, TIPS_COLOR,
+                ENABLED, TRIGGER, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
                 NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
                 STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
         };

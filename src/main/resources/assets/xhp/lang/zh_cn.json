@@ -3,6 +3,8 @@
     "xhp.menu.option.trigger": "触发方式",
     "xhp.menu.option.tips": "开启提示",
     "xhp.menu.option.tips_color": "提示颜色",
+    "xhp.menu.option.tips_x": "提示坐标x: %d",
+    "xhp.menu.option.tips_y": "提示坐标y: %d",
     "xhp.menu.option.name": "显示名字",
     "xhp.menu.option.hp": "显示HP",
     "xhp.menu.option.visualization": "显示可视化",

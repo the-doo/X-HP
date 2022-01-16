@@ -1,6 +1,5 @@
 package com.doo.xhp.mixin;
 
-import com.doo.xhp.config.Config;
 import com.doo.xhp.renderer.HpRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,9 +19,6 @@ public abstract class LivingEntityRenderMixin {
     @Inject(at = @At(value = "HEAD"), method = "render*")
     private void renderR(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack,
                          VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
-        if (livingEntity.getClass().getName().contains("BaseCreeper")) {
-            Config.LOGGER.fatal(livingEntity.getName());
-        }
         if (HpRenderer.canRender(livingEntity)) {
             HpRenderer.render(matrixStack, livingEntity);
         }
