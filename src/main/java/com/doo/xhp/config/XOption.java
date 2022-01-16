@@ -8,6 +8,49 @@ import java.awt.*;
 public class XOption {
 
     /**
+     * enabled
+     */
+    public boolean enabled = true;
+
+    /**
+     * trigger
+     */
+    public TriggerEnum trigger = TriggerEnum.FOCUS;
+
+    /**
+     * trigger
+     */
+    public enum TriggerEnum {
+        FOCUS("xhp.menu.trigger.focus"),
+        DISTANCE("xhp.menu.trigger.distance");
+
+        public final String key;
+
+        TriggerEnum(String key) {
+            this.key = key;
+        }
+
+        public static TriggerEnum get(Integer index) {
+            return values()[index % values().length];
+        }
+    }
+
+    /**
+     * tips
+     */
+    public boolean tips = true;
+
+    /**
+     * tips color
+     */
+    public int tipsColor = Color.BLUE.getRGB();
+
+    /**
+     * tips location x, y
+     */
+    public int[] tipsLocation = {0, 0};
+
+    /**
      * 名字
      */
     public boolean name = true;
@@ -33,8 +76,7 @@ public class XOption {
     public enum StyleEnum {
         BAR("xhp.menu.style.bar"),
         ICON("xhp.menu.style.icon"),
-        FENCE("xhp.menu.style.fence")
-        ;
+        FENCE("xhp.menu.style.fence");
 
         public final String key;
 
@@ -98,7 +140,7 @@ public class XOption {
     public int height = 0;
 
     /**
-     *  忽略盔甲架
+     * 忽略盔甲架
      */
     public boolean ignoreArmorStandEntity = true;
 }

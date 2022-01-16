@@ -1,31 +1,30 @@
 package com.doo.xhp.mixin;
 
-import com.doo.xhp.XHP;
+import com.doo.xhp.config.Config;
 import com.doo.xhp.renderer.HpRenderer;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRenderMixin {
 
-    @Inject(at = @At(value = "TAIL"), method = "render")
+    @Inject(at = @At(value = "HEAD"), method = "render*")
     private void renderR(LivingEntity livingEntity, float f, float g, MatrixStack matrixStack,
                          VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
-        Entity camera = MinecraftClient.getInstance().cameraEntity;
-        double distance;
-        boolean canRender = camera != null && livingEntity.canSee(camera)
-                && (distance = camera.getPos().distanceTo(livingEntity.getPos())) > 1
-                && distance < XHP.XOption.distance;
-        if (canRender) {
-            HpRenderer.render(matrixStack, livingEntity, camera);
+        if (livingEntity.getClass().getName().contains("BaseCreeper")) {
+            Config.LOGGER.fatal(livingEntity.getName());
+        }
+        if (HpRenderer.canRender(livingEntity)) {
+            HpRenderer.render(matrixStack, livingEntity);
         }
     }
 }

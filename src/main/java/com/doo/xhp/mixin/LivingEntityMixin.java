@@ -2,34 +2,26 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.XHP;
 import com.doo.xhp.util.NetworkUtil;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin {
 
-    @Shadow
-    protected float lastDamageTaken;
-
-    public LivingEntityMixin(EntityType<?> type, World world) {
-        super(type, world);
-    }
-
-    @Inject(at = @At(value = "TAIL"), method = "damage")
-    private void setDamageT(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
-        float damage = this.lastDamageTaken;
-        if (XHP.XOption.damage && damage > 0) {
-            NetworkUtil.packetSender(getId(), damage, source.getAttacker()).accept(PlayerLookup.tracking((ServerWorld) world, getBlockPos()));
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;setHealth(F)V"), method = "applyDamage")
+    private void sendDamagePacket(DamageSource source, float amount, CallbackInfo ci) {
+        if (XHP.XOption.damage) {
+            LivingEntity entity = (LivingEntity) (Object) this;
+            NetworkUtil.packetSender(entity.getId(), amount, source.getAttacker())
+                    .accept(entity.getWorld().getEntitiesByClass(
+                            ServerPlayerEntity.class,
+                            entity.getBoundingBox().expand(XHP.XOption.distance),
+                            l -> l.canSee(entity)));
         }
     }
 }

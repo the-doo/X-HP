@@ -21,6 +21,32 @@ import net.minecraft.text.TranslatableText;
  */
 public class ModMenuScreen extends Screen {
 
+    private static final Option ENABLED = CyclingOption.create(
+            "xhp.menu.option.enabled",
+            o -> XHP.XOption.enabled,
+            (g, o, v) -> XHP.XOption.enabled = v);
+
+    private static final Option TRIGGER = CyclingOption.create(
+            "xhp.menu.option.trigger", XOption.TriggerEnum.values(),
+            v -> new TranslatableText(v.key),
+            o -> XHP.XOption.trigger, (g, o, v) -> XHP.XOption.trigger = v);
+
+    private static final Option TIPS = CyclingOption.create(
+            "xhp.menu.option.tips",
+            o -> XHP.XOption.enabled,
+            (g, o, v) -> XHP.XOption.enabled = v);
+
+    private static final Option TIPS_COLOR = new Option("xhp.menu.option.tips_color") {
+        @Override
+        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.tipsColor = v, XHP.XOption.tipsColor, INSTANCE));
+                }
+            });
+        }
+    };
+
     private static final Option NAME = CyclingOption.create(
             "xhp.menu.option.name",
             o -> XHP.XOption.name,
@@ -52,7 +78,7 @@ public class ModMenuScreen extends Screen {
 
     private static final Option STYLE = CyclingOption.create(
             "xhp.menu.option.style", XOption.StyleEnum.values(),
-            v -> new TranslatableText(XHP.XOption.style.key),
+            v -> new TranslatableText(v.key),
             o -> XHP.XOption.style,
             (g, o, v) -> XHP.XOption.style = v);
 
@@ -110,7 +136,7 @@ public class ModMenuScreen extends Screen {
         }
     };
 
-    private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.hp",
+    private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.ignore_armor_stand_entity",
             o -> XHP.XOption.ignoreArmorStandEntity, (g, o, v) -> XHP.XOption.ignoreArmorStandEntity = v);
 
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
@@ -126,6 +152,7 @@ public class ModMenuScreen extends Screen {
     @Override
     protected void init() {
         Option[] options = {
+                ENABLED, TRIGGER, TIPS, TIPS_COLOR,
                 NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
                 STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
         };

@@ -55,7 +55,7 @@ public class Config {
         } catch (NoSuchFileException ignored) {
             // 文件不存在（file not found）
         } catch (Exception e) {
-            LOGGER.log(Level.WARN, "文件读取失败(read file error) : " + path.toString(), e);
+            LOGGER.log(Level.WARN, "文件读取失败(read file error) : {}",  path, e);
         }
         return defaultValue;
     }
@@ -123,8 +123,7 @@ public class Config {
             // 写入
             open.write(ByteBuffer.wrap(json.toJson(read).getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
-            LOGGER.log(Level.WARN, "文件写入失败(write file error) : " +
-                    path.toString() + ", " + value.toString(), e);
+            LOGGER.log(Level.WARN, "文件写入失败(write file error) : {}, {}", path, value, e);
         } finally {
             unlock(lock);
         }
