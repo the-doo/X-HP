@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "x-hp",
-  "version": "1.18-1",
+  "version": "1.17-1",
 
   "name": "X-HP",
   "description": "HP展示\n(show HP)",
@@ -28,9 +28,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": ">=0.12.8",
     "fabric": "*",
-    "minecraft": ["1.18.X"]
+    "minecraft": ["1.17.X"]
   },
   "recommends": {
     "modmenu": "*"

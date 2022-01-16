@@ -18,7 +18,7 @@ public abstract class LivingEntityMixin {
         if (XHP.XOption.damage) {
             LivingEntity entity = (LivingEntity) (Object) this;
             NetworkUtil.packetSender(entity.getId(), amount, source.getAttacker())
-                    .accept(entity.getWorld().getEntitiesByClass(
+                    .accept(entity.world.getEntitiesByClass(
                             ServerPlayerEntity.class,
                             entity.getBoundingBox().expand(XHP.XOption.distance),
                             l -> l.canSee(entity)));
