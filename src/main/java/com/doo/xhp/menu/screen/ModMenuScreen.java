@@ -125,6 +125,17 @@ public class ModMenuScreen extends Screen {
         }
     };
 
+    private static final Option EMPTY_COLOR = new Option("xhp.menu.option.empty_color") {
+        @Override
+        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
+                if (INSTANCE.client != null) {
+                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.emptyColor = v, XHP.XOption.emptyColor, INSTANCE));
+                }
+            });
+        }
+    };
+
     private static final Option DAMAGE_COLOR = new Option("xhp.menu.option.damage_color") {
         @Override
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
@@ -165,7 +176,7 @@ public class ModMenuScreen extends Screen {
         Option[] options = {
                 ENABLED, TRIGGER, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
                 NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
-                STYLE, FRIEND_COLOR, MOB_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
+                STYLE, FRIEND_COLOR, MOB_COLOR, EMPTY_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         // 显示基础高度

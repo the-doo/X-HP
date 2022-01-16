@@ -100,6 +100,11 @@ public class XOption {
     public Integer mobColor = Color.RED.getRGB();
 
     /**
+     * EMPTY COLOR
+     */
+    public Integer emptyColor = Color.GRAY.getRGB();
+
+    /**
      * 伤害颜色
      */
     public Integer damageColor = Color.RED.getRGB();

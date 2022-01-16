@@ -16,6 +16,7 @@
     "xhp.menu.option.bar_height": "Bar Height: %d",
     "xhp.menu.option.style": "Choose Style",
     "xhp.menu.option.mob_color": "Mob Color",
+    "xhp.menu.option.empty_color": "Empty HP Color",
     "xhp.menu.option.friend_color": "Friend Color",
     "xhp.menu.option.damage_color": "Damage Font Color",
     "xhp.menu.option.critic_damage_color": "Critic Damage Font Color",

@@ -26,7 +26,6 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.function.Function;
 
@@ -35,8 +34,6 @@ public class HpRenderer {
     private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
     private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
     private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
-
-    private static final int EMPTY_COLOR = Color.DARK_GRAY.getRGB();
 
     private static final DecimalFormat FORMATTER = new DecimalFormat("#.#");
 
@@ -250,7 +247,7 @@ public class HpRenderer {
         int y2 = y - XHP.XOption.barHeight;
         DrawableHelper.fill(matrixStack, x1, (int) (y * 3.4), x2, (int) (y2 * 3.4), color);
         if (healLen < len) {
-            DrawableHelper.fill(matrixStack, x2, (int) (y * 3.4), x1 + len, (int) (y2 * 3.4), EMPTY_COLOR);
+            DrawableHelper.fill(matrixStack, x2, (int) (y * 3.4), x1 + len, (int) (y2 * 3.4), XHP.XOption.emptyColor);
         }
 
         matrixStack.pop();
@@ -276,7 +273,7 @@ public class HpRenderer {
         LiteralText heal = new LiteralText(fenceStr.substring(0, len));
         LiteralText empty = new LiteralText(fenceStr.substring(len));
         heal.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)));
-        empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(EMPTY_COLOR)));
+        empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(XHP.XOption.emptyColor)));
 
         DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, heal.append(empty), 0, (int) (y * 3.5), color);
 
