@@ -17,6 +17,7 @@
     "xhp.menu.option.style": "样式选择",
     "xhp.menu.option.mob_color": "敌人血条颜色",
     "xhp.menu.option.friend_color": "中立血条颜色",
+    "xhp.menu.option.empty_color": "空血条颜色",
     "xhp.menu.option.damage_color": "伤害颜色",
     "xhp.menu.option.critic_damage_color": "暴击伤害颜色",
     "xhp.menu.option.ignore_armor_stand_entity": "忽略显示盔甲架HP",
