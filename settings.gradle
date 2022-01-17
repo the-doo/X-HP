@@ -4,9 +4,7 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-        maven {
-            url = 'https://maven.terraformersmc.com/releases'
-        }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
