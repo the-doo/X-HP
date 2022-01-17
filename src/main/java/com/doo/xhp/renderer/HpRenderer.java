@@ -31,6 +31,10 @@ import java.util.function.Function;
 
 public class HpRenderer {
 
+    private HpRenderer() {
+
+    }
+
     private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
     private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
     private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
@@ -140,15 +144,9 @@ public class HpRenderer {
             RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
             switch (XHP.XOption.style) {
-                case BAR:
-                    y -= drawBar(matrixStack, y, color, healScale);
-                    break;
-                case ICON:
-                    y -= drawIcon(matrixStack, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
-                    break;
-                case FENCE:
-                    y -= drawFence(matrixStack, client, y, color, healScale);
-                default:
+                case BAR -> y -= drawBar(matrixStack, y, color, healScale);
+                case ICON -> y -= drawIcon(matrixStack, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
+                case FENCE -> y -= drawFence(matrixStack, client, y, color, healScale);
             }
         }
         // 画名字
