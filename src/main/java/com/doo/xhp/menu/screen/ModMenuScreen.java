@@ -34,8 +34,8 @@ public class ModMenuScreen extends Screen {
 
     private static final Option TIPS = CyclingOption.create(
             "xhp.menu.option.tips",
-            o -> XHP.XOption.enabled,
-            (g, o, v) -> XHP.XOption.enabled = v);
+            o -> XHP.XOption.tips,
+            (g, o, v) -> XHP.XOption.tips = v);
 
     private static final Option TIPS_COLOR = new Option("xhp.menu.option.tips_color") {
         @Override
