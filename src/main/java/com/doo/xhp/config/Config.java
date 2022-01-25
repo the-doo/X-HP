@@ -55,7 +55,7 @@ public class Config {
         } catch (NoSuchFileException ignored) {
             // 文件不存在（file not found）
         } catch (Exception e) {
-            LOGGER.log(Level.WARN, "文件读取失败(read file error) : {}",  path, e);
+            LOGGER.log(Level.WARN, "文件读取失败(read file error) : {}", path, e);
         }
         return defaultValue;
     }
