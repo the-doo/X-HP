@@ -1,5 +1,6 @@
 {
     "xhp.menu.option.enabled": "启用",
+    "xhp.menu.option.sync_with_hud": "跟随HUD",
     "xhp.menu.option.trigger": "触发方式",
     "xhp.menu.option.tips": "开启提示",
     "xhp.menu.option.tips_color": "提示颜色",

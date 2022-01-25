@@ -13,6 +13,11 @@ public class XOption {
     public boolean enabled = true;
 
     /**
+     * sync with hud
+     */
+    public boolean syncWithHud = true;
+
+    /**
      * trigger
      */
     public TriggerEnum trigger = TriggerEnum.FOCUS;

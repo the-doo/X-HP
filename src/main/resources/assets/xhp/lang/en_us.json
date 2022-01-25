@@ -1,5 +1,6 @@
 {
     "xhp.menu.option.enabled": "Enabled",
+    "xhp.menu.option.sync_with_hud": "Sync With HUD",
     "xhp.menu.option.trigger": "Trigger",
     "xhp.menu.option.tips": "Enabled Tips",
     "xhp.menu.option.tips_color": "Tips Color",

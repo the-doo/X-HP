@@ -46,6 +46,11 @@ public class HpRenderer {
             return false;
         }
 
+        // option to if hidden hud
+        if (XHP.XOption.syncWithHud && MinecraftClient.getInstance().options.hudHidden) {
+            return false;
+        }
+
         Entity camera = MinecraftClient.getInstance().cameraEntity;
         if (camera == null) {
             return false;
