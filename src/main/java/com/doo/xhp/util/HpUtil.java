@@ -184,6 +184,7 @@ public abstract class HpUtil {
         if (result != null && result.getEntity() instanceof LivingEntity) {
             target = (LivingEntity) result.getEntity();
             focusTarget = target;
+            focusTime = entity.age;
         }
 
         return target;
