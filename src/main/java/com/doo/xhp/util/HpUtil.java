@@ -5,10 +5,15 @@ import com.doo.xhp.config.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.Level;
 
 import java.util.*;
@@ -124,5 +129,63 @@ public abstract class HpUtil {
                 player.fallDistance > 0.0f && !player.isOnGround() &&
                 !player.isClimbing() && !player.isTouchingWater() &&
                 !player.hasStatusEffect(StatusEffects.BLINDNESS) && !player.hasVehicle();
+    }
+
+
+    public static LivingEntity focusTarget(Entity entity) {
+        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
+        Vec3d v1 = entity.getCameraPosVec(0);
+        Vec3d v2 = entity.getRotationVec(0);
+        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
+
+        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
+
+        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
+
+        return HpUtil.focusResult(entity, result);
+    }
+
+
+    /**
+     * log Player
+     */
+    private static Entity looker = null;
+
+    /**
+     * log time
+     */
+    private static long focusTime = -1;
+
+    /**
+     * log target
+     */
+    private static LivingEntity focusTarget = null;
+
+    /**
+     * Check focus result
+     */
+    public static LivingEntity focusResult(Entity entity, EntityHitResult result) {
+        // entity maybe change
+        if (entity != looker) {
+            looker = entity;
+            focusTime = -1;
+            focusTarget = null;
+        }
+
+        LivingEntity target = null;
+        // default prev target in 2s
+        if (entity.age - focusTime <= 40) {
+            target = focusTarget;
+        } else {
+            focusTarget = null;
+        }
+
+        // if hit result now
+        if (result != null && result.getEntity() instanceof LivingEntity) {
+            target = (LivingEntity) result.getEntity();
+            focusTarget = target;
+        }
+
+        return target;
     }
 }

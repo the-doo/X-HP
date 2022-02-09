@@ -13,15 +13,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
@@ -62,23 +58,10 @@ public class HpRenderer {
 
         // if FOCUS
         if (XHP.XOption.trigger == XOption.TriggerEnum.FOCUS) {
-            return focusTarget(camera) == entity;
+            return HpUtil.focusTarget(camera) == entity;
         }
 
         return true;
-    }
-
-    public static LivingEntity focusTarget(Entity entity) {
-        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
-        Vec3d v1 = entity.getCameraPosVec(0);
-        Vec3d v2 = entity.getRotationVec(0);
-        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
-
-        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
-
-        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
-
-        return result == null || !(result.getEntity() instanceof LivingEntity) ? null : (LivingEntity) result.getEntity();
     }
 
     public static void render(MatrixStack matrixStack, LivingEntity e) {
@@ -248,6 +231,7 @@ public class HpRenderer {
         int x1 = -(len / 2);
         int x2 = x1 + healLen;
         int y2 = y - XHP.XOption.barHeight;
+
         DrawableHelper.fill(matrixStack, x1, (int) (y * 3.4), x2, (int) (y2 * 3.4), color);
         if (healLen < len) {
             DrawableHelper.fill(matrixStack, x2, (int) (y * 3.4), x1 + len, (int) (y2 * 3.4), XHP.XOption.emptyColor);
