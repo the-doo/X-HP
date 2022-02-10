@@ -3,13 +3,11 @@ package com.doo.xhp.menu.screen;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.Config;
 import com.doo.xhp.config.XOption;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.CyclingOption;
 import net.minecraft.client.option.DoubleOption;
 import net.minecraft.client.option.GameOptions;
@@ -17,7 +15,6 @@ import net.minecraft.client.option.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * mod menu 配置界面
@@ -49,31 +46,17 @@ public class ModMenuScreen extends Screen {
             (o, d) -> XHP.XOption.focusDelay = d,
             (g, o) -> new TranslatableText("xhp.menu.option.focus_delay", XHP.XOption.focusDelay));
 
-    private static final Option TIPS = CyclingOption.create(
-            "xhp.menu.option.tips",
-            o -> XHP.XOption.tips,
-            (g, o, v) -> XHP.XOption.tips = v);
 
-    private static final Option TIPS_COLOR = new Option("xhp.menu.option.tips_color") {
+    private static final Option TIPS_SETTINGS = new Option("xhp.menu.option.tips_settings") {
         @Override
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.tipsColor = v, XHP.XOption.tipsColor, INSTANCE));
+                    INSTANCE.client.setScreen(TipsScreen.get(INSTANCE));
                 }
             });
         }
     };
-
-    private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getScaledWidth(), 1,
-            v -> (double) XHP.XOption.tipsLocation[0],
-            (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.tips_x", XHP.XOption.tipsLocation[0]));
-
-    private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getScaledHeight(), 1,
-            v -> (double) XHP.XOption.tipsLocation[1],
-            (o, d) -> XHP.XOption.tipsLocation[1] = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.tips_y", XHP.XOption.tipsLocation[1]));
 
     private static final Option NAME = CyclingOption.create(
             "xhp.menu.option.name",
@@ -178,24 +161,6 @@ public class ModMenuScreen extends Screen {
     private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.ignore_armor_stand_entity",
             o -> XHP.XOption.ignoreArmorStandEntity, (g, o, v) -> XHP.XOption.ignoreArmorStandEntity = v);
 
-    private static final Option TIPS_TEMPLATE = new Option("") {
-        @Override
-        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
-            if (INSTANCE.client == null) {
-                return null;
-            }
-
-            TextFieldWidget text = new TextFieldWidget(INSTANCE.client.textRenderer,
-                    x, y, width - 4, 20,
-                    new TranslatableText("xhp.menu.option.tips_temp"));
-
-            text.setChangedListener(v -> XHP.XOption.tipsTemplate = StringUtils.defaultIfEmpty(v, XOption.DEFAULT_TIPS_TEMP));
-            text.setSuggestion(XOption.DEFAULT_TIPS_TEMP);
-
-            return text;
-        }
-    };
-
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
     private ButtonListWidget list;
@@ -211,9 +176,10 @@ public class ModMenuScreen extends Screen {
         Option[] base = {
                 ENABLED, DISPLAY,
                 SYNC_WITH_HUD, SYNC_WITH_HIDE,
-                FOCUS_DELAY, NAME,
-                HP, VISUALIZATION,
-                DAMAGE, DISTANCE
+                FOCUS_DELAY, TIPS_SETTINGS,
+                NAME, HP,
+                VISUALIZATION, DAMAGE,
+                DISTANCE
         };
         Option[] icon = {
                 STYLE, HEIGHT,
@@ -223,9 +189,6 @@ public class ModMenuScreen extends Screen {
                 DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
         };
         Option[] other = {
-                TIPS, TIPS_COLOR,
-                TIPS_X, TIPS_Y,
-                TIPS_TEMPLATE,
                 IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
