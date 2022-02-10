@@ -27,7 +27,7 @@
     "xhp.menu.option.tips_x": "提示坐标x: %d",
     "xhp.menu.option.tips_y": "提示坐标y: %d",
     "xhp.menu.option.tips_temp": "提示模板",
-    "xhp.menu.option.tips_temp_desc": "说明",
+    "xhp.menu.option.tips_temp_desc": "比如",
     "xhp.menu.option.tips_temp_name": "生物名称",
     "xhp.menu.option.tips_temp_health": "生物当前血量",
     "xhp.menu.option.tips_temp_max_health": "生物最大血量",

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "x-hp",
-  "version": "1.18-4",
+  "version": "1.18-5",
 
   "name": "X-HP",
-  "description": "HP展示\n(show HP)",
+  "description": "HP展示\n(Show HP)",
   "authors": [
     "doo"
   ],

@@ -67,11 +67,12 @@ public class TipsScreen extends Screen {
             // tips
             List<OrderedText> tips = new ArrayList<>();
             tips.add(new TranslatableText("xhp.menu.option.tips_temp").asOrderedText());
-            tips.add(new TranslatableText("xhp.menu.option.tips_temp_desc").asOrderedText());
+            tips.add(new TranslatableText("xhp.menu.option.tips_temp_desc").append(":  ")
+                    .append(XOption.DEFAULT_TIPS_TEMP).asOrderedText());
             Arrays.stream(XOption.AttrKeyValue.values()).forEach(kv ->
-                    tips.add(new TranslatableText(kv.transactionKey).append(": ").append(kv.key).asOrderedText()));
+                    tips.add(new LiteralText(kv.key).append(": ").append(new TranslatableText(kv.transactionKey)).asOrderedText()));
 
-            TextFieldWidget text = new InputWidget(INSTANCE.client.textRenderer, x, y, width, 20, tips);
+            TextFieldWidget text = new InputWidget(INSTANCE.client.textRenderer, x + 2, y + 2, width - 4, 18, tips);
 
             text.setText(XHP.XOption.tipsTemplate);
             if (StringUtils.isEmpty(text.getText())) {
