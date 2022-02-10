@@ -3,7 +3,6 @@ package com.doo.xhp.menu.screen;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.Config;
 import com.doo.xhp.config.XOption;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonListWidget;
@@ -27,36 +26,37 @@ public class ModMenuScreen extends Screen {
             o -> XHP.XOption.enabled,
             (g, o, v) -> XHP.XOption.enabled = v);
 
-    private static final Option TRIGGER = CyclingOption.create(
-            "xhp.menu.option.trigger", XOption.TriggerEnum.values(),
+    private static final Option DISPLAY = CyclingOption.create(
+            "xhp.menu.option.display", XOption.Display.values(),
             v -> new TranslatableText(v.key),
-            o -> XHP.XOption.trigger, (g, o, v) -> XHP.XOption.trigger = v);
+            o -> XHP.XOption.display, (g, o, v) -> XHP.XOption.display = v);
 
-    private static final Option TIPS = CyclingOption.create(
-            "xhp.menu.option.tips",
-            o -> XHP.XOption.tips,
-            (g, o, v) -> XHP.XOption.tips = v);
+    private static final Option SYNC_WITH_HUD = CyclingOption.create(
+            "xhp.menu.option.sync_with_hud",
+            o -> XHP.XOption.syncWithHud,
+            (g, o, v) -> XHP.XOption.syncWithHud = v);
 
-    private static final Option TIPS_COLOR = new Option("xhp.menu.option.tips_color") {
+    private static final Option SYNC_WITH_HIDE = CyclingOption.create(
+            "xhp.menu.option.sync_with_hide",
+            o -> XHP.XOption.syncWithHud,
+            (g, o, v) -> XHP.XOption.syncWithHud = v);
+
+    private static final Option FOCUS_DELAY = new DoubleOption("xhp.menu.option.focus_delay", 0, 10, 0.1F,
+            v -> XHP.XOption.focusDelay,
+            (o, d) -> XHP.XOption.focusDelay = d,
+            (g, o) -> new TranslatableText("xhp.menu.option.focus_delay", XHP.XOption.focusDelay));
+
+
+    private static final Option TIPS_SETTINGS = new Option("xhp.menu.option.tips_settings") {
         @Override
         public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             return new ButtonWidget(x, y, width, 20, getDisplayPrefix(), b -> {
                 if (INSTANCE.client != null) {
-                    INSTANCE.client.setScreen(new ColorScreen(v -> XHP.XOption.tipsColor = v, XHP.XOption.tipsColor, INSTANCE));
+                    INSTANCE.client.setScreen(TipsScreen.get(INSTANCE));
                 }
             });
         }
     };
-
-    private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getScaledWidth(), 1,
-            v -> (double) XHP.XOption.tipsLocation[0],
-            (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.tips_x", XHP.XOption.tipsLocation[0]));
-
-    private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getScaledHeight(), 1,
-            v -> (double) XHP.XOption.tipsLocation[1],
-            (o, d) -> XHP.XOption.tipsLocation[1] = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.tips_y", XHP.XOption.tipsLocation[1]));
 
     private static final Option NAME = CyclingOption.create(
             "xhp.menu.option.name",
@@ -173,16 +173,31 @@ public class ModMenuScreen extends Screen {
 
     @Override
     protected void init() {
-        Option[] options = {
-                ENABLED, TRIGGER, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
-                NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
-                STYLE, FRIEND_COLOR, MOB_COLOR, EMPTY_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
+        Option[] base = {
+                ENABLED, DISPLAY,
+                SYNC_WITH_HUD, SYNC_WITH_HIDE,
+                FOCUS_DELAY, TIPS_SETTINGS,
+                NAME, HP,
+                VISUALIZATION, DAMAGE,
+                DISTANCE
+        };
+        Option[] icon = {
+                STYLE, HEIGHT,
+                BAR_LENGTH, BAR_HEIGHT,
+                SCALE, FRIEND_COLOR,
+                MOB_COLOR, EMPTY_COLOR,
+                DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
+        };
+        Option[] other = {
+                IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        // 显示基础高度
-        list.addAll(options);
+
+        list.addAll(base);
+        list.addAll(icon);
+        list.addAll(other);
         this.addSelectableChild(list);
-        // 返回按钮
+
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
                 ScreenTexts.BACK, b -> INSTANCE.close()));
     }

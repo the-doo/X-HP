@@ -13,20 +13,15 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-import java.text.DecimalFormat;
 import java.util.function.Function;
 
 public class HpRenderer {
@@ -39,10 +34,18 @@ public class HpRenderer {
     private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
     private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
 
-    private static final DecimalFormat FORMATTER = new DecimalFormat("#.#");
-
     public static boolean canRender(LivingEntity entity) {
         if (!XHP.XOption.enabled) {
+            return false;
+        }
+
+        // option to if hidden hud
+        if (XHP.XOption.syncWithHud && MinecraftClient.getInstance().options.hudHidden) {
+            return false;
+        }
+
+        // option to if entity hidden
+        if (XHP.XOption.syncWithHide && entity.isInvisible()) {
             return false;
         }
 
@@ -56,24 +59,11 @@ public class HpRenderer {
         }
 
         // if FOCUS
-        if (XHP.XOption.trigger == XOption.TriggerEnum.FOCUS) {
-            return focusTarget(camera) == entity;
+        if (XHP.XOption.display == XOption.Display.FOCUS) {
+            return HpUtil.focusTarget(camera) == entity;
         }
 
         return true;
-    }
-
-    public static LivingEntity focusTarget(Entity entity) {
-        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
-        Vec3d v1 = entity.getCameraPosVec(0);
-        Vec3d v2 = entity.getRotationVec(0);
-        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
-
-        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
-
-        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
-
-        return result == null || !(result.getEntity() instanceof LivingEntity) ? null : (LivingEntity) result.getEntity();
     }
 
     public static void render(MatrixStack matrixStack, LivingEntity e) {
@@ -120,7 +110,7 @@ public class HpRenderer {
         if (XHP.XOption.damage) {
             HpUtil.get(id).stream().filter(d -> time - d.time() <= 20).forEach(d ->
                     DrawableHelper.drawCenteredText(matrixStack, client.textRenderer,
-                            String.format("%s", FORMATTER.format(d.damage())), d.x(), -d.y(), d.rgb()));
+                            String.format("%s", HpUtil.FORMATTER.format(d.damage())), d.x(), -d.y(), d.rgb()));
         }
 
         // todo if simple tips style
@@ -134,7 +124,7 @@ public class HpRenderer {
 
         // 画生命值
         if (XHP.XOption.hp) {
-            y -= drawText(matrixStack, client, y, color, String.format("%s", FORMATTER.format(health)));
+            y -= drawText(matrixStack, client, y, color, String.format("%s", HpUtil.FORMATTER.format(health)));
         }
         // 画图片
         if (XHP.XOption.visualization) {
@@ -243,6 +233,7 @@ public class HpRenderer {
         int x1 = -(len / 2);
         int x2 = x1 + healLen;
         int y2 = y - XHP.XOption.barHeight;
+
         DrawableHelper.fill(matrixStack, x1, (int) (y * 3.4), x2, (int) (y2 * 3.4), color);
         if (healLen < len) {
             DrawableHelper.fill(matrixStack, x2, (int) (y * 3.4), x1 + len, (int) (y2 * 3.4), XHP.XOption.emptyColor);
@@ -288,7 +279,7 @@ public class HpRenderer {
 
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        Text tips = getTipsFormatter().apply(target);
+        Text tips = tipsGetter().apply(target);
 
         int x = Math.min(XHP.XOption.tipsLocation[0], mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips));
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
@@ -297,9 +288,16 @@ public class HpRenderer {
         matrixStack.pop();
     }
 
-    private static Function<LivingEntity, Text> getTipsFormatter() {
-        String format = ": %s / %s - Armor(%d)";
-        return e -> LiteralText.EMPTY.copy().append(e.getDisplayName())
-                .append(String.format(format, FORMATTER.format(e.getHealth()), FORMATTER.format(e.getMaxHealth()), e.getArmor()));
+    private static Function<LivingEntity, Text> tipsGetter() {
+        return e -> {
+            String tips = XHP.XOption.tipsTemplate;
+            if (e != null && tips != null && tips.length() > 0) {
+                // replace all tips
+                for (XOption.AttrKeyValue kv : XOption.AttrKeyValue.values()) {
+                    tips = tips.replaceAll(kv.key, kv.valueGetter.apply(e));
+                }
+            }
+            return Text.of(tips);
+        };
     }
 }

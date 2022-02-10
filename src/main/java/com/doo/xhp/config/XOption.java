@@ -1,6 +1,11 @@
 package com.doo.xhp.config;
 
+import com.doo.xhp.util.HpUtil;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
+
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * 设置选项
@@ -13,27 +18,42 @@ public class XOption {
     public boolean enabled = true;
 
     /**
-     * trigger
+     * sync with hud
      */
-    public TriggerEnum trigger = TriggerEnum.FOCUS;
+    public boolean syncWithHud = true;
 
     /**
-     * trigger
+     * sync with hide
      */
-    public enum TriggerEnum {
-        FOCUS("xhp.menu.trigger.focus"),
-        DISTANCE("xhp.menu.trigger.distance");
+    public boolean syncWithHide = true;
+
+    /**
+     * display
+     */
+    public Display display = Display.FOCUS;
+
+    /**
+     * Display
+     */
+    public enum Display {
+        FOCUS("xhp.menu.display.focus"),
+        DISTANCE("xhp.menu.display.distance");
 
         public final String key;
 
-        TriggerEnum(String key) {
+        Display(String key) {
             this.key = key;
         }
 
-        public static TriggerEnum get(Integer index) {
+        public static Display get(Integer index) {
             return values()[index % values().length];
         }
     }
+
+    /**
+     * disappear delay time on focus
+     */
+    public double focusDelay = 1.2;
 
     /**
      * tips
@@ -148,4 +168,34 @@ public class XOption {
      * 忽略盔甲架
      */
     public boolean ignoreArmorStandEntity = true;
+
+    /**
+     * 提示模板
+     */
+    public static final String DEFAULT_TIPS_TEMP = "#n#: #h# / #mh# - Armor(#a#)";
+
+    /**
+     * 提示模板
+     */
+    public String tipsTemplate = DEFAULT_TIPS_TEMP;
+
+    public enum AttrKeyValue {
+        NAME("#n#", e -> e.getDisplayName().getString(), "xhp.menu.option.tips_temp_name"),
+        HEALTH("#h#", e -> HpUtil.FORMATTER.format(e.getHealth()), "xhp.menu.option.tips_temp_health"),
+        MAX_HEALTH("#mh#", e -> HpUtil.FORMATTER.format(e.getHealth()), "xhp.menu.option.tips_temp_max_health"),
+        ARMOR("#a#", e -> HpUtil.FORMATTER.format(e.getAttributeValue(EntityAttributes.GENERIC_ARMOR)), "xhp.menu.option.tips_temp_armor"),
+        TOUGHNESS("#t#", e -> HpUtil.FORMATTER.format(e.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)), "xhp.menu.option.tips_temp_toughness"),
+
+        ;
+
+        public final String key;
+        public final Function<LivingEntity, String> valueGetter;
+        public final String transactionKey;
+
+        AttrKeyValue(String key, Function<LivingEntity, String> valueGetter, String transactionKey) {
+            this.key = key;
+            this.transactionKey = transactionKey;
+            this.valueGetter = valueGetter;
+        }
+    }
 }

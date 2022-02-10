@@ -1,10 +1,9 @@
 {
     "xhp.menu.option.enabled": "启用",
-    "xhp.menu.option.trigger": "触发方式",
-    "xhp.menu.option.tips": "开启提示",
-    "xhp.menu.option.tips_color": "提示颜色",
-    "xhp.menu.option.tips_x": "提示坐标x: %d",
-    "xhp.menu.option.tips_y": "提示坐标y: %d",
+    "xhp.menu.option.sync_with_hud": "跟随HUD",
+    "xhp.menu.option.sync_with_hide": "跟随隐身",
+    "xhp.menu.option.display": "显示方式",
+    "xhp.menu.option.focus_delay": "显示延迟时间: %ds",
     "xhp.menu.option.name": "显示名字",
     "xhp.menu.option.hp": "显示HP",
     "xhp.menu.option.visualization": "显示可视化",
@@ -22,6 +21,19 @@
     "xhp.menu.option.critic_damage_color": "暴击伤害颜色",
     "xhp.menu.option.ignore_armor_stand_entity": "忽略显示盔甲架HP",
 
+    "xhp.menu.option.tips_settings": "提示设置",
+    "xhp.menu.option.tips": "开启提示",
+    "xhp.menu.option.tips_color": "提示颜色",
+    "xhp.menu.option.tips_x": "提示坐标x: %d",
+    "xhp.menu.option.tips_y": "提示坐标y: %d",
+    "xhp.menu.option.tips_temp": "提示模板",
+    "xhp.menu.option.tips_temp_desc": "比如",
+    "xhp.menu.option.tips_temp_name": "生物名称",
+    "xhp.menu.option.tips_temp_health": "生物当前血量",
+    "xhp.menu.option.tips_temp_max_health": "生物最大血量",
+    "xhp.menu.option.tips_temp_armor": "生物当前盔甲",
+    "xhp.menu.option.tips_temp_toughness": "生物当前韧性",
+
     "xhp.menu.color.red": "红: %d",
     "xhp.menu.color.green": "绿: %d",
     "xhp.menu.color.blue": "蓝: %d",
@@ -30,6 +42,6 @@
     "xhp.menu.style.icon": "图标样式",
     "xhp.menu.style.fence": "栅栏样式",
 
-    "xhp.menu.trigger.focus": "聚焦时",
-    "xhp.menu.trigger.distance": "按距离"
+    "xhp.menu.display.focus": "聚焦时",
+    "xhp.menu.display.distance": "按距离"
 }

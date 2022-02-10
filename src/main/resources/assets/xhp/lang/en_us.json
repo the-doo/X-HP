@@ -1,10 +1,9 @@
 {
     "xhp.menu.option.enabled": "Enabled",
-    "xhp.menu.option.trigger": "Trigger",
-    "xhp.menu.option.tips": "Enabled Tips",
-    "xhp.menu.option.tips_color": "Tips Color",
-    "xhp.menu.option.tips_x": "Tips Location X: %d",
-    "xhp.menu.option.tips_y": "Tips Location Y: %d",
+    "xhp.menu.option.sync_with_hud": "Sync With HUD",
+    "xhp.menu.option.sync_with_hide": "Sync With Hide",
+    "xhp.menu.option.display": "Display Mode",
+    "xhp.menu.option.focus_delay": "Delay Display Time: %ds",
     "xhp.menu.option.name": "Show Name",
     "xhp.menu.option.hp": "Show HP",
     "xhp.menu.option.visualization": "Show Visualization",
@@ -22,6 +21,19 @@
     "xhp.menu.option.critic_damage_color": "Critic Damage Font Color",
     "xhp.menu.option.ignore_armor_stand_entity": "Ignore Show Armor Stand Entity HP",
 
+    "xhp.menu.option.tips_settings": "Tips Settings",
+    "xhp.menu.option.tips": "Enabled Tips",
+    "xhp.menu.option.tips_color": "Tips Color",
+    "xhp.menu.option.tips_x": "Tips Location X: %d",
+    "xhp.menu.option.tips_y": "Tips Location Y: %d",
+    "xhp.menu.option.tips_temp": "Tips Template",
+    "xhp.menu.option.tips_temp_desc": "Such as",
+    "xhp.menu.option.tips_temp_name": "Living Name",
+    "xhp.menu.option.tips_temp_health": "Living current health",
+    "xhp.menu.option.tips_temp_max_health": "Living max health",
+    "xhp.menu.option.tips_temp_armor": "Living current armor",
+    "xhp.menu.option.tips_temp_toughness": "Living current toughness",
+
     "xhp.menu.color.red": "Red: %d",
     "xhp.menu.color.green": "Green: %d",
     "xhp.menu.color.blue": "Blue: %d",
@@ -30,7 +42,7 @@
     "xhp.menu.style.icon": "Icon Style",
     "xhp.menu.style.fence": "Fence Style",
 
-    "xhp.menu.trigger.focus": "On Focus",
-    "xhp.menu.trigger.distance": "In Around"
+    "xhp.menu.display.focus": "On Focus",
+    "xhp.menu.display.distance": "In Around"
 
 }
