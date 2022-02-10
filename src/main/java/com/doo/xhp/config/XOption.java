@@ -172,7 +172,12 @@ public class XOption {
     /**
      * 提示模板
      */
-    public String tipsTemplate = "#n#: #h# / #mh# - Armor(#a#)";
+    public static final String DEFAULT_TIPS_TEMP = "#n#: #h# / #mh# - Armor(#a#)";
+
+    /**
+     * 提示模板
+     */
+    public String tipsTemplate = DEFAULT_TIPS_TEMP;
 
     public enum AttrKeyValue {
         NAME("#n#", e -> e.getDisplayName().getString(), "xhp.menu.option.tips_temp_name"),

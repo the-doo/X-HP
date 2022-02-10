@@ -24,6 +24,12 @@
     "xhp.menu.option.damage_color": "Damage Font Color",
     "xhp.menu.option.critic_damage_color": "Critic Damage Font Color",
     "xhp.menu.option.ignore_armor_stand_entity": "Ignore Show Armor Stand Entity HP",
+    "xhp.menu.option.tips_temp": "Tips Template",
+    "xhp.menu.option.tips_temp_name": "Living Name",
+    "xhp.menu.option.tips_temp_health": "Living current health",
+    "xhp.menu.option.tips_temp_max_health": "Living max health",
+    "xhp.menu.option.tips_temp_armor": "Living current armor",
+    "xhp.menu.option.tips_temp_toughness": "Living current toughness",
 
     "xhp.menu.color.red": "Red: %d",
     "xhp.menu.color.green": "Green: %d",

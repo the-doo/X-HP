@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.CyclingOption;
 import net.minecraft.client.option.DoubleOption;
 import net.minecraft.client.option.GameOptions;
@@ -16,6 +17,7 @@ import net.minecraft.client.option.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * mod menu 配置界面
@@ -176,6 +178,24 @@ public class ModMenuScreen extends Screen {
     private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.ignore_armor_stand_entity",
             o -> XHP.XOption.ignoreArmorStandEntity, (g, o, v) -> XHP.XOption.ignoreArmorStandEntity = v);
 
+    private static final Option TIPS_TEMPLATE = new Option("") {
+        @Override
+        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            if (INSTANCE.client == null) {
+                return null;
+            }
+
+            TextFieldWidget text = new TextFieldWidget(INSTANCE.client.textRenderer,
+                    x, y, width - 4, 20,
+                    new TranslatableText("xhp.menu.option.tips_temp"));
+
+            text.setChangedListener(v -> XHP.XOption.tipsTemplate = StringUtils.defaultIfEmpty(v, XOption.DEFAULT_TIPS_TEMP));
+            text.setSuggestion(XOption.DEFAULT_TIPS_TEMP);
+
+            return text;
+        }
+    };
+
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
     private ButtonListWidget list;
@@ -205,6 +225,7 @@ public class ModMenuScreen extends Screen {
         Option[] other = {
                 TIPS, TIPS_COLOR,
                 TIPS_X, TIPS_Y,
+                TIPS_TEMPLATE,
                 IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
