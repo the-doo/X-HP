@@ -22,7 +22,6 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-import java.text.DecimalFormat;
 import java.util.function.Function;
 
 public class HpRenderer {
@@ -34,8 +33,6 @@ public class HpRenderer {
     private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
     private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
     private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
-
-    private static final DecimalFormat FORMATTER = new DecimalFormat("#.#");
 
     public static boolean canRender(LivingEntity entity) {
         if (!XHP.XOption.enabled) {
@@ -113,7 +110,7 @@ public class HpRenderer {
         if (XHP.XOption.damage) {
             HpUtil.get(id).stream().filter(d -> time - d.time() <= 20).forEach(d ->
                     DrawableHelper.drawCenteredText(matrixStack, client.textRenderer,
-                            String.format("%s", FORMATTER.format(d.damage())), d.x(), -d.y(), d.rgb()));
+                            String.format("%s", HpUtil.FORMATTER.format(d.damage())), d.x(), -d.y(), d.rgb()));
         }
 
         // todo if simple tips style
@@ -127,7 +124,7 @@ public class HpRenderer {
 
         // 画生命值
         if (XHP.XOption.hp) {
-            y -= drawText(matrixStack, client, y, color, String.format("%s", FORMATTER.format(health)));
+            y -= drawText(matrixStack, client, y, color, String.format("%s", HpUtil.FORMATTER.format(health)));
         }
         // 画图片
         if (XHP.XOption.visualization) {
@@ -282,7 +279,7 @@ public class HpRenderer {
 
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        Text tips = getTipsFormatter().apply(target);
+        Text tips = tipsGetter().apply(target);
 
         int x = Math.min(XHP.XOption.tipsLocation[0], mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips));
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
@@ -291,9 +288,16 @@ public class HpRenderer {
         matrixStack.pop();
     }
 
-    private static Function<LivingEntity, Text> getTipsFormatter() {
-        String format = ": %s / %s - Armor(%d)";
-        return e -> LiteralText.EMPTY.copy().append(e.getDisplayName())
-                .append(String.format(format, FORMATTER.format(e.getHealth()), FORMATTER.format(e.getMaxHealth()), e.getArmor()));
+    private static Function<LivingEntity, Text> tipsGetter() {
+        return e -> {
+            String tips = XHP.XOption.tipsTemplate;
+            if (e != null && tips != null && tips.length() > 0) {
+                // replace all tips
+                for (XOption.AttrKeyValue kv : XOption.AttrKeyValue.values()) {
+                    tips = tips.replaceAll(kv.key, kv.valueGetter.apply(e));
+                }
+            }
+            return Text.of(tips);
+        };
     }
 }

@@ -16,11 +16,14 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.Level;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
 
 public abstract class HpUtil {
+
+    public static final DecimalFormat FORMATTER = new DecimalFormat("#.#");
 
     public record DamageTaken(int attackerId, int rgb, float damage, long time, int x, int y) {
 
