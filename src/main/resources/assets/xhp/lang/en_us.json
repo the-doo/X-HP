@@ -1,6 +1,7 @@
 {
     "xhp.menu.option.enabled": "Enabled",
     "xhp.menu.option.sync_with_hud": "Sync With HUD",
+    "xhp.menu.option.sync_with_hide": "Sync With Hide",
     "xhp.menu.option.display": "Display Mode",
     "xhp.menu.option.focus_delay": "Delay Display Time: %ds",
     "xhp.menu.option.tips": "Enabled Tips",

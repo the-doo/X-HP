@@ -47,6 +47,11 @@ public class HpRenderer {
             return false;
         }
 
+        // option to if entity hidden
+        if (XHP.XOption.syncWithHide && entity.isInvisible()) {
+            return false;
+        }
+
         Entity camera = MinecraftClient.getInstance().cameraEntity;
         if (camera == null) {
             return false;

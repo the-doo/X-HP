@@ -1,6 +1,7 @@
 {
     "xhp.menu.option.enabled": "启用",
     "xhp.menu.option.sync_with_hud": "跟随HUD",
+    "xhp.menu.option.sync_with_hide": "跟随隐身",
     "xhp.menu.option.display": "显示方式",
     "xhp.menu.option.focus_delay": "显示延迟时间: %ds",
     "xhp.menu.option.tips": "开启提示",

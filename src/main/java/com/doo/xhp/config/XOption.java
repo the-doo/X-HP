@@ -18,6 +18,11 @@ public class XOption {
     public boolean syncWithHud = true;
 
     /**
+     * sync with hide
+     */
+    public boolean syncWithHide = true;
+
+    /**
      * display
      */
     public Display display = Display.FOCUS;

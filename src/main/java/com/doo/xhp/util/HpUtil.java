@@ -178,6 +178,7 @@ public abstract class HpUtil {
             target = focusTarget;
         } else {
             focusTarget = null;
+            focusTime = -1;
         }
 
         // if hit result now

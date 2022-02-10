@@ -32,6 +32,16 @@ public class ModMenuScreen extends Screen {
             v -> new TranslatableText(v.key),
             o -> XHP.XOption.display, (g, o, v) -> XHP.XOption.display = v);
 
+    private static final Option SYNC_WITH_HUD = CyclingOption.create(
+            "xhp.menu.option.sync_with_hud",
+            o -> XHP.XOption.syncWithHud,
+            (g, o, v) -> XHP.XOption.syncWithHud = v);
+
+    private static final Option SYNC_WITH_HIDE = CyclingOption.create(
+            "xhp.menu.option.sync_with_hide",
+            o -> XHP.XOption.syncWithHud,
+            (g, o, v) -> XHP.XOption.syncWithHud = v);
+
     private static final Option FOCUS_DELAY = new DoubleOption("xhp.menu.option.focus_delay", 0, 10, 0.1F,
             v -> XHP.XOption.focusDelay,
             (o, d) -> XHP.XOption.focusDelay = d,
@@ -178,16 +188,32 @@ public class ModMenuScreen extends Screen {
 
     @Override
     protected void init() {
-        Option[] options = {
-                ENABLED, DISPLAY, FOCUS_DELAY, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
-                NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
-                STYLE, FRIEND_COLOR, MOB_COLOR, EMPTY_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
+        Option[] base = {
+                ENABLED, DISPLAY,
+                SYNC_WITH_HUD, SYNC_WITH_HIDE,
+                FOCUS_DELAY, NAME,
+                HP, VISUALIZATION,
+                DAMAGE, DISTANCE
+        };
+        Option[] icon = {
+                STYLE, HEIGHT,
+                BAR_LENGTH, BAR_HEIGHT,
+                SCALE, FRIEND_COLOR,
+                MOB_COLOR, EMPTY_COLOR,
+                DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
+        };
+        Option[] other = {
+                TIPS, TIPS_COLOR,
+                TIPS_X, TIPS_Y,
+                IGNORE_ARMOR_STAND_ENTITY
         };
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        // 显示基础高度
-        list.addAll(options);
+
+        list.addAll(base);
+        list.addAll(icon);
+        list.addAll(other);
         this.addSelectableChild(list);
-        // 返回按钮
+
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
                 ScreenTexts.BACK, b -> INSTANCE.close()));
     }
