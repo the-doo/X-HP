@@ -1,7 +1,8 @@
 {
     "xhp.menu.option.enabled": "启用",
     "xhp.menu.option.sync_with_hud": "跟随HUD",
-    "xhp.menu.option.trigger": "触发方式",
+    "xhp.menu.option.display": "显示方式",
+    "xhp.menu.option.focus_delay": "显示延迟时间: %ds",
     "xhp.menu.option.tips": "开启提示",
     "xhp.menu.option.tips_color": "提示颜色",
     "xhp.menu.option.tips_x": "提示坐标x: %d",
@@ -31,6 +32,6 @@
     "xhp.menu.style.icon": "图标样式",
     "xhp.menu.style.fence": "栅栏样式",
 
-    "xhp.menu.trigger.focus": "聚焦时",
-    "xhp.menu.trigger.distance": "按距离"
+    "xhp.menu.display.focus": "聚焦时",
+    "xhp.menu.display.distance": "按距离"
 }

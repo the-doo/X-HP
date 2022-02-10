@@ -18,27 +18,32 @@ public class XOption {
     public boolean syncWithHud = true;
 
     /**
-     * trigger
+     * display
      */
-    public TriggerEnum trigger = TriggerEnum.FOCUS;
+    public Display display = Display.FOCUS;
 
     /**
-     * trigger
+     * Display
      */
-    public enum TriggerEnum {
-        FOCUS("xhp.menu.trigger.focus"),
-        DISTANCE("xhp.menu.trigger.distance");
+    public enum Display {
+        FOCUS("xhp.menu.display.focus"),
+        DISTANCE("xhp.menu.display.distance");
 
         public final String key;
 
-        TriggerEnum(String key) {
+        Display(String key) {
             this.key = key;
         }
 
-        public static TriggerEnum get(Integer index) {
+        public static Display get(Integer index) {
             return values()[index % values().length];
         }
     }
+
+    /**
+     * disappear delay time on focus
+     */
+    public double focusDelay = 1.2;
 
     /**
      * tips

@@ -27,10 +27,15 @@ public class ModMenuScreen extends Screen {
             o -> XHP.XOption.enabled,
             (g, o, v) -> XHP.XOption.enabled = v);
 
-    private static final Option TRIGGER = CyclingOption.create(
-            "xhp.menu.option.trigger", XOption.TriggerEnum.values(),
+    private static final Option DISPLAY = CyclingOption.create(
+            "xhp.menu.option.display", XOption.Display.values(),
             v -> new TranslatableText(v.key),
-            o -> XHP.XOption.trigger, (g, o, v) -> XHP.XOption.trigger = v);
+            o -> XHP.XOption.display, (g, o, v) -> XHP.XOption.display = v);
+
+    private static final Option FOCUS_DELAY = new DoubleOption("xhp.menu.option.focus_delay", 0, 10, 0.1F,
+            v -> XHP.XOption.focusDelay,
+            (o, d) -> XHP.XOption.focusDelay = d,
+            (g, o) -> new TranslatableText("xhp.menu.option.focus_delay", XHP.XOption.focusDelay));
 
     private static final Option TIPS = CyclingOption.create(
             "xhp.menu.option.tips",
@@ -174,7 +179,7 @@ public class ModMenuScreen extends Screen {
     @Override
     protected void init() {
         Option[] options = {
-                ENABLED, TRIGGER, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
+                ENABLED, DISPLAY, FOCUS_DELAY, TIPS, TIPS_COLOR, TIPS_X, TIPS_Y,
                 NAME, HP, VISUALIZATION, DAMAGE, BAR_LENGTH, BAR_HEIGHT, DISTANCE, SCALE, HEIGHT,
                 STYLE, FRIEND_COLOR, MOB_COLOR, EMPTY_COLOR, DAMAGE_COLOR, CRITIC_DAMAGE_COLOR, IGNORE_ARMOR_STAND_ENTITY
         };

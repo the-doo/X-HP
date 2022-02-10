@@ -57,7 +57,7 @@ public class HpRenderer {
         }
 
         // if FOCUS
-        if (XHP.XOption.trigger == XOption.TriggerEnum.FOCUS) {
+        if (XHP.XOption.display == XOption.Display.FOCUS) {
             return HpUtil.focusTarget(camera) == entity;
         }
 

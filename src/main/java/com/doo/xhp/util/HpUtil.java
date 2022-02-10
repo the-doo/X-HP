@@ -174,7 +174,7 @@ public abstract class HpUtil {
 
         LivingEntity target = null;
         // default prev target in 2s
-        if (entity.age - focusTime <= 40) {
+        if (entity.age - focusTime <= 20 * XHP.XOption.focusDelay) {
             target = focusTarget;
         } else {
             focusTarget = null;
