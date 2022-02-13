@@ -128,8 +128,7 @@ public abstract class HpUtil {
             return true;
         }
         // 原版暴击判定，参考：PlayerEntity#attack(net.minecraft.entity.Entity)
-        return player.getAttackCooldownProgress(0.5f) > 0.9 &&
-                player.fallDistance > 0.0f && !player.isOnGround() &&
+        return player.fallDistance > 0.0f && !player.isOnGround() &&
                 !player.isClimbing() && !player.isTouchingWater() &&
                 !player.hasStatusEffect(StatusEffects.BLINDNESS) && !player.hasVehicle();
     }

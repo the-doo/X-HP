@@ -17,7 +17,7 @@ public abstract class LivingEntityMixin {
     private void sendDamagePacket(DamageSource source, float amount, CallbackInfo ci) {
         if (XHP.XOption.damage) {
             LivingEntity entity = (LivingEntity) (Object) this;
-            NetworkUtil.packetSender(entity.getId(), amount, source.getAttacker())
+            NetworkUtil.packetSender(entity.getId(), amount, source)
                     .accept(entity.getWorld().getEntitiesByClass(
                             ServerPlayerEntity.class,
                             entity.getBoundingBox().expand(XHP.XOption.distance),
