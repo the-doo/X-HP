@@ -6,11 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -91,7 +87,7 @@ public abstract class HpUtil {
                 int count = HpUtil.removeNotExists();
                 Config.LOGGER.log(Level.DEBUG, "clear data end --- remove count: {}", count);
             }
-        }, 0, 10000);
+        }, 0, 5000);
     }
 
     /**
@@ -111,28 +107,6 @@ public abstract class HpUtil {
         removeIds.forEach(LAST_DAMAGE_TAKEN_MAP::remove);
         return removeIds.size();
     }
-
-    /**
-     * 是否是暴击
-     * <p>
-     * 判断是否是跳劈 || 伤害 > 基础伤害
-     *
-     * @return true false
-     * @see PlayerEntity#attack(net.minecraft.entity.Entity)
-     */
-    public static boolean isCritic(Entity attacker, float damage) {
-        if (!(attacker instanceof ServerPlayerEntity player)) {
-            return false;
-        }
-        if (player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) < damage) {
-            return true;
-        }
-        // 原版暴击判定，参考：PlayerEntity#attack(net.minecraft.entity.Entity)
-        return player.fallDistance > 0.0f && !player.isOnGround() &&
-                !player.isClimbing() && !player.isTouchingWater() &&
-                !player.hasStatusEffect(StatusEffects.BLINDNESS) && !player.hasVehicle();
-    }
-
 
     public static LivingEntity focusTarget(Entity entity) {
         // see net.minecraft.client.render.GameRenderer.updateTargetedEntity

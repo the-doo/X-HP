@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.text.LiteralText;
@@ -160,7 +161,13 @@ public class HpRenderer {
         if (HpUtil.isAttacker(e.getId(), camera.getId(), time)) {
             return false;
         }
-        // 如果不是mob or monster
+        if (e.isTeammate(camera)) {
+            return false;
+        }
+        if (e instanceof Angerable) {
+            return !camera.getUuid().equals(((Angerable) e).getAngryAt());
+        }
+        // 如果不是monster
         return !(e instanceof Monster);
     }
 

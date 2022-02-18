@@ -15,19 +15,24 @@ public class XHP implements ModInitializer {
 
     public static final String ID = "xhp";
 
-    public static final Identifier ON_DAMAGE_PACKET = new Identifier(ID);
+    public static final Identifier ON_DAMAGE_PACKET = new Identifier(ID + "_damage");
+
+    public static final Identifier ANGER_PACKET = new Identifier(ID + "_anger");
 
     public static XOption XOption = new XOption();
 
     @Override
     public void onInitialize() {
-        // 加载配置
+        // Loading config
         XOption = Config.read(ID, XOption.class, XOption);
-        // 注册监听
-        NetworkUtil.registerPacketAcceptor();
+
+        // Regis Damage Pack
+        NetworkUtil.registerDamagePacketAcceptor();
+        // Regis Anger Pack
+        NetworkUtil.registerAngerPacketAcceptor();
 
 
-        // register event
+        // regis event
         HudRenderCallback.EVENT.register(((matrixStack, tickDelta) -> {
             if (!XOption.enabled || MinecraftClient.getInstance().cameraEntity == null) {
                 return;
