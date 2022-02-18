@@ -4,6 +4,7 @@
   "package": "com.doo.xhp.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "AngerableMixin",
     "LivingEntityMixin",
     "PlayEntityMixin"
   ],

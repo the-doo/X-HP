@@ -8,9 +8,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,7 +43,7 @@ public abstract class NetworkUtil {
             if (entity instanceof PersistentProjectileEntity) {
                 isCritic = ((PersistentProjectileEntity) entity).isCritical();
             } else if (attacker instanceof Critable) {
-                isCritic = ((Critable) attacker).isCrit() || damage > ((PlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                isCritic = ((Critable) attacker).isCrit();
             }
 
             buf.writeBoolean(isCritic);
@@ -55,11 +55,11 @@ public abstract class NetworkUtil {
     /**
      * 数据包处理器
      */
-    public static void registerPacketAcceptor() {
+    public static void registerDamagePacketAcceptor() {
         ClientPlayNetworking.registerGlobalReceiver(XHP.ON_DAMAGE_PACKET, (client, handler, buf, responseSender) -> {
             // if offline
             ClientWorld world = MinecraftClient.getInstance().world;
-            if (world == null) {
+            if (world == null || client.player == null) {
                 return;
             }
 
@@ -75,6 +75,41 @@ public abstract class NetworkUtil {
                 return;
             }
             client.execute(() -> HpUtil.set(id, entity.getWidth(), entity.getHeight(), attacker, isCritic, damage, world.getTime()));
+        });
+    }
+
+    /**
+     * Anger at player
+     */
+    public static void angerAt(LivingEntity anger, ServerPlayerEntity player, boolean isAnger) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBoolean(isAnger);
+        buf.writeInt(anger.getId());
+        ServerPlayNetworking.send(player, XHP.ANGER_PACKET, buf);
+    }
+
+    /**
+     * Register Anger Pack
+     */
+    public static void registerAngerPacketAcceptor() {
+        ClientPlayNetworking.registerGlobalReceiver(XHP.ANGER_PACKET, (client, handler, buf, responseSender) -> {
+            // if offline
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world == null || client.player == null) {
+                return;
+            }
+
+            // 读取数据
+            boolean isAnger = buf.readBoolean();
+            int id = buf.readInt();
+
+            // 获取当前id的对象
+            Entity entity = world.getEntityById(id);
+            if (!(entity instanceof Angerable)) {
+                return;
+            }
+
+            ((Angerable) entity).setAngryAt(isAnger ? client.player.getUuid() : null);
         });
     }
 }

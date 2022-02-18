@@ -87,7 +87,7 @@ public abstract class HpUtil {
                 int count = HpUtil.removeNotExists();
                 Config.LOGGER.log(Level.DEBUG, "clear data end --- remove count: {}", count);
             }
-        }, 0, 10000);
+        }, 0, 5000);
     }
 
     /**
