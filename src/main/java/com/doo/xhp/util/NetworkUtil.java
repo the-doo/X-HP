@@ -43,7 +43,7 @@ public abstract class NetworkUtil {
             if (entity instanceof PersistentProjectileEntity) {
                 isCritic = ((PersistentProjectileEntity) entity).isCritical();
             } else if (attacker instanceof Critable) {
-                isCritic = ((Critable) attacker).isCrit() || ((PlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) > damage;
+                isCritic = ((Critable) attacker).isCrit() || damage > ((PlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             }
 
             buf.writeBoolean(isCritic);
