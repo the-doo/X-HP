@@ -1,13 +1,16 @@
 package com.doo.xhp.util;
 
 import com.doo.xhp.XHP;
+import com.doo.xhp.interfaces.Critable;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,13 +37,13 @@ public abstract class NetworkUtil {
             buf.writeFloat(damage);
 
             // is critic
-            boolean isCritic;
+            boolean isCritic = false;
             // if is persistentProjectileEntity
             Entity entity = source.getSource();
             if (entity instanceof PersistentProjectileEntity) {
                 isCritic = ((PersistentProjectileEntity) entity).isCritical();
-            } else {
-                isCritic = HpUtil.isCritic(attacker, damage);
+            } else if (attacker instanceof Critable) {
+                isCritic = ((Critable) attacker).isCrit() || ((PlayerEntity) attacker).getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) > damage;
             }
 
             buf.writeBoolean(isCritic);
