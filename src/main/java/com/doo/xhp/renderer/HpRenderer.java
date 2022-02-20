@@ -162,7 +162,7 @@ public class HpRenderer {
             return false;
         }
         if (e.isTeammate(camera)) {
-            return false;
+            return true;
         }
         if (e instanceof Angerable) {
             return !camera.getUuid().equals(((Angerable) e).getAngryAt());
