@@ -49,7 +49,12 @@ public class TipsScreen extends Screen {
     private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getScaledWidth(), 1,
             v -> (double) XHP.XOption.tipsLocation[0],
             (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.tips_x", XHP.XOption.tipsLocation[0]));
+            (g, o) -> {
+                if (Math.abs(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 10) {
+                    return new TranslatableText("options.fov.min");
+                }
+                return new TranslatableText("xhp.menu.option.tips_x", XHP.XOption.tipsLocation[0]);
+            });
 
     private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getScaledHeight(), 1,
             v -> (double) XHP.XOption.tipsLocation[1],

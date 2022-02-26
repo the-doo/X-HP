@@ -1,5 +1,6 @@
 package com.doo.xhp.config;
 
+import com.doo.xhp.renderer.HpRenderer;
 import com.doo.xhp.util.HpUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -81,6 +82,11 @@ public class XOption {
     public boolean hp = true;
 
     /**
+     * name and hp on one line
+     */
+    public boolean oneLine = false;
+
+    /**
      * 血量可视化
      */
     public boolean visualization = true;
@@ -88,26 +94,7 @@ public class XOption {
     /**
      * 血条还是图片
      */
-    public StyleEnum style = StyleEnum.BAR;
-
-    /**
-     * 样式枚举
-     */
-    public enum StyleEnum {
-        BAR("xhp.menu.style.bar"),
-        ICON("xhp.menu.style.icon"),
-        FENCE("xhp.menu.style.fence");
-
-        public final String key;
-
-        StyleEnum(String key) {
-            this.key = key;
-        }
-
-        public static StyleEnum get(Integer index) {
-            return values()[index % values().length];
-        }
-    }
+    public HpRenderer.BarStyleEnum style = HpRenderer.BarStyleEnum.BAR;
 
     /**
      * 中立生物血条颜色
@@ -137,12 +124,12 @@ public class XOption {
     /**
      * 血条长度
      */
-    public int barLength = 20;
+    public int barLength = 70;
 
     /**
      * 血条高度
      */
-    public int barHeight = 3;
+    public int barHeight = 6;
 
     /**
      * 伤害
@@ -150,19 +137,14 @@ public class XOption {
     public boolean damage = true;
 
     /**
+     * damage follow display mode
+     */
+    public boolean damageFollow = false;
+
+    /**
      * 距离
      */
     public int distance = 128;
-
-    /**
-     * 缩放比例
-     */
-    public float scale = 0.02F;
-
-    /**
-     * 基础高度
-     */
-    public int height = 0;
 
     /**
      * 忽略盔甲架

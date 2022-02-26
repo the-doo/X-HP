@@ -3,13 +3,10 @@
   "minVersion": "0.8",
   "package": "com.doo.xhp.mixin",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "AngerableMixin",
-    "LivingEntityMixin",
-    "PlayEntityMixin"
-  ],
   "client": [
-    "EntityRenderMixin"
+    "EntityRenderMixin",
+    "PlayEntityMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

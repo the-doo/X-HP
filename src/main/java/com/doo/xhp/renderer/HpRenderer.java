@@ -1,82 +1,82 @@
 package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
-import com.doo.xhp.config.XOption;
 import com.doo.xhp.util.HpUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
-import java.util.function.Function;
+/**
+ * Just render
+ */
+public interface HpRenderer {
 
-public class HpRenderer {
+    /**
+     * 样式枚举
+     */
+    enum BarStyleEnum {
+        BAR("xhp.menu.style.bar", BarRenderer.INSTANCE),
+        ICON("xhp.menu.style.icon", IconRenderer.INSTANCE),
+        FENCE("xhp.menu.style.fence", FenceRenderer.INSTANCE);
 
-    private HpRenderer() {
+        public final String key;
+        public final HpRenderer layout;
 
+        BarStyleEnum(String key, HpRenderer layout) {
+            this.key = key;
+            this.layout = layout;
+        }
+
+        public static BarStyleEnum get(Integer index) {
+            return values()[index % values().length];
+        }
     }
 
-    private static final Identifier HEART_ID = new Identifier(XHP.ID, "textures/heart/heart.png");
-    private static final Identifier YELLOW_HEART_ID = new Identifier(XHP.ID, "textures/heart/yellow_heart.png");
-    private static final Identifier EMPTY_HEART_ID = new Identifier(XHP.ID, "textures/heart/empty_heart.png");
+    int getHeight();
 
-    public static boolean canRender(LivingEntity entity) {
-        if (!XHP.XOption.enabled) {
-            return false;
+    int getWidth();
+
+    int getMarginY();
+
+    static void render(MatrixStack matrices, LivingEntity entity, VertexConsumerProvider vertexConsumers, int light, TextRenderer textRenderer, EntityRenderDispatcher dispatcher, boolean hasLabel) {
+        if (!HpUtil.mustCheck(entity)) {
+            return;
         }
 
-        // option to if hidden hud
-        if (XHP.XOption.syncWithHud && MinecraftClient.getInstance().options.hudHidden) {
-            return false;
+        float f = entity.getHeight() + 0.5f;
+
+        matrices.push();
+        matrices.translate(0.0, f, 0.0);
+        matrices.multiply(dispatcher.getRotation());
+        matrices.scale(-0.025f, -0.025f, 0.025f);
+
+        boolean can = HpUtil.canRender(entity);
+
+        // draw damage
+        if (XHP.XOption.damage && (!XHP.XOption.damageFollow || can)) {
+            DamageRenderer.INSTANCE.drawDamage(matrices, textRenderer, entity, vertexConsumers);
         }
 
-        // option to if entity hidden
-        if (XHP.XOption.syncWithHide && entity.isInvisible()) {
-            return false;
+        // draw other info
+        if (can) {
+            render(matrices, entity);
         }
 
-        Entity camera = MinecraftClient.getInstance().cameraEntity;
-        if (camera == null) {
-            return false;
-        }
-
-        if (camera.getPos().distanceTo(entity.getPos()) > XHP.XOption.distance) {
-            return false;
-        }
-
-        // if FOCUS
-        if (XHP.XOption.display == XOption.Display.FOCUS) {
-            return HpUtil.focusTarget(camera) == entity;
-        }
-
-        return true;
+        matrices.pop();
     }
 
-    public static void render(MatrixStack matrixStack, LivingEntity e) {
+    static void render(MatrixStack matrixStack, LivingEntity e) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         Entity camera = client.getCameraEntity();
         if (world == null || camera == null) {
-            return;
-        }
-
-        // todo filter list
-        if (e instanceof ArmorStandEntity && XHP.XOption.ignoreArmorStandEntity) {
             return;
         }
 
@@ -85,90 +85,75 @@ public class HpRenderer {
             return;
         }
 
-
-        // 基本参数
-        int id = e.getId();
         float health = e.getHealth();
+        int color = HpUtil.isFriend(e, camera) ? XHP.XOption.friendColor : XHP.XOption.mobColor;
+        int y = 0;
 
-        float scale = HpUtil.getScale(e.isBaby());
-        int y = -HpUtil.getShowY(e.getHeight(), e.isBaby());
-        if (e instanceof WitchEntity) {
-            y -= 8;
-        }
-        long time = world.getTime();
-        // 判断 --- !(敌对/史莱姆/)
-        boolean isFriend = isFriend(e, camera, time);
-        int color = isFriend ? XHP.XOption.friendColor : XHP.XOption.mobColor;
-        // 矩阵操作
         matrixStack.push();
-        // 缩小倍数
-        matrixStack.scale(scale, scale, scale);
-        // 始终正对玩家
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-camera.getYaw()));
-        // 翻转
-        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
-        // 画伤害
-        if (XHP.XOption.damage) {
-            HpUtil.get(id).stream().filter(d -> time - d.time() <= 20).forEach(d ->
-                    DrawableHelper.drawCenteredText(matrixStack, client.textRenderer,
-                            String.format("%s", HpUtil.FORMATTER.format(d.damage())), d.x(), -d.y(), d.rgb()));
+
+        // hp
+        if (XHP.XOption.hp && !XHP.XOption.oneLine) {
+            y -= drawText(matrixStack, client, y, color, Text.of(HpUtil.FORMATTER.format(health)));
+            y -= 3;
         }
 
-        // todo if simple tips style
-//        if (true) {
-//            matrixStack.scale(0.5F, 0.5F, 0.5F);
-//            DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, getTipsFormatter().apply(e), 0, (int) (y * 1.8), color);
-//            // 矩阵操作退栈
-//            matrixStack.pop();
-//            return;
-//        }
-
-        // 画生命值
-        if (XHP.XOption.hp) {
-            y -= drawText(matrixStack, client, y, color, String.format("%s", HpUtil.FORMATTER.format(health)));
-        }
-        // 画图片
+        // icon
         if (XHP.XOption.visualization) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-            switch (XHP.XOption.style) {
-                case BAR -> y -= drawBar(matrixStack, y, color, healScale);
-                case ICON -> y -= drawIcon(matrixStack, y, isFriend ? YELLOW_HEART_ID : HEART_ID, healScale);
-                case FENCE -> y -= drawFence(matrixStack, client, y, color, healScale);
-            }
+            y -= XHP.XOption.style.layout.draw(matrixStack, client, y, color, healScale);
+            y -= 3;
         }
-        // 画名字
-        if (XHP.XOption.name) {
-            drawText(matrixStack, client, y, color, e.getDisplayName().getString());
+
+        // name
+        if (XHP.XOption.name && !XHP.XOption.oneLine) {
+            drawText(matrixStack, client, y, color, e.getDisplayName());
         }
-        // 矩阵操作退栈
+
+        // one line
+        if (XHP.XOption.oneLine) {
+            drawOneLine(matrixStack, client, y, color, XHP.XOption.name ? e.getDisplayName() : null, XHP.XOption.hp ? Text.of(HpUtil.FORMATTER.format(health)) : null);
+        }
+
         matrixStack.pop();
     }
 
-    /**
-     * 如果不是敌对实体，且目标人物不是玩家，且玩家没有伤害过
-     *
-     * @param e      渲染实体
-     * @param camera 当前摄像机对象
-     * @param time   渲染的时间
-     * @return 是否
-     */
-    private static boolean isFriend(LivingEntity e, Entity camera, long time) {
-        // 被攻击过
-        if (HpUtil.isAttacker(e.getId(), camera.getId(), time)) {
-            return false;
+    static void drawOneLine(MatrixStack matrixStack, MinecraftClient client, int y, int color, Text name, Text hp) {
+        if (name == null && hp == null) {
+            return;
         }
-        if (e.isTeammate(camera)) {
-            return false;
+
+        matrixStack.push();
+
+        int width = XHP.XOption.barLength;
+
+        if (XHP.XOption.style == BarStyleEnum.FENCE) {
+            width = BarStyleEnum.FENCE.layout.getWidth();
+        } else if (XHP.XOption.style == BarStyleEnum.ICON) {
+            y *= 1.5;
+            y -= 3;
         }
-        if (e instanceof Angerable) {
-            return !camera.getUuid().equals(((Angerable) e).getAngryAt());
+
+        // check max width
+        int nameW = name == null ? 0 : client.textRenderer.getWidth(name);
+        int hpW = hp == null ? 0 : client.textRenderer.getWidth(hp);
+
+        int hpX = width / 2 - hpW / 2;
+        int hpY = y;
+        if (nameW + hpW + 3 > width) {
+            // need display at name next line
+            hpY -= (client.textRenderer.fontHeight + 3);
+            hpX = -width / 2 + hpW / 2;
         }
-        // 如果不是monster
-        return !(e instanceof Monster);
+
+        if (name != null) {
+            DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, name, -width / 2 + nameW / 2, y, color);
+        }
+
+        if (hp != null) {
+            DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, hp, hpX, hpY, color);
+        }
+
+        matrixStack.pop();
     }
 
     /**
@@ -178,133 +163,16 @@ public class HpRenderer {
      * @param client      客户端
      * @param y           y坐标
      * @param color       颜色
-     * @param string      名字
+     * @param text        名字
      */
-    private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, String string) {
-        matrixStack.push();
-        matrixStack.scale(0.25F, 0.25F, 0.25F);
-        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, string, 0, (int) (y * 3.5), color);
-        matrixStack.pop();
-        return client.textRenderer.fontHeight / 2;
-    }
-
-    /**
-     * 画图标
-     *
-     * @param matrixStack 矩阵
-     * @param y           坐标y
-     * @param texture     需要画的icon
-     * @param healScale   比例
-     * @return height
-     */
-    private static int drawIcon(MatrixStack matrixStack, int y, Identifier texture, float healScale) {
+    private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, Text text) {
         matrixStack.push();
 
-        matrixStack.scale(0.5F, 0.5F, 0.5F);
-
-        int x = -HpUtil.HEALTH / 2;
-        int healWidth = (int) (healScale * HpUtil.HEALTH);
-        // 空血槽
-        if (healWidth < HpUtil.HEALTH) {
-            RenderSystem.setShaderTexture(0, EMPTY_HEART_ID);
-            DrawableHelper.drawTexture(matrixStack, x + healWidth, (int) (y * 1.88), healWidth, 0,
-                    HpUtil.HEALTH - healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
-        }
-        // 血槽
-        RenderSystem.setShaderTexture(0, texture);
-        DrawableHelper.drawTexture(matrixStack, x, (int) (y * 1.88), 0, 0,
-                healWidth, HpUtil.HEALTH, HpUtil.HEALTH, HpUtil.HEALTH);
+        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, text, 0, y, color);
 
         matrixStack.pop();
-        return (int) (HpUtil.HEALTH / 1.2);
+        return client.textRenderer.fontHeight;
     }
 
-    /**
-     * 画血条
-     *
-     * @param matrixStack 矩阵
-     * @param y           坐标y
-     * @param color       颜色
-     * @param healScale   比例
-     * @return height
-     */
-    private static int drawBar(MatrixStack matrixStack, int y, int color, float healScale) {
-        matrixStack.push();
-
-        matrixStack.scale(0.25F, 0.25F, 0.25F);
-
-        // 总长度
-        int len = (int) (XHP.XOption.barLength * 3.8);
-        // 当前血量长度
-        int healLen = (int) (healScale * len);
-        int x1 = -(len / 2);
-        int x2 = x1 + healLen;
-        int y2 = y - XHP.XOption.barHeight;
-
-        DrawableHelper.fill(matrixStack, x1, (int) (y * 3.4), x2, (int) (y2 * 3.4), color);
-        if (healLen < len) {
-            DrawableHelper.fill(matrixStack, x2, (int) (y * 3.4), x1 + len, (int) (y2 * 3.4), XHP.XOption.emptyColor);
-        }
-
-        matrixStack.pop();
-        return (int) (XHP.XOption.barHeight * 1.8);
-    }
-
-    /**
-     * 画栅栏
-     *
-     * @param matrixStack 矩阵
-     * @param client      客户端
-     * @param y           坐标y
-     * @param color       颜色
-     * @param healScale   比例
-     * @return height
-     */
-    private static int drawFence(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
-        matrixStack.push();
-        matrixStack.scale(0.25F, 0.25F, 0.25F);
-
-        String fenceStr = "||||||||||||||||||||";
-        int len = (int) (fenceStr.length() * healScale);
-        LiteralText heal = new LiteralText(fenceStr.substring(0, len));
-        LiteralText empty = new LiteralText(fenceStr.substring(len));
-        heal.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)));
-        empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(XHP.XOption.emptyColor)));
-
-        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, heal.append(empty), 0, (int) (y * 3.5), color);
-
-        matrixStack.pop();
-
-        return client.textRenderer.fontHeight / 2;
-    }
-
-    public static void renderTips(MatrixStack matrixStack, LivingEntity target) {
-        if (!XHP.XOption.tips) {
-            return;
-        }
-        matrixStack.push();
-
-        MinecraftClient mc = MinecraftClient.getInstance();
-
-        Text tips = tipsGetter().apply(target);
-
-        int x = Math.min(XHP.XOption.tipsLocation[0], mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips));
-        int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
-        DrawableHelper.drawTextWithShadow(matrixStack, mc.textRenderer, tips, x, y, XHP.XOption.tipsColor);
-
-        matrixStack.pop();
-    }
-
-    private static Function<LivingEntity, Text> tipsGetter() {
-        return e -> {
-            String tips = XHP.XOption.tipsTemplate;
-            if (e != null && tips != null && tips.length() > 0) {
-                // replace all tips
-                for (XOption.AttrKeyValue kv : XOption.AttrKeyValue.values()) {
-                    tips = tips.replaceAll(kv.key, kv.valueGetter.apply(e));
-                }
-            }
-            return Text.of(tips);
-        };
-    }
+    int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale);
 }

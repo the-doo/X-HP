@@ -3,6 +3,7 @@ package com.doo.xhp.menu.screen;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.Config;
 import com.doo.xhp.config.XOption;
+import com.doo.xhp.renderer.HpRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonListWidget;
@@ -38,8 +39,8 @@ public class ModMenuScreen extends Screen {
 
     private static final Option SYNC_WITH_HIDE = CyclingOption.create(
             "xhp.menu.option.sync_with_hide",
-            o -> XHP.XOption.syncWithHud,
-            (g, o, v) -> XHP.XOption.syncWithHud = v);
+            o -> XHP.XOption.syncWithHide,
+            (g, o, v) -> XHP.XOption.syncWithHide = v);
 
     private static final Option FOCUS_DELAY = new DoubleOption("xhp.menu.option.focus_delay", 0, 10, 0.1F,
             v -> XHP.XOption.focusDelay,
@@ -72,33 +73,29 @@ public class ModMenuScreen extends Screen {
     private static final Option DAMAGE = CyclingOption.create("xhp.menu.option.damage",
             o -> XHP.XOption.damage, (g, o, v) -> XHP.XOption.damage = v);
 
+    private static final Option DAMAGE_FOLLOW = CyclingOption.create("xhp.menu.option.damage_follow",
+            o -> XHP.XOption.damageFollow, (g, o, v) -> XHP.XOption.damageFollow = v);
+
+    private static final Option ONE_LINE = CyclingOption.create("xhp.menu.option.one_line",
+            o -> XHP.XOption.oneLine, (g, o, v) -> XHP.XOption.oneLine = v);
+
     private static final Option DISTANCE = new DoubleOption("xhp.menu.option.distance", 2, 128, 1,
             v -> (double) XHP.XOption.distance,
             (o, d) -> XHP.XOption.distance = d.intValue(),
             (g, o) -> new TranslatableText("xhp.menu.option.distance", XHP.XOption.distance));
 
-    private static final Option SCALE = new DoubleOption("xhp.menu.option.scale", 10, 40, 1,
-            v -> (double) XHP.XOption.scale * 1000,
-            (o, d) -> XHP.XOption.scale = d.intValue() / 1000F,
-            (g, o) -> new TranslatableText("xhp.menu.option.scale", XHP.XOption.scale * 1000));
-
-    private static final Option HEIGHT = new DoubleOption("xhp.menu.option.height", 0, 20, 1,
-            v -> (double) XHP.XOption.height,
-            (o, d) -> XHP.XOption.height = d.intValue(),
-            (g, o) -> new TranslatableText("xhp.menu.option.height", XHP.XOption.height));
-
     private static final Option STYLE = CyclingOption.create(
-            "xhp.menu.option.style", XOption.StyleEnum.values(),
+            "xhp.menu.option.style", HpRenderer.BarStyleEnum.values(),
             v -> new TranslatableText(v.key),
             o -> XHP.XOption.style,
             (g, o, v) -> XHP.XOption.style = v);
 
-    private static final Option BAR_LENGTH = new DoubleOption("xhp.menu.option.bar_length", 1, 20, 1,
+    private static final Option BAR_LENGTH = new DoubleOption("xhp.menu.option.bar_length", 1, 100, 1,
             v -> (double) XHP.XOption.barLength,
             (o, d) -> XHP.XOption.barLength = d.intValue(),
             (g, o) -> new TranslatableText("xhp.menu.option.bar_length", XHP.XOption.barLength));
 
-    private static final Option BAR_HEIGHT = new DoubleOption("xhp.menu.option.bar_height", 1, 20, 1,
+    private static final Option BAR_HEIGHT = new DoubleOption("xhp.menu.option.bar_height", 1, 40, 1,
             v -> (double) XHP.XOption.barHeight,
             (o, d) -> XHP.XOption.barHeight = d.intValue(),
             (g, o) -> new TranslatableText("xhp.menu.option.bar_height", XHP.XOption.barHeight));
@@ -179,12 +176,12 @@ public class ModMenuScreen extends Screen {
                 FOCUS_DELAY, TIPS_SETTINGS,
                 NAME, HP,
                 VISUALIZATION, DAMAGE,
+                DAMAGE_FOLLOW, ONE_LINE,
                 DISTANCE
         };
         Option[] icon = {
-                STYLE, HEIGHT,
-                BAR_LENGTH, BAR_HEIGHT,
-                SCALE, FRIEND_COLOR,
+                STYLE, BAR_LENGTH,
+                BAR_HEIGHT, FRIEND_COLOR,
                 MOB_COLOR, EMPTY_COLOR,
                 DAMAGE_COLOR, CRITIC_DAMAGE_COLOR
         };
