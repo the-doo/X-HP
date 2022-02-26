@@ -108,11 +108,6 @@ public abstract class HpUtil {
             return false;
         }
 
-        // option to if entity hidden
-        if (XHP.XOption.syncWithHide && entity.isInvisible()) {
-            return false;
-        }
-
         // todo filter list
         if (entity instanceof ArmorStandEntity && XHP.XOption.ignoreArmorStandEntity) {
             return false;
@@ -128,6 +123,11 @@ public abstract class HpUtil {
     }
 
     public static boolean canRender(LivingEntity entity) {
+        // option to if entity hidden
+        if (XHP.XOption.syncWithHide && entity.isInvisible()) {
+            return false;
+        }
+
         Entity camera = MinecraftClient.getInstance().cameraEntity;
         if (camera == null) {
             return false;

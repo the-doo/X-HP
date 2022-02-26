@@ -31,7 +31,9 @@ public class XHP implements ClientModInitializer {
                 return;
             }
 
-            TipsRenderer.INSTANCE.tips(matrixStack, target);
+            if (HpUtil.mustCheck(target)) {
+                TipsRenderer.INSTANCE.tips(matrixStack, target);
+            }
         }));
     }
 }

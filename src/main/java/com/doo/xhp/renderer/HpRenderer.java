@@ -61,7 +61,7 @@ public interface HpRenderer {
 
         // draw damage
         if (XHP.XOption.damage && (!XHP.XOption.damageFollow || can)) {
-            DamageRenderer.INSTANCE.drawDamage(matrices, textRenderer, entity, vertexConsumers, light);
+            DamageRenderer.INSTANCE.drawDamage(matrices, textRenderer, entity, vertexConsumers);
         }
 
         // draw other info

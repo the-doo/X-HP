@@ -39,8 +39,8 @@ public class ModMenuScreen extends Screen {
 
     private static final Option SYNC_WITH_HIDE = CyclingOption.create(
             "xhp.menu.option.sync_with_hide",
-            o -> XHP.XOption.syncWithHud,
-            (g, o, v) -> XHP.XOption.syncWithHud = v);
+            o -> XHP.XOption.syncWithHide,
+            (g, o, v) -> XHP.XOption.syncWithHide = v);
 
     private static final Option FOCUS_DELAY = new DoubleOption("xhp.menu.option.focus_delay", 0, 10, 0.1F,
             v -> XHP.XOption.focusDelay,
