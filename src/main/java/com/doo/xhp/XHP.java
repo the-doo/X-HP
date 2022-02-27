@@ -2,12 +2,7 @@ package com.doo.xhp;
 
 import com.doo.xhp.config.Config;
 import com.doo.xhp.config.XOption;
-import com.doo.xhp.renderer.TipsRenderer;
-import com.doo.xhp.util.HpUtil;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
 
 public class XHP implements ClientModInitializer {
 
