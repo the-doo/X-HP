@@ -61,7 +61,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
         float damage = f - preHealth;
         preHealth = f;
-        if (damage == 0) {
+        if (damage == 0 || f == 0) {
             return;
         }
 

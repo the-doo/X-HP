@@ -59,6 +59,11 @@ public class ModMenuScreen extends Screen {
         }
     };
 
+    private static final Option SEE_THROUGH = CyclingOption.create(
+            "xhp.menu.option.see_through",
+            o -> XHP.XOption.seeThrough,
+            (g, o, v) -> XHP.XOption.seeThrough = v);
+
     private static final Option NAME = CyclingOption.create(
             "xhp.menu.option.name",
             o -> XHP.XOption.name,
@@ -174,10 +179,10 @@ public class ModMenuScreen extends Screen {
                 ENABLED, DISPLAY,
                 SYNC_WITH_HUD, SYNC_WITH_HIDE,
                 FOCUS_DELAY, TIPS_SETTINGS,
-                NAME, HP,
-                VISUALIZATION, DAMAGE,
-                DAMAGE_FOLLOW, ONE_LINE,
-                DISTANCE
+                SEE_THROUGH, NAME,
+                HP, VISUALIZATION,
+                DAMAGE, DAMAGE_FOLLOW,
+                ONE_LINE, DISTANCE
         };
         Option[] icon = {
                 STYLE, BAR_LENGTH,
