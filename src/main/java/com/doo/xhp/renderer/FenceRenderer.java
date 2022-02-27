@@ -2,7 +2,7 @@ package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -28,7 +28,7 @@ public class FenceRenderer implements HpRenderer {
     }
 
     @Override
-    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers) {
         matrixStack.push();
 
         String fenceStr = "||||||||||||||||||||";
@@ -38,7 +38,7 @@ public class FenceRenderer implements HpRenderer {
         heal.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)));
         empty.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(XHP.XOption.emptyColor)));
 
-        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, heal.append(empty), 0, y, color);
+        HpRenderer.drawText(matrixStack, client, 0, y, color, heal.append(empty), vertexConsumers);
 
         matrixStack.pop();
 

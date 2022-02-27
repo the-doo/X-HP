@@ -2,9 +2,10 @@ package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
 import com.doo.xhp.util.HpUtil;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -66,13 +67,13 @@ public interface HpRenderer {
 
         // draw other info
         if (can) {
-            render(matrices, entity);
+            render(matrices, entity, hasLabel, vertexConsumers);
         }
 
         matrices.pop();
     }
 
-    static void render(MatrixStack matrixStack, LivingEntity e) {
+    static void render(MatrixStack matrixStack, LivingEntity e, boolean hasLabel, VertexConsumerProvider vertexConsumers) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         Entity camera = client.getCameraEntity();
@@ -87,37 +88,39 @@ public interface HpRenderer {
 
         float health = e.getHealth();
         int color = HpUtil.isFriend(e, camera) ? XHP.XOption.friendColor : XHP.XOption.mobColor;
-        int y = 0;
+        int y = hasLabel ? -client.textRenderer.fontHeight : 0;
 
         matrixStack.push();
 
+        RenderSystem.disableDepthTest();
+
         // hp
         if (XHP.XOption.hp && !XHP.XOption.oneLine) {
-            y -= drawText(matrixStack, client, y, color, Text.of(HpUtil.FORMATTER.format(health)));
+            y -= drawText(matrixStack, client, 0, y, color, Text.of(HpUtil.FORMATTER.format(health)), vertexConsumers);
             y -= 3;
         }
 
         // icon
         if (XHP.XOption.visualization) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
-            y -= XHP.XOption.style.layout.draw(matrixStack, client, y, color, healScale);
+            y -= XHP.XOption.style.layout.draw(matrixStack, client, y, color, healScale, vertexConsumers);
             y -= 3;
         }
 
         // name
         if (XHP.XOption.name && !XHP.XOption.oneLine) {
-            drawText(matrixStack, client, y, color, e.getDisplayName());
+            drawText(matrixStack, client, 0, y, color, e.getDisplayName(), vertexConsumers);
         }
 
         // one line
         if (XHP.XOption.oneLine) {
-            drawOneLine(matrixStack, client, y, color, XHP.XOption.name ? e.getDisplayName() : null, XHP.XOption.hp ? Text.of(HpUtil.FORMATTER.format(health)) : null);
+            drawOneLine(matrixStack, client, y, color, XHP.XOption.name ? e.getDisplayName() : null, XHP.XOption.hp ? Text.of(HpUtil.FORMATTER.format(health)) : null, vertexConsumers);
         }
 
         matrixStack.pop();
     }
 
-    static void drawOneLine(MatrixStack matrixStack, MinecraftClient client, int y, int color, Text name, Text hp) {
+    static void drawOneLine(MatrixStack matrixStack, MinecraftClient client, int y, int color, Text name, Text hp, VertexConsumerProvider vertexConsumers) {
         if (name == null && hp == null) {
             return;
         }
@@ -146,33 +149,25 @@ public interface HpRenderer {
         }
 
         if (name != null) {
-            DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, name, -width / 2 + nameW / 2, y, color);
+            drawText(matrixStack, client, -width / 2 + nameW / 2, y, color, name, vertexConsumers);
         }
 
         if (hp != null) {
-            DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, hp, hpX, hpY, color);
+            drawText(matrixStack, client, hpX, hpY, color, hp, vertexConsumers);
         }
 
         matrixStack.pop();
     }
 
-    /**
-     * 画名字
-     *
-     * @param matrixStack 矩阵
-     * @param client      客户端
-     * @param y           y坐标
-     * @param color       颜色
-     * @param text        名字
-     */
-    private static int drawText(MatrixStack matrixStack, MinecraftClient client, int y, int color, Text text) {
+    static int drawText(MatrixStack matrixStack, MinecraftClient client, int x, int y, int color, Text text, VertexConsumerProvider vertexConsumers) {
         matrixStack.push();
 
-        DrawableHelper.drawCenteredText(matrixStack, client.textRenderer, text, 0, y, color);
+        boolean canSee = XHP.XOption.seeThrough;
+        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getPositionMatrix(), vertexConsumers, canSee, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
         matrixStack.pop();
         return client.textRenderer.fontHeight;
     }
 
-    int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale);
+    int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers);
 }

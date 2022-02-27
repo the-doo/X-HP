@@ -1,9 +1,9 @@
 package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class BarRenderer implements HpRenderer {
@@ -26,10 +26,8 @@ public class BarRenderer implements HpRenderer {
     }
 
     @Override
-    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers) {
         matrixStack.push();
-
-        RenderSystem.enableDepthTest();
 
         int height = XHP.XOption.barHeight;
 

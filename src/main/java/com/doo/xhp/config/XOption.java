@@ -72,6 +72,11 @@ public class XOption {
     public int[] tipsLocation = {0, 0};
 
     /**
+     * see through
+     */
+    public boolean seeThrough = true;
+
+    /**
      * 名字
      */
     public boolean name = true;

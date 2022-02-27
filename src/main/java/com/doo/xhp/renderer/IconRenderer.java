@@ -4,6 +4,7 @@ import com.doo.xhp.XHP;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -33,11 +34,9 @@ public class IconRenderer implements HpRenderer {
     }
 
     @Override
-    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers) {
 
         matrixStack.push();
-
-        RenderSystem.enableDepthTest();
 
         y = -3 - width;
 

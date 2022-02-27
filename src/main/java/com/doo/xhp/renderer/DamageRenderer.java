@@ -37,7 +37,7 @@ public class DamageRenderer implements HpRenderer {
     }
 
     @Override
-    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale) {
+    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers) {
         return 0;
     }
 
@@ -68,7 +68,7 @@ public class DamageRenderer implements HpRenderer {
             }
 
             int speed = 3;
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), t * d.x() * speed, -t * d.y() * speed, color, false, matrix4f, vertexConsumers, true, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), t * d.x() * speed, -t * d.y() * speed, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
         });
 
         matrices.pop();
