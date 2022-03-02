@@ -78,7 +78,7 @@ public class ColorScreen extends Screen {
                 150, 20, ScreenTexts.BACK, ignored -> close()));
     }
 
-    private void close() {
+    public void close() {
         if (client != null) {
             setter.apply(getValue());
             client.setScreen(pre);

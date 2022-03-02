@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Mixin(EntityRenderer.class)
+@Mixin(value = EntityRenderer.class, priority = Integer.MAX_VALUE)
 public abstract class EntityRenderMixin<T extends Entity> {
 
     @Shadow

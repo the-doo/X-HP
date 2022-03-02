@@ -92,7 +92,9 @@ public interface HpRenderer {
 
         matrixStack.push();
 
-        RenderSystem.disableDepthTest();
+        if (XHP.XOption.seeThrough) {
+            RenderSystem.disableDepthTest();
+        }
 
         // hp
         if (XHP.XOption.hp && !XHP.XOption.oneLine) {
