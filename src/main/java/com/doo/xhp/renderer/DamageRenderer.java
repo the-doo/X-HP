@@ -53,9 +53,9 @@ public class DamageRenderer implements HpRenderer {
         long time = entity.world.getTime();
         damageRS.stream().filter(d -> time - d.time() <= 30).forEach(d -> {
             long t = time - d.time();
-            float scale = 0.9F + Math.min(1F, 10F / t);
-            if (t < 5) {
-                scale = 1;
+            float scale = 1.2F + Math.min(1F, 6F / t);
+            if (t < 6) {
+                scale = 1.2F + Math.min(1F, t / 5F);
             }
 
             matrices.scale(scale, scale, scale);
@@ -68,7 +68,9 @@ public class DamageRenderer implements HpRenderer {
             }
 
             int speed = 3;
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), t * d.x() * speed, -t * d.y() * speed, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            float x = t * d.x() * speed;
+            float y = -t * d.y() * speed;
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
         });
 
         matrices.pop();
