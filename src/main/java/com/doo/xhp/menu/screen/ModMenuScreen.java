@@ -211,7 +211,7 @@ public class ModMenuScreen extends Screen {
         return INSTANCE;
     }
 
-    private void close() {
+    public void close() {
         if (client != null) {
             // 返回上个页面
             client.currentScreen = this.pre;

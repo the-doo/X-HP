@@ -70,7 +70,7 @@ public class DamageRenderer implements HpRenderer {
             int speed = 3;
             float x = t * d.x() * speed;
             float y = -t * d.y() * speed;
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, true, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE);
         });
 
         matrices.pop();
