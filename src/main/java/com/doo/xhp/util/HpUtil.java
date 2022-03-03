@@ -28,17 +28,16 @@ public abstract class HpUtil {
     }
 
     public static LivingEntity focusTarget(Entity entity) {
-        return HpUtil.focusResult(entity, entity.raycast(XHP.XOption.distance, 0, false));
-//        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
-//        Vec3d v1 = entity.getCameraPosVec(0);
-//        Vec3d v2 = entity.getRotationVec(0);
-//        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
-//
-//        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
-//
-//        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
-//
-//        return HpUtil.focusResult(entity, result);
+        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
+        Vec3d v1 = entity.getCameraPosVec(0);
+        Vec3d v2 = entity.getRotationVec(0);
+        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
+
+        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
+
+        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
+
+        return HpUtil.focusResult(entity, result);
     }
 
 
