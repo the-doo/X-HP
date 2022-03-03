@@ -53,9 +53,9 @@ public class DamageRenderer implements HpRenderer {
         long time = entity.world.getTime();
         damageRS.stream().filter(d -> time - d.time() <= 30).forEach(d -> {
             long t = time - d.time();
-            float scale = 1.2F + Math.min(1F, 6F / t);
+            float scale = 0.8F + Math.min(1F, 6F / t);
             if (t < 6) {
-                scale = 1.2F + Math.min(1F, t / 5F);
+                scale = 0.8F + Math.min(1F, t / 5F);
             }
 
             matrices.scale(scale, scale, scale);
@@ -67,10 +67,10 @@ public class DamageRenderer implements HpRenderer {
                 color = XHP.XOption.criticDamageColor;
             }
 
-            int speed = 3;
+            int speed = 2;
             float x = t * d.x() * speed;
-            float y = -t * d.y() * speed;
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE);
+            float y = -t * d.y() * speed + (XHP.XOption.damageFromMiddle ? entity.getHeight() * 20F : 0);
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
         });
 
         matrices.pop();

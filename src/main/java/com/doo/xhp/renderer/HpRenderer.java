@@ -67,13 +67,13 @@ public interface HpRenderer {
 
         // draw other info
         if (can) {
-            render(matrices, entity, hasLabel, vertexConsumers);
+            renderLayer(matrices, entity, hasLabel, vertexConsumers);
         }
 
         matrices.pop();
     }
 
-    static void render(MatrixStack matrixStack, LivingEntity e, boolean hasLabel, VertexConsumerProvider vertexConsumers) {
+    static void renderLayer(MatrixStack matrixStack, LivingEntity e, boolean hasLabel, VertexConsumerProvider vertexConsumers) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         Entity camera = client.getCameraEntity();

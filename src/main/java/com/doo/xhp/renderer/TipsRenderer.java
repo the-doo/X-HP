@@ -52,10 +52,10 @@ public class TipsRenderer implements HpRenderer {
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
 
         if (Math.abs(mc.getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 10) {
-            x = (mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips)) / 2;
+            x = mc.getWindow().getScaledWidth() / 2;
         }
 
-        DrawableHelper.drawTextWithShadow(matrixStack, mc.textRenderer, tips, x, y, XHP.XOption.tipsColor);
+        DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), x, y, XHP.XOption.tipsColor);
 
         matrixStack.pop();
     }
