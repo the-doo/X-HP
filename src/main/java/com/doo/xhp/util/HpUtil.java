@@ -35,7 +35,7 @@ public abstract class HpUtil {
 
         Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
 
-        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
+        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, e -> !e.isSpectator() && e.collides(), XHP.XOption.distance * XHP.XOption.distance);
 
         return HpUtil.focusResult(entity, result);
     }
