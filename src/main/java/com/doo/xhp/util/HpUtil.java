@@ -156,7 +156,10 @@ public abstract class HpUtil {
         if (e.getAttacker() == camera && e.age - e.getLastAttackedTime() < 800) {
             return false;
         }
+        if (e instanceof Angerable) {
+            return ((Angerable) e).getAngerTime() < 1;
+        }
         // monster or angerable
-        return !(e instanceof Monster || e instanceof Angerable);
+        return !(e instanceof Monster);
     }
 }
