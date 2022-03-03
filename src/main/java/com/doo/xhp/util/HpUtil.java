@@ -13,6 +13,7 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
@@ -27,16 +28,17 @@ public abstract class HpUtil {
     }
 
     public static LivingEntity focusTarget(Entity entity) {
-        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
-        Vec3d v1 = entity.getCameraPosVec(0);
-        Vec3d v2 = entity.getRotationVec(0);
-        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
-
-        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
-
-        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
-
-        return HpUtil.focusResult(entity, result);
+        return HpUtil.focusResult(entity, entity.raycast(XHP.XOption.distance, 0, false));
+//        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
+//        Vec3d v1 = entity.getCameraPosVec(0);
+//        Vec3d v2 = entity.getRotationVec(0);
+//        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
+//
+//        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
+//
+//        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, t -> true, XHP.XOption.distance * XHP.XOption.distance);
+//
+//        return HpUtil.focusResult(entity, result);
     }
 
 
@@ -58,7 +60,7 @@ public abstract class HpUtil {
     /**
      * Check focus result
      */
-    public static LivingEntity focusResult(Entity entity, EntityHitResult result) {
+    public static LivingEntity focusResult(Entity entity, HitResult result) {
         // entity maybe change
         if (entity != looker) {
             looker = entity;
@@ -76,8 +78,8 @@ public abstract class HpUtil {
         }
 
         // if hit result now
-        if (result != null && result.getEntity() instanceof LivingEntity) {
-            target = (LivingEntity) result.getEntity();
+        if (result instanceof EntityHitResult && ((EntityHitResult) result).getEntity() instanceof LivingEntity) {
+            target = (LivingEntity) ((EntityHitResult) result).getEntity();
             focusTarget = target;
             focusTime = entity.age;
         }
