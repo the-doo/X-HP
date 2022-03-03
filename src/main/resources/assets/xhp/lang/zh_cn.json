@@ -11,6 +11,7 @@
     "xhp.menu.option.visualization": "显示可视化",
     "xhp.menu.option.damage": "显示伤害",
     "xhp.menu.option.damage_follow": "伤害跟随显示方式",
+    "xhp.menu.option.damage_from_middle": "伤害生成位置靠近中间",
     "xhp.menu.option.distance": "最大距离: %d",
     "xhp.menu.option.scale": "缩放比例: %d",
     "xhp.menu.option.height": "基础高度: %d",

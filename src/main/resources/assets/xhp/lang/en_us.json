@@ -11,6 +11,7 @@
     "xhp.menu.option.visualization": "Show Visualization",
     "xhp.menu.option.damage": "Show Damage",
     "xhp.menu.option.damage_follow": "Damage Follows Display Mode",
+    "xhp.menu.option.damage_from_middle": "Damage Location closely middle",
     "xhp.menu.option.distance": "Max Distance: %d",
     "xhp.menu.option.scale": "Text And Image Scale: %d",
     "xhp.menu.option.height": "Base Height: %d",

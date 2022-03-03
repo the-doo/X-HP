@@ -89,7 +89,7 @@ public class XOption {
     /**
      * name and hp on one line
      */
-    public boolean oneLine = false;
+    public boolean oneLine = true;
 
     /**
      * 血量可视化
@@ -129,7 +129,7 @@ public class XOption {
     /**
      * 血条长度
      */
-    public int barLength = 70;
+    public int barLength = 65;
 
     /**
      * 血条高度
@@ -145,6 +145,11 @@ public class XOption {
      * damage follow display mode
      */
     public boolean damageFollow = false;
+
+    /**
+     * Damage From Middle
+     */
+    public boolean damageFromMiddle = true;
 
     /**
      * 距离

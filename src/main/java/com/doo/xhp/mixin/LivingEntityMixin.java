@@ -33,6 +33,9 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
     @Shadow
     public abstract void setAttacker(@Nullable LivingEntity attacker);
 
+    @Shadow
+    public abstract float getMaxHealth();
+
     private float preHealth = 0;
     private boolean damageIsCrit = false;
     private final List<HpUtil.DamageR> damages = new ArrayList<>();
@@ -61,7 +64,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
         float damage = f - preHealth;
         preHealth = f;
-        if (damage == 0 || f == 0) {
+        if (damage == 0 || preHealth == getMaxHealth()) {
             return;
         }
 
