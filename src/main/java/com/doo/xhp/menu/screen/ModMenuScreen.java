@@ -166,6 +166,9 @@ public class ModMenuScreen extends Screen {
     private static final Option IGNORE_ARMOR_STAND_ENTITY = CyclingOption.create("xhp.menu.option.ignore_armor_stand_entity",
             o -> XHP.XOption.ignoreArmorStandEntity, (g, o, v) -> XHP.XOption.ignoreArmorStandEntity = v);
 
+    private static final Option ENABLED_FTB_TEAM = CyclingOption.create("xhp.menu.option.enabled_ftb_team",
+            o -> XHP.XOption.enableFTBTeam, (g, o, v) -> XHP.XOption.enableFTBTeam = v);
+
     private static final ModMenuScreen INSTANCE = new ModMenuScreen();
 
     private ButtonListWidget list;
@@ -202,6 +205,9 @@ public class ModMenuScreen extends Screen {
         list.addAll(base);
         list.addAll(icon);
         list.addAll(other);
+        if (XHP.hasFTBTeam) {
+            list.addSingleOptionEntry(ENABLED_FTB_TEAM);
+        }
         this.addSelectableChild(list);
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
