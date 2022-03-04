@@ -4,7 +4,7 @@
   "package": "com.doo.xhp.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "EntityRenderMixin",
+    "EntityRenderDispatcherMixin",
     "LivingEntityMixin",
     "PlayEntityMixin"
   ],

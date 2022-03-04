@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,24 +17,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Mixin(value = EntityRenderer.class, priority = Integer.MAX_VALUE)
-public abstract class EntityRenderMixin<T extends Entity> {
+@Mixin(value = EntityRenderDispatcher.class, priority = Integer.MAX_VALUE)
+public abstract class EntityRenderDispatcherMixin {
 
     @Shadow
     @Final
     private TextRenderer textRenderer;
 
-    @Shadow
-    @Final
-    protected EntityRenderDispatcher dispatcher;
-
-    @Shadow
-    protected abstract boolean hasLabel(T entity);
-
-    @Inject(at = @At(value = "HEAD"), method = "render")
-    private void renderH(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;doesRenderOnFire()Z"), method = "render")
+    private <E extends Entity> void renderH(E entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (entity instanceof LivingEntity) {
-            HpRenderer.render(matrices, ((LivingEntity) entity), vertexConsumers, light, textRenderer, dispatcher, hasLabel(entity));
+            HpRenderer.render(matrices, ((LivingEntity) entity), vertexConsumers, light, textRenderer, (EntityRenderDispatcher) (Object) this, entity.hasCustomName() || entity.shouldRenderName());
         }
     }
 }
