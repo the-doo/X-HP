@@ -8,6 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Function;
 
@@ -48,7 +49,7 @@ public class TipsRenderer implements HpRenderer {
 
         Text tips = tipsGetter().apply(target);
 
-        int x = Math.min(XHP.XOption.tipsLocation[0], mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips));
+        int x = MathHelper.clamp(XHP.XOption.tipsLocation[0], mc.textRenderer.getWidth(tips) / 2, mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips) / 2);
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
 
         if (Math.abs(mc.getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 10) {
