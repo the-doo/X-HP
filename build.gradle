@@ -24,6 +24,13 @@ repositories {
     maven {
         url = 'https://maven.terraformersmc.com/releases'
     }
+    maven {
+        url "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.ftb.mods"
+        }
+    }
 }
 
 dependencies {
@@ -35,6 +42,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmeun}"
+
+    modApi("dev.ftb.mods:ftb-teams-fabric:${rootProject.ftb_teams_version}") { transitive false }
 }
 
 processResources {

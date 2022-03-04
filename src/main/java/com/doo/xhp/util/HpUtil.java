@@ -3,13 +3,17 @@ package com.doo.xhp.util;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.XOption;
 import com.doo.xhp.interfaces.Critable;
+import dev.ftb.mods.ftbteams.data.ClientTeam;
+import dev.ftb.mods.ftbteams.data.ClientTeamManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
@@ -149,18 +153,30 @@ public abstract class HpUtil {
      * @param camera 当前摄像机对象
      * @return 是否
      */
-    public static boolean isFriend(LivingEntity e, Entity camera) {
+    public static int getColor(LivingEntity e, Entity camera) {
         if (e.isTeammate(camera)) {
-            return true;
+            return XHP.XOption.friendColor;
         }
         // is attacker
-        if (e.getAttacker() == camera && e.age - e.getLastAttackedTime() < 800) {
-            return false;
+        if (e.getAttacker() == camera && e.age - e.getLastAttackedTime() < 100) {
+            return XHP.XOption.mobColor;
         }
         if (e instanceof Angerable) {
-            return ((Angerable) e).getAngerTime() < 1;
+            return ((Angerable) e).getAngerTime() < 1 ? XHP.XOption.friendColor : XHP.XOption.mobColor;
         }
+
+        // support FTB Team
+        if (XHP.hasFTBTeam && XHP.XOption.enableFTBTeam && camera instanceof PlayerEntity && ClientTeamManager.INSTANCE.selfTeam != null) {
+            ClientTeam team;
+            if (e instanceof PlayerEntity && (team = ClientTeamManager.INSTANCE.getTeam(e.getUuid())) != null) {
+                return team.getColor();
+            }
+            if (e instanceof Tameable && (team = ClientTeamManager.INSTANCE.getTeam(((Tameable) e).getOwnerUuid())) != null) {
+                return team.getColor();
+            }
+        }
+
         // monster or angerable
-        return !(e instanceof Monster);
+        return !(e instanceof Monster) ? XHP.XOption.friendColor : XHP.XOption.mobColor;
     }
 }

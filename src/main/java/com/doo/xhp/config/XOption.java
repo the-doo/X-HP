@@ -34,6 +34,11 @@ public class XOption {
     public Display display = Display.FOCUS;
 
     /**
+     * FTB Team
+     */
+    public boolean enableFTBTeam = true;
+
+    /**
      * Display
      */
     public enum Display {

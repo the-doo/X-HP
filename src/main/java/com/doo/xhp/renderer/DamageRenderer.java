@@ -5,7 +5,6 @@ import com.doo.xhp.interfaces.Damageable;
 import com.doo.xhp.util.HpUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -37,11 +36,11 @@ public class DamageRenderer implements HpRenderer {
     }
 
     @Override
-    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers) {
+    public int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers, int light) {
         return 0;
     }
 
-    public void drawDamage(MatrixStack matrices, TextRenderer textRenderer, LivingEntity entity, VertexConsumerProvider vertexConsumers) {
+    public void drawDamage(MatrixStack matrices, TextRenderer textRenderer, LivingEntity entity, VertexConsumerProvider vertexConsumers, int light) {
         if (!(entity instanceof Damageable)) {
             return;
         }
@@ -70,7 +69,7 @@ public class DamageRenderer implements HpRenderer {
             int speed = 2;
             float x = t * d.x() * speed;
             float y = -t * d.y() * speed + (XHP.XOption.damageFromMiddle ? entity.getHeight() * 20F : 0);
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x, y, color, false, matrix4f, vertexConsumers, XHP.XOption.seeThrough, 0xFF, light);
         });
 
         matrices.pop();

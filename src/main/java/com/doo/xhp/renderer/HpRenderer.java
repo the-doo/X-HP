@@ -62,18 +62,18 @@ public interface HpRenderer {
 
         // draw damage
         if (XHP.XOption.damage && (!XHP.XOption.damageFollow || can)) {
-            DamageRenderer.INSTANCE.drawDamage(matrices, textRenderer, entity, vertexConsumers);
+            DamageRenderer.INSTANCE.drawDamage(matrices, textRenderer, entity, vertexConsumers, light);
         }
 
         // draw other info
         if (can) {
-            renderLayer(matrices, entity, hasLabel, vertexConsumers);
+            renderLayer(matrices, entity, hasLabel, vertexConsumers, light);
         }
 
         matrices.pop();
     }
 
-    static void renderLayer(MatrixStack matrixStack, LivingEntity e, boolean hasLabel, VertexConsumerProvider vertexConsumers) {
+    static void renderLayer(MatrixStack matrixStack, LivingEntity e, boolean hasLabel, VertexConsumerProvider vertexConsumers, int light) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         Entity camera = client.getCameraEntity();
@@ -87,7 +87,8 @@ public interface HpRenderer {
         }
 
         float health = e.getHealth();
-        int color = HpUtil.isFriend(e, camera) ? XHP.XOption.friendColor : XHP.XOption.mobColor;
+        int color = HpUtil.getColor(e, camera);
+
         int y = hasLabel ? -client.textRenderer.fontHeight : 0;
 
         matrixStack.push();
@@ -105,13 +106,14 @@ public interface HpRenderer {
         // icon
         if (XHP.XOption.visualization) {
             float healScale = Math.min(health / e.getMaxHealth(), 1);
-            y -= XHP.XOption.style.layout.draw(matrixStack, client, y, color, healScale, vertexConsumers);
+            y -= XHP.XOption.style.layout.draw(matrixStack, client, y, color, healScale, vertexConsumers, light);
             y -= 3;
         }
 
         // name
         if (XHP.XOption.name && !XHP.XOption.oneLine) {
-            drawText(matrixStack, client, 0, y, color, e.getDisplayName(), vertexConsumers);
+            y -= drawText(matrixStack, client, 0, y, color, e.getDisplayName(), vertexConsumers);
+            y -= 3;
         }
 
         // one line
@@ -171,5 +173,5 @@ public interface HpRenderer {
         return client.textRenderer.fontHeight;
     }
 
-    int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers);
+    int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers, int light);
 }

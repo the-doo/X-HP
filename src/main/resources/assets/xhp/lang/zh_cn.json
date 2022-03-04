@@ -24,6 +24,7 @@
     "xhp.menu.option.damage_color": "伤害颜色",
     "xhp.menu.option.critic_damage_color": "暴击伤害颜色",
     "xhp.menu.option.ignore_armor_stand_entity": "忽略显示盔甲架HP",
+    "xhp.menu.option.enabled_ftb_team": "配合FTB团队显示",
 
     "xhp.menu.option.tips_settings": "提示设置",
     "xhp.menu.option.tips": "开启提示",
