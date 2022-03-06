@@ -77,9 +77,19 @@ public class XOption {
     public int[] tipsLocation = {0, 0};
 
     /**
+     * tips location middle x, y
+     */
+    public boolean[] tipsMiddle = {false, false};
+
+    /**
+     * tips scale
+     */
+    public int tipsScale = 10;
+
+    /**
      * see through
      */
-    public boolean seeThrough = true;
+    public boolean seeThrough = false;
 
     /**
      * 名字
@@ -155,6 +165,11 @@ public class XOption {
      * Damage From Middle
      */
     public boolean damageFromMiddle = true;
+
+    /**
+     * damage scale
+     */
+    public int damageScale = 8;
 
     /**
      * 距离

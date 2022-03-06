@@ -5,6 +5,7 @@ import com.doo.xhp.config.XOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -47,18 +48,28 @@ public class TipsRenderer implements HpRenderer {
 
         MinecraftClient mc = MinecraftClient.getInstance();
 
+        float scale = XHP.XOption.tipsScale / 10F;
+        matrixStack.scale(scale, scale, scale);
+
         Text tips = tipsGetter().apply(target);
 
         int x = MathHelper.clamp(XHP.XOption.tipsLocation[0], mc.textRenderer.getWidth(tips) / 2, mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips) / 2);
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
 
-        if (Math.abs(mc.getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 10) {
+        if (XHP.XOption.tipsMiddle[0]) {
             x = mc.getWindow().getScaledWidth() / 2;
         }
+        if (XHP.XOption.tipsMiddle[1]) {
+            y = mc.getWindow().getScaledHeight() / 2;
+        }
 
-        DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), x, y, XHP.XOption.tipsColor);
+        DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), (int) (x / scale), (int) (y / scale), XHP.XOption.tipsColor);
 
         matrixStack.pop();
+    }
+
+    private double getScaleF(Window window) {
+        return window.getScaleFactor();
     }
 
     private static Function<LivingEntity, Text> tipsGetter() {
