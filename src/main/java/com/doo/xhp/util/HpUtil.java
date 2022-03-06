@@ -12,6 +12,7 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -124,7 +125,7 @@ public abstract class HpUtil {
         }
 
         double distance = camera.getPos().distanceTo(entity.getPos());
-        return !(distance > XHP.XOption.distance || distance < entity.getHeight() * 0.6);
+        return !(distance > XHP.XOption.distance || distance < 0.8);
     }
 
     public static boolean canRender(LivingEntity entity) {
@@ -157,8 +158,8 @@ public abstract class HpUtil {
         if (e.isTeammate(camera)) {
             return XHP.XOption.friendColor;
         }
-        // is attacker
-        if (e.getAttacker() == camera && e.age - e.getLastAttackedTime() < 100) {
+        // is attacker or hostileEntity
+        if (e instanceof HostileEntity || e.getAttacker() == camera && e.age - e.getLastAttackedTime() < 100) {
             return XHP.XOption.mobColor;
         }
         if (e instanceof Angerable) {

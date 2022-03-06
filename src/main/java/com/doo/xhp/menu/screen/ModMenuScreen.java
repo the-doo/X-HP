@@ -84,6 +84,11 @@ public class ModMenuScreen extends Screen {
     private static final Option DAMAGE_FROM_MIDDLE = CyclingOption.create("xhp.menu.option.damage_from_middle",
             o -> XHP.XOption.damageFromMiddle, (g, o, v) -> XHP.XOption.damageFromMiddle = v);
 
+    private static final Option DAMAGE_SCALE = new DoubleOption("xhp.menu.option.damage_scale", 1, 30, 1,
+            v -> (double) XHP.XOption.damageScale,
+            (o, d) -> XHP.XOption.damageScale = d.intValue(),
+            (g, o) -> new TranslatableText("xhp.menu.option.damage_scale", XHP.XOption.damageScale));
+
     private static final Option ONE_LINE = CyclingOption.create("xhp.menu.option.one_line",
             o -> XHP.XOption.oneLine, (g, o, v) -> XHP.XOption.oneLine = v);
 
@@ -189,7 +194,7 @@ public class ModMenuScreen extends Screen {
                 HP, VISUALIZATION,
                 DAMAGE, DAMAGE_FOLLOW,
                 ONE_LINE, DISTANCE,
-                DAMAGE_FROM_MIDDLE
+                DAMAGE_FROM_MIDDLE, DAMAGE_SCALE
         };
         Option[] icon = {
                 STYLE, BAR_LENGTH,

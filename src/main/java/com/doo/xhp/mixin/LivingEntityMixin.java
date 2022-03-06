@@ -36,7 +36,11 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
     @Shadow
     public abstract float getMaxHealth();
 
+    @Shadow
+    public abstract boolean damage(DamageSource source, float amount);
+
     private float preHealth = 0;
+    private float preAmount = 0;
     private boolean damageIsCrit = false;
     private final List<HpUtil.DamageR> damages = new ArrayList<>();
 
@@ -46,6 +50,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
             return;
         }
         damageIsCrit = HpUtil.isCrit(source);
+        preAmount = amount;
         if (source.getAttacker() instanceof LivingEntity) {
             setAttacker((LivingEntity) source.getAttacker());
         }
@@ -70,7 +75,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
         float x = (random.nextBoolean() ? 1 : -1) * random.nextFloat();
         float y = random.nextFloat();
-        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit, x, y));
+        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit || preAmount < -damage, x, y));
 
         damageIsCrit = false;
     }

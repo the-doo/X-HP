@@ -17,9 +17,10 @@ public abstract class PlayEntityMixin implements Critable {
 
     private boolean isCrit;
 
-    @ModifyVariable(at = @At(value = "LOAD", ordinal = 1), method = "attack", ordinal = 2)
-    private boolean setCrit(boolean bl3) {
-        return isCrit = bl3;
+    @ModifyVariable(at = @At(value = "STORE", ordinal = 2), method = "attack", ordinal = 0)
+    private float setCrit(float f) {
+        isCrit = true;
+        return f;
     }
 
     @Inject(at = @At(value = "HEAD"), method = "attack")
