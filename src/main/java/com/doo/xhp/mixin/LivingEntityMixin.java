@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -50,7 +51,10 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
             return;
         }
         damageIsCrit = HpUtil.isCrit(source);
-        preAmount = amount;
+        preAmount = 0;
+        if (source.getAttacker() instanceof PlayerEntity) {
+            preAmount = amount;
+        }
         if (source.getAttacker() instanceof LivingEntity) {
             setAttacker((LivingEntity) source.getAttacker());
         }

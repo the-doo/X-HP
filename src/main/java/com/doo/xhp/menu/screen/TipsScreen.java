@@ -22,10 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Tips Settings
@@ -107,6 +104,31 @@ public class TipsScreen extends Screen {
         }
     };
 
+    private static final Option TIPS_TEMPLATE_2 = new Option("") {
+
+        @Override
+        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            if (INSTANCE.client == null) {
+                return null;
+            }
+
+            TextFieldWidget text = new InputWidget(INSTANCE.client.textRenderer, x + 2, y + 2, width - 4, 18,
+                    Collections.singletonList(new TranslatableText("xhp.menu.option.tips_temp_2").asOrderedText()));
+
+            text.setText(XHP.XOption.tipsTemplate2);
+            if (StringUtils.isEmpty(text.getText())) {
+                text.setSuggestion(XOption.AttrKeyValue.DAMAGE.key);
+            }
+
+            text.setChangedListener(v -> {
+                XHP.XOption.tipsTemplate2 = StringUtils.defaultIfEmpty(v, XOption.AttrKeyValue.DAMAGE.key);
+                text.setSuggestion(StringUtils.isEmpty(v) ? XOption.AttrKeyValue.DAMAGE.key : StringUtils.EMPTY);
+            });
+
+            return text;
+        }
+    };
+
     private static final TipsScreen INSTANCE = new TipsScreen();
 
     private ButtonListWidget list;
@@ -122,7 +144,8 @@ public class TipsScreen extends Screen {
         Option[] other = {
                 TIPS, TIPS_COLOR,
                 TIPS_X, TIPS_Y,
-                TIPS_SCALE, TIPS_TEMPLATE
+                TIPS_TEMPLATE, TIPS_TEMPLATE_2,
+                TIPS_SCALE
         };
 
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);

@@ -1,11 +1,13 @@
 package com.doo.xhp.config;
 
+import com.doo.xhp.interfaces.Damageable;
 import com.doo.xhp.renderer.HpRenderer;
 import com.doo.xhp.util.HpUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 
 import java.awt.*;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -191,12 +193,25 @@ public class XOption {
      */
     public String tipsTemplate = DEFAULT_TIPS_TEMP;
 
+    /**
+     * 提示模板2
+     */
+    public String tipsTemplate2 = AttrKeyValue.DAMAGE.key;
+
     public enum AttrKeyValue {
         NAME("#n#", e -> e.getDisplayName().getString(), "xhp.menu.option.tips_temp_name"),
         HEALTH("#h#", e -> HpUtil.FORMATTER.format(e.getHealth()), "xhp.menu.option.tips_temp_health"),
         MAX_HEALTH("#mh#", e -> HpUtil.FORMATTER.format(e.getMaxHealth()), "xhp.menu.option.tips_temp_max_health"),
         ARMOR("#a#", e -> HpUtil.FORMATTER.format(e.getAttributeValue(EntityAttributes.GENERIC_ARMOR)), "xhp.menu.option.tips_temp_armor"),
         TOUGHNESS("#t#", e -> HpUtil.FORMATTER.format(e.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)), "xhp.menu.option.tips_temp_toughness"),
+        DAMAGE("#d#", e -> {
+            List<HpUtil.DamageR> damageList = ((Damageable) e).getDamageList();
+            HpUtil.DamageR last;
+            if (damageList.isEmpty() ||  e.world.getTime() - (last = damageList.get(damageList.size() - 1)).time() > 30) {
+                return "";
+            }
+            return last.damage() > 0 ? "+" : "-" + HpUtil.FORMATTER.format(last.damage());
+        }, "xhp.menu.option.tips_temp_damage"),
 
         ;
 
