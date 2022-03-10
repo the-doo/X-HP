@@ -207,10 +207,10 @@ public class XOption {
         DAMAGE("#d#", e -> {
             List<HpUtil.DamageR> damageList = ((Damageable) e).getDamageList();
             HpUtil.DamageR last;
-            if (damageList.isEmpty() ||  e.world.getTime() - (last = damageList.get(damageList.size() - 1)).time() > 30) {
+            if (damageList.isEmpty() ||  e.world.getTime() - (last = damageList.get(damageList.size() - 1)).time() > 10) {
                 return "";
             }
-            return last.damage() > 0 ? "+" : "-" + HpUtil.FORMATTER.format(last.damage());
+            return HpUtil.FORMATTER.format(last.damage());
         }, "xhp.menu.option.tips_temp_damage"),
 
         ;

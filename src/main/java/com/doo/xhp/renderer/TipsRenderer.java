@@ -5,7 +5,6 @@ import com.doo.xhp.config.XOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -67,7 +66,7 @@ public class TipsRenderer implements HpRenderer {
         DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), (int) (x / scale), (int) (y / scale), XHP.XOption.tipsColor);
 
         // second line
-        if (StringUtils.isNoneBlank(XHP.XOption.tipsTemplate2)) {
+        if (StringUtils.isNotBlank(XHP.XOption.tipsTemplate2)) {
             tips = tipsGetter(XHP.XOption.tipsTemplate2).apply(target);
             DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), (int) (x / scale), (int) (y / scale) + 9, XHP.XOption.tipsColor);
         }

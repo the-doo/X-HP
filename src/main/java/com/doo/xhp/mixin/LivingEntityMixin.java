@@ -50,8 +50,8 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
         if (!world.isClient() || amount <= 0) {
             return;
         }
-        damageIsCrit = HpUtil.isCrit(source);
         preAmount = 0;
+        damageIsCrit = HpUtil.isCrit(source);
         if (source.getAttacker() instanceof PlayerEntity) {
             preAmount = amount;
         }
