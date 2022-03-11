@@ -16,10 +16,6 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 import java.text.DecimalFormat;
@@ -32,24 +28,18 @@ public abstract class HpUtil {
 
     }
 
-    public static LivingEntity focusTarget(Entity entity) {
-        // see net.minecraft.client.render.GameRenderer.updateTargetedEntity
-        Vec3d v1 = entity.getCameraPosVec(0);
-        Vec3d v2 = entity.getRotationVec(0);
-        Vec3d v3 = v1.add(v2.multiply(XHP.XOption.distance));
-
-        Box box = entity.getBoundingBox().stretch(v2.multiply(XHP.XOption.distance)).expand(1);
-
-        EntityHitResult result = ProjectileUtil.raycast(entity, v1, v3, box, e -> !e.isSpectator() && e.collides(), XHP.XOption.distance * XHP.XOption.distance);
-
-        return HpUtil.focusResult(entity, result);
+    public static boolean isStaring(LivingEntity target, Entity entity) {
+        // see net.minecraft.entity.mob.EndermanEntity.isPlayerStaring
+        Vec3d vec3d = entity.getRotationVec(1.0f).normalize();
+        Vec3d vec3d2 = new Vec3d(target.getX() - entity.getX(), target.getEyeY() - entity.getEyeY(), target.getZ() - entity.getZ());
+        double d = vec3d2.length();
+        double e = vec3d.dotProduct(vec3d2.normalize());
+        if (e > 1 - 0.03 / d) {
+            focusResult(entity, target);
+            return true;
+        }
+        return false;
     }
-
-
-    /**
-     * log Player
-     */
-    private static Entity looker = null;
 
     /**
      * log time
@@ -64,26 +54,11 @@ public abstract class HpUtil {
     /**
      * Check focus result
      */
-    public static LivingEntity focusResult(Entity entity, HitResult result) {
-        // entity maybe change
-        if (entity != looker) {
-            looker = entity;
-            focusTime = -1;
-            focusTarget = null;
-        }
-
-        LivingEntity target = null;
+    public static LivingEntity focusResult(Entity entity, LivingEntity target) {
         // default prev target in 2s
-        if (entity.age - focusTime <= 20 * XHP.XOption.focusDelay) {
+        if (target == null && entity.age - focusTime <= 20 * XHP.XOption.focusDelay) {
             target = focusTarget;
         } else {
-            focusTarget = null;
-            focusTime = -1;
-        }
-
-        // if hit result now
-        if (result instanceof EntityHitResult && ((EntityHitResult) result).getEntity() instanceof LivingEntity) {
-            target = (LivingEntity) ((EntityHitResult) result).getEntity();
             focusTarget = target;
             focusTime = entity.age;
         }
@@ -141,7 +116,7 @@ public abstract class HpUtil {
 
         // if FOCUS
         if (XHP.XOption.display == XOption.Display.FOCUS) {
-            return HpUtil.focusTarget(camera) == entity;
+            return isStaring(entity, camera) || focusResult(camera, null) == entity;
         }
 
         return true;

@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
         float x = (random.nextBoolean() ? 1 : -1) * random.nextFloat();
         float y = random.nextFloat();
-        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit || damage < 0 && preAmount < -damage, x, y));
+        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit || preAmount != 0 && preAmount < -damage, x, y));
 
         damageIsCrit = false;
         preAmount = 0;

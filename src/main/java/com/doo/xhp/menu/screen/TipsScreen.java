@@ -44,10 +44,10 @@ public class TipsScreen extends Screen {
     };
 
     private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2D, 1,
-            v -> XHP.XOption.tipsMiddle[0] ? MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 : (double) XHP.XOption.tipsLocation[0],
+            v -> XHP.XOption.tipsMiddle[0] ? MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2 : (double) XHP.XOption.tipsLocation[0],
             (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
             (g, o) -> {
-                if (Math.abs(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 3) {
+                if (Math.abs(MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2 - XHP.XOption.tipsLocation[0]) < 3) {
                     XHP.XOption.tipsMiddle[0] = true;
                     return new TranslatableText("options.fov.min");
                 }
@@ -56,10 +56,10 @@ public class TipsScreen extends Screen {
             });
 
     private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2D, 1,
-            v -> XHP.XOption.tipsMiddle[1] ? MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 : (double) XHP.XOption.tipsLocation[1],
+            v -> XHP.XOption.tipsMiddle[1] ? MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2 : (double) XHP.XOption.tipsLocation[1],
             (o, d) -> XHP.XOption.tipsLocation[1] = d.intValue(),
             (g, o) -> {
-                if (Math.abs(MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - XHP.XOption.tipsLocation[1]) < 3) {
+                if (Math.abs(MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2 - XHP.XOption.tipsLocation[1]) < 3) {
                     XHP.XOption.tipsMiddle[1] = true;
                     return new TranslatableText("options.fov.min");
                 }

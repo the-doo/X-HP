@@ -61,7 +61,7 @@ public class XOption {
     /**
      * disappear delay time on focus
      */
-    public double focusDelay = 1.2;
+    public double focusDelay = 0.8;
 
     /**
      * tips
@@ -71,17 +71,17 @@ public class XOption {
     /**
      * tips color
      */
-    public int tipsColor = Color.BLUE.getRGB();
+    public int tipsColor = Color.RED.darker().getRGB();
 
     /**
      * tips location x, y
      */
-    public int[] tipsLocation = {0, 0};
+    public int[] tipsLocation = {0, 20};
 
     /**
      * tips location middle x, y
      */
-    public boolean[] tipsMiddle = {false, false};
+    public boolean[] tipsMiddle = {true, false};
 
     /**
      * tips scale
@@ -207,7 +207,7 @@ public class XOption {
         DAMAGE("#d#", e -> {
             List<HpUtil.DamageR> damageList = ((Damageable) e).getDamageList();
             HpUtil.DamageR last;
-            if (damageList.isEmpty() ||  e.world.getTime() - (last = damageList.get(damageList.size() - 1)).time() > 10) {
+            if (damageList.isEmpty() || e.world.getTime() - (last = damageList.get(damageList.size() - 1)).time() > 10) {
                 return "";
             }
             return HpUtil.FORMATTER.format(last.damage());

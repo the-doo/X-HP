@@ -8,6 +8,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 
 public class XHP implements ClientModInitializer {
@@ -28,11 +29,12 @@ public class XHP implements ClientModInitializer {
 
         // regis event
         HudRenderCallback.EVENT.register(((matrixStack, tickDelta) -> {
-            if (!XOption.enabled || MinecraftClient.getInstance().cameraEntity == null) {
+            Entity camera = MinecraftClient.getInstance().cameraEntity;
+            if (!XOption.enabled || camera == null) {
                 return;
             }
 
-            LivingEntity target = HpUtil.focusTarget(MinecraftClient.getInstance().cameraEntity);
+            LivingEntity target = HpUtil.focusResult(camera, null);
             if (target == null) {
                 return;
             }
