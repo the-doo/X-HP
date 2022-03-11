@@ -5,8 +5,10 @@ import com.doo.xhp.util.HpUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -39,6 +41,9 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
     @Shadow
     public abstract boolean damage(DamageSource source, float amount);
 
+    @Shadow
+    @Final
+    private AttributeContainer attributes;
     private float preHealth = 0;
     private float preAmount = 0;
     private boolean damageIsCrit = false;
@@ -49,8 +54,11 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
         if (!world.isClient() || amount <= 0) {
             return;
         }
+        preAmount = 0;
         damageIsCrit = HpUtil.isCrit(source);
-        preAmount = amount;
+        if (source.getAttacker() instanceof PlayerEntity) {
+            preAmount = amount;
+        }
         if (source.getAttacker() instanceof LivingEntity) {
             setAttacker((LivingEntity) source.getAttacker());
         }
@@ -58,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
     @Inject(at = @At(value = "HEAD"), method = "getHealth")
     private void getHealthH(CallbackInfoReturnable<Float> cir) {
-        if (!world.isClient()) {
+        if (!world.isClient() || attributes == null) {
             return;
         }
 
@@ -75,9 +83,10 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
         float x = (random.nextBoolean() ? 1 : -1) * random.nextFloat();
         float y = random.nextFloat();
-        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit || preAmount < -damage, x, y));
+        damages.add(new HpUtil.DamageR(damage, world.getTime(), damageIsCrit || preAmount != 0 && preAmount < -damage, x, y));
 
         damageIsCrit = false;
+        preAmount = 0;
     }
 
     @Override

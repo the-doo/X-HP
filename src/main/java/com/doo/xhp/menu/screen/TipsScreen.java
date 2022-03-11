@@ -22,10 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Tips Settings
@@ -47,10 +44,10 @@ public class TipsScreen extends Screen {
     };
 
     private static final Option TIPS_X = new DoubleOption("xhp.menu.option.tips_x", 0, MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2D, 1,
-            v -> XHP.XOption.tipsMiddle[0] ? MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 : (double) XHP.XOption.tipsLocation[0],
+            v -> XHP.XOption.tipsMiddle[0] ? MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2 : (double) XHP.XOption.tipsLocation[0],
             (o, d) -> XHP.XOption.tipsLocation[0] = d.intValue(),
             (g, o) -> {
-                if (Math.abs(MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - XHP.XOption.tipsLocation[0]) < 3) {
+                if (Math.abs(MinecraftClient.getInstance().getWindow().getFramebufferWidth() / 2 - XHP.XOption.tipsLocation[0]) < 3) {
                     XHP.XOption.tipsMiddle[0] = true;
                     return new TranslatableText("options.fov.min");
                 }
@@ -59,10 +56,10 @@ public class TipsScreen extends Screen {
             });
 
     private static final Option TIPS_Y = new DoubleOption("xhp.menu.option.tips_y", 0, MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2D, 1,
-            v -> XHP.XOption.tipsMiddle[1] ? MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 : (double) XHP.XOption.tipsLocation[1],
+            v -> XHP.XOption.tipsMiddle[1] ? MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2 : (double) XHP.XOption.tipsLocation[1],
             (o, d) -> XHP.XOption.tipsLocation[1] = d.intValue(),
             (g, o) -> {
-                if (Math.abs(MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - XHP.XOption.tipsLocation[1]) < 3) {
+                if (Math.abs(MinecraftClient.getInstance().getWindow().getFramebufferHeight() / 2 - XHP.XOption.tipsLocation[1]) < 3) {
                     XHP.XOption.tipsMiddle[1] = true;
                     return new TranslatableText("options.fov.min");
                 }
@@ -107,6 +104,31 @@ public class TipsScreen extends Screen {
         }
     };
 
+    private static final Option TIPS_TEMPLATE_2 = new Option("") {
+
+        @Override
+        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            if (INSTANCE.client == null) {
+                return null;
+            }
+
+            TextFieldWidget text = new InputWidget(INSTANCE.client.textRenderer, x + 2, y + 2, width - 4, 18,
+                    Collections.singletonList(new TranslatableText("xhp.menu.option.tips_temp_2").asOrderedText()));
+
+            text.setText(XHP.XOption.tipsTemplate2);
+            if (StringUtils.isEmpty(text.getText())) {
+                text.setSuggestion(XOption.AttrKeyValue.DAMAGE.key);
+            }
+
+            text.setChangedListener(v -> {
+                XHP.XOption.tipsTemplate2 = StringUtils.defaultIfEmpty(v, XOption.AttrKeyValue.DAMAGE.key);
+                text.setSuggestion(StringUtils.isEmpty(v) ? XOption.AttrKeyValue.DAMAGE.key : StringUtils.EMPTY);
+            });
+
+            return text;
+        }
+    };
+
     private static final TipsScreen INSTANCE = new TipsScreen();
 
     private ButtonListWidget list;
@@ -122,7 +144,8 @@ public class TipsScreen extends Screen {
         Option[] other = {
                 TIPS, TIPS_COLOR,
                 TIPS_X, TIPS_Y,
-                TIPS_SCALE, TIPS_TEMPLATE
+                TIPS_TEMPLATE, TIPS_TEMPLATE_2,
+                TIPS_SCALE
         };
 
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);

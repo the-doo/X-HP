@@ -62,7 +62,7 @@ public class DamageRenderer implements HpRenderer {
 
             int color = XHP.XOption.damageColor;
             if (d.damage() > 0) {
-                color = Color.GREEN.getRGB();
+                color = Color.GREEN.brighter().getRGB();
             } else if (d.isCrit()) {
                 color = XHP.XOption.criticDamageColor;
             }

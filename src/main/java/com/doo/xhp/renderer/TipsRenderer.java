@@ -5,11 +5,11 @@ import com.doo.xhp.config.XOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Function;
 
@@ -51,7 +51,7 @@ public class TipsRenderer implements HpRenderer {
         float scale = XHP.XOption.tipsScale / 10F;
         matrixStack.scale(scale, scale, scale);
 
-        Text tips = tipsGetter().apply(target);
+        Text tips = tipsGetter(XHP.XOption.tipsTemplate).apply(target);
 
         int x = MathHelper.clamp(XHP.XOption.tipsLocation[0], mc.textRenderer.getWidth(tips) / 2, mc.getWindow().getScaledWidth() - mc.textRenderer.getWidth(tips) / 2);
         int y = Math.min(XHP.XOption.tipsLocation[1], mc.getWindow().getScaledHeight() - mc.textRenderer.fontHeight);
@@ -65,16 +65,18 @@ public class TipsRenderer implements HpRenderer {
 
         DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), (int) (x / scale), (int) (y / scale), XHP.XOption.tipsColor);
 
+        // second line
+        if (StringUtils.isNotBlank(XHP.XOption.tipsTemplate2)) {
+            tips = tipsGetter(XHP.XOption.tipsTemplate2).apply(target);
+            DrawableHelper.drawCenteredTextWithShadow(matrixStack, mc.textRenderer, tips.asOrderedText(), (int) (x / scale), (int) (y / scale) + 9, XHP.XOption.tipsColor);
+        }
+
         matrixStack.pop();
     }
 
-    private double getScaleF(Window window) {
-        return window.getScaleFactor();
-    }
-
-    private static Function<LivingEntity, Text> tipsGetter() {
+    private static Function<LivingEntity, Text> tipsGetter(String temp) {
         return e -> {
-            String tips = XHP.XOption.tipsTemplate;
+            String tips = temp;
             if (e != null && tips != null && tips.length() > 0) {
                 // replace all tips
                 for (XOption.AttrKeyValue kv : XOption.AttrKeyValue.values()) {
