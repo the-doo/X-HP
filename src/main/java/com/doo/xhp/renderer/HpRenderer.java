@@ -5,19 +5,21 @@ import com.doo.xhp.util.HpUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 /**
  * Just render
  */
 public interface HpRenderer {
+
+    int MAX_LIGHT = 15728880;
 
     /**
      * 样式枚举
@@ -169,11 +171,17 @@ public interface HpRenderer {
         matrixStack.push();
 
         boolean canSee = XHP.XOption.seeThrough;
-        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getPositionMatrix(), vertexConsumers, canSee, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getPositionMatrix(), vertexConsumers, canSee, 0, MAX_LIGHT);
+//        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getModel(), vertexConsumers, canSee, 0, MAX_LIGHT);
 
         matrixStack.pop();
         return client.textRenderer.fontHeight;
     }
 
     int draw(MatrixStack matrixStack, MinecraftClient client, int y, int color, float healScale, VertexConsumerProvider vertexConsumers, int light);
+
+    default void bindTex(Identifier id) {
+        MinecraftClient.getInstance().getTextureManager().bindTexture(id);
+//        RenderSystem.setShaderTexture(0, id);
+    }
 }

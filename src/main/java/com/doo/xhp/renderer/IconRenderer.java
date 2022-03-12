@@ -1,7 +1,6 @@
 package com.doo.xhp.renderer;
 
 import com.doo.xhp.XHP;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -42,13 +41,11 @@ public class IconRenderer implements HpRenderer {
 
         int x = -width / 2;
         int healWidth = (int) (healScale * width);
-        // 空血槽
         if (healWidth < width) {
-            RenderSystem.setShaderTexture(0, EMPTY_HEART_ID);
+            bindTex(EMPTY_HEART_ID);
             DrawableHelper.drawTexture(matrixStack, x + healWidth, y, healWidth, 0, width - healWidth, width, width, width);
         }
-        // 血槽
-        RenderSystem.setShaderTexture(0, color == XHP.XOption.friendColor ? YELLOW_HEART_ID : HEART_ID);
+        bindTex(color == XHP.XOption.friendColor ? YELLOW_HEART_ID : HEART_ID);
         DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, healWidth, width, width, width);
 
         matrixStack.pop();

@@ -94,12 +94,12 @@ public class XOption {
     public boolean seeThrough = false;
 
     /**
-     * 名字
+     * name
      */
     public boolean name = true;
 
     /**
-     * 血量
+     * hp
      */
     public boolean hp = true;
 
@@ -109,22 +109,22 @@ public class XOption {
     public boolean oneLine = true;
 
     /**
-     * 血量可视化
+     * visualization
      */
     public boolean visualization = true;
 
     /**
-     * 血条还是图片
+     * style
      */
     public HpRenderer.BarStyleEnum style = HpRenderer.BarStyleEnum.BAR;
 
     /**
-     * 中立生物血条颜色
+     * friendColor
      */
     public Integer friendColor = Color.ORANGE.getRGB();
 
     /**
-     * 敌对生物血条颜色
+     * mobColor
      */
     public Integer mobColor = Color.RED.getRGB();
 
@@ -134,27 +134,27 @@ public class XOption {
     public Integer emptyColor = Color.GRAY.getRGB();
 
     /**
-     * 伤害颜色
+     * damageColor
      */
     public Integer damageColor = Color.RED.getRGB();
 
     /**
-     * 暴击伤害颜色
+     * criticDamageColor
      */
     public Integer criticDamageColor = Color.MAGENTA.getRGB();
 
     /**
-     * 血条长度
+     * barLength
      */
     public int barLength = 65;
 
     /**
-     * 血条高度
+     * barHeight
      */
     public int barHeight = 6;
 
     /**
-     * 伤害
+     * damage
      */
     public boolean damage = true;
 
@@ -174,27 +174,27 @@ public class XOption {
     public int damageScale = 8;
 
     /**
-     * 距离
+     * distance
      */
     public int distance = 128;
 
     /**
-     * 忽略盔甲架
+     * ignoreArmorStandEntity
      */
     public boolean ignoreArmorStandEntity = true;
 
     /**
-     * 提示模板
+     * DEFAULT_TIPS_TEMP
      */
     public static final String DEFAULT_TIPS_TEMP = "#n#: #h# / #mh# - Armor(#a#)";
 
     /**
-     * 提示模板
+     * tipsTemplate
      */
     public String tipsTemplate = DEFAULT_TIPS_TEMP;
 
     /**
-     * 提示模板2
+     * tipsTemplate2
      */
     public String tipsTemplate2 = AttrKeyValue.DAMAGE.key;
 

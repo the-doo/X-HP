@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "x-hp",
+  "version": "1.16-2",
+
+  "name": "X-HP",
+  "description": "HP展示\n(Display HP and Damage)",
+  "authors": [
+    "doo"
+  ],
+  "contact": {
+    "sources": "https://github.com/the-doo/x-hp",
+    "issues": "https://github.com/the-doo/x-hp/issues"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/xhp/textures/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.doo.xhp.XHP"
+    ],
+    "modmenu": [ "com.doo.xhp.menu.ModMenu" ]
+  },
+  "mixins": [
+    "xhp.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": ["1.16.X"]
+  },
+  "recommends": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
+  }
+}
