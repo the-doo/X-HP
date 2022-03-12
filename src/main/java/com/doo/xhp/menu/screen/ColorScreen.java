@@ -2,13 +2,13 @@ package com.doo.xhp.menu.screen;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.option.DoubleOption;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.options.DoubleOption;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -56,9 +56,9 @@ public class ColorScreen extends Screen {
         DoubleOption bo = new DoubleOption(blueKey, 0, 255, 1,
                 (o) -> Double.valueOf(b), (o, d) -> b = d.intValue(), (o, c) -> new TranslatableText(blueKey, b));
         Option[] options = {ro, go, bo, new Option("") {
-            //            @Override
-//            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
-            public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+            @Override
+            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+//            public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
                 TextFieldWidget color = new TextFieldWidget(Objects.requireNonNull(client).textRenderer, x, y, width, 20, Text.of("color")) {
                     @Override
                     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -73,9 +73,9 @@ public class ColorScreen extends Screen {
             }
         }};
         list.addAll(options);
-        this.addSelectableChild(list);
+        this.addChild(list);
         // 返回按钮
-        this.addDrawable(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28,
+        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28,
                 150, 20, ScreenTexts.BACK, ignored -> close()));
     }
 

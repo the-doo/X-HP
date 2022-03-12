@@ -46,8 +46,8 @@ public class DamageRenderer implements HpRenderer {
         }
         matrices.push();
 
-//        Matrix4f matrix4f = matrices.peek().getModel();
-        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+        Matrix4f matrix4f = matrices.peek().getModel();
+//        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
 
         List<HpUtil.DamageR> damageRS = ((Damageable) entity).getDamageList();
         long time = entity.world.getTime();

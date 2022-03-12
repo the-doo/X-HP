@@ -6,14 +6,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.option.CyclingOption;
-import net.minecraft.client.option.DoubleOption;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.options.BooleanOption;
+import net.minecraft.client.options.DoubleOption;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.Option;
 import net.minecraft.client.util.OrderableTooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -30,10 +30,10 @@ import java.util.*;
 public class TipsScreen extends Screen {
 
     private static final Option TIPS =
-            CyclingOption.create("xhp.menu.option.tips",
-                    o -> XHP.XOption.tips, (g, o, v) -> XHP.XOption.tips = v);
-//            new BooleanOption("xhp.menu.option.tips",
-//            o -> XHP.XOption.tips, (g, v) -> XHP.XOption.tips = v);
+//            CyclingOption.create("xhp.menu.option.tips",
+//                    o -> XHP.XOption.tips, (g, o, v) -> XHP.XOption.tips = v);
+            new BooleanOption("xhp.menu.option.tips",
+                    o -> XHP.XOption.tips, (g, v) -> XHP.XOption.tips = v);
 
     private static final Option TIPS_COLOR = new ModMenuScreen.ColorOption("xhp.menu.option.tips_color",
             v -> XHP.XOption.tipsColor = v, () -> XHP.XOption.tipsColor);
@@ -70,8 +70,8 @@ public class TipsScreen extends Screen {
     private static final Option TIPS_TEMPLATE = new Option("") {
 
         @Override
-//        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
-        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+//        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
             if (INSTANCE.client == null) {
                 return null;
             }
@@ -103,8 +103,8 @@ public class TipsScreen extends Screen {
     private static final Option TIPS_TEMPLATE_2 = new Option("") {
 
         @Override
-        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
-//        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
+//        public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
+        public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
             if (INSTANCE.client == null) {
                 return null;
             }
@@ -148,12 +148,12 @@ public class TipsScreen extends Screen {
         list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         list.addAll(other);
 
-        this.addSelectableChild(list);
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
-                ScreenTexts.BACK, b -> Optional.ofNullable(client).ifPresent(c -> c.currentScreen = this.pre)));
-//        this.addChild(list);
-//        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
+//        this.addSelectableChild(list);
+//        this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
 //                ScreenTexts.BACK, b -> Optional.ofNullable(client).ifPresent(c -> c.currentScreen = this.pre)));
+        this.addChild(list);
+        this.addButton(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28, 150, 20,
+                ScreenTexts.BACK, b -> Optional.ofNullable(client).ifPresent(c -> c.currentScreen = this.pre)));
     }
 
     public static TipsScreen get(Screen pre) {
@@ -169,12 +169,12 @@ public class TipsScreen extends Screen {
         super.render(matrices, mouseX, mouseY, delta);
 
         // see net.minecraft.client.gui.screen.option.NarratorOptionsScreen.render
-        Optional<ClickableWidget> optional = list.getHoveredButton(mouseX, mouseY);
-//        Optional<AbstractButtonWidget> optional = list.getHoveredButton(mouseX, mouseY);
-        if (optional.isPresent() && optional.get() instanceof OrderableTooltip) {
-            this.renderOrderedTooltip(matrices, ((OrderableTooltip) optional.get()).getOrderedTooltip(), mouseX, mouseY);
-//        if (optional.isPresent() && optional.get() instanceof OrderableTooltip && ((OrderableTooltip) optional.get()).getOrderedTooltip().isPresent()) {
-//            this.renderOrderedTooltip(matrices, ((OrderableTooltip) optional.get()).getOrderedTooltip().get(), mouseX, mouseY);
+//        Optional<ClickableWidget> optional = list.getHoveredButton(mouseX, mouseY);
+        Optional<AbstractButtonWidget> optional = list.getHoveredButton(mouseX, mouseY);
+//        if (optional.isPresent() && optional.get() instanceof OrderableTooltip) {
+//            this.renderOrderedTooltip(matrices, ((OrderableTooltip) optional.get()).getOrderedTooltip(), mouseX, mouseY);
+        if (optional.isPresent() && optional.get() instanceof OrderableTooltip && ((OrderableTooltip) optional.get()).getOrderedTooltip().isPresent()) {
+            this.renderOrderedTooltip(matrices, ((OrderableTooltip) optional.get()).getOrderedTooltip().get(), mouseX, mouseY);
         }
     }
 
@@ -187,13 +187,13 @@ public class TipsScreen extends Screen {
             this.tips = tips;
         }
 
-        @Override
-        public List<OrderedText> getOrderedTooltip() {
-            return tips;
-        }
-//        @Override
-//        public Optional<List<OrderedText>> getOrderedTooltip() {
-//            return Optional.of(tips);
+        //        @Override
+//        public List<OrderedText> getOrderedTooltip() {
+//            return tips;
 //        }
+        @Override
+        public Optional<List<OrderedText>> getOrderedTooltip() {
+            return Optional.of(tips);
+        }
     }
 }

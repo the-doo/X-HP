@@ -171,8 +171,8 @@ public interface HpRenderer {
         matrixStack.push();
 
         boolean canSee = XHP.XOption.seeThrough;
-        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getPositionMatrix(), vertexConsumers, canSee, 0, MAX_LIGHT);
-//        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getModel(), vertexConsumers, canSee, 0, MAX_LIGHT);
+//        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getPositionMatrix(), vertexConsumers, canSee, 0, MAX_LIGHT);
+        client.textRenderer.draw(text, (float) (x - client.textRenderer.getWidth(text) / 2), y, color, true, matrixStack.peek().getModel(), vertexConsumers, canSee, 0, MAX_LIGHT);
 
         matrixStack.pop();
         return client.textRenderer.fontHeight;
