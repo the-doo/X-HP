@@ -56,7 +56,8 @@ public class ColorScreen extends Screen {
         DoubleOption bo = new DoubleOption(blueKey, 0, 255, 1,
                 (o) -> Double.valueOf(b), (o, d) -> b = d.intValue(), (o, c) -> new TranslatableText(blueKey, b));
         Option[] options = {ro, go, bo, new Option("") {
-            @Override
+            //            @Override
+//            public AbstractButtonWidget createButton(GameOptions options, int x, int y, int width) {
             public ClickableWidget createButton(GameOptions options, int x, int y, int width) {
                 TextFieldWidget color = new TextFieldWidget(Objects.requireNonNull(client).textRenderer, x, y, width, 20, Text.of("color")) {
                     @Override
@@ -74,14 +75,14 @@ public class ColorScreen extends Screen {
         list.addAll(options);
         this.addSelectableChild(list);
         // 返回按钮
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28,
+        this.addDrawable(new ButtonWidget(this.width / 2 - 150 / 2, this.height - 28,
                 150, 20, ScreenTexts.BACK, ignored -> close()));
     }
 
     public void close() {
         if (client != null) {
             setter.apply(getValue());
-            client.setScreen(pre);
+            client.currentScreen = pre;
         }
     }
 

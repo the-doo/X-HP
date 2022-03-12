@@ -5,7 +5,6 @@ import com.doo.xhp.interfaces.Damageable;
 import com.doo.xhp.util.HpUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -47,6 +46,7 @@ public class DamageRenderer implements HpRenderer {
         }
         matrices.push();
 
+//        Matrix4f matrix4f = matrices.peek().getModel();
         Matrix4f matrix4f = matrices.peek().getPositionMatrix();
 
         List<HpUtil.DamageR> damageRS = ((Damageable) entity).getDamageList();
@@ -70,7 +70,7 @@ public class DamageRenderer implements HpRenderer {
             int speed = 2;
             float x = t * d.x() * speed;
             float y = -t * d.y() * speed + (XHP.XOption.damageFromMiddle ? entity.getHeight() * 20F : 0);
-            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x / scale, y / scale, color, false, matrix4f, vertexConsumers, true, 0, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            textRenderer.draw(HpUtil.FORMATTER.format(Math.abs(d.damage())), x / scale, y / scale, color, false, matrix4f, vertexConsumers, true, 0, MAX_LIGHT);
         });
 
         matrices.pop();

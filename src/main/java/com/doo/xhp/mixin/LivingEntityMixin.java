@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -44,6 +43,9 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
     @Shadow
     @Final
     private AttributeContainer attributes;
+    @Shadow
+    private @Nullable LivingEntity attacker;
+
     private float preHealth = 0;
     private float preAmount = 0;
     private boolean damageIsCrit = false;
@@ -54,13 +56,11 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
         if (!world.isClient() || amount <= 0) {
             return;
         }
-        preAmount = 0;
+
         damageIsCrit = HpUtil.isCrit(source);
-        if (source.getAttacker() instanceof PlayerEntity) {
-            preAmount = amount;
-        }
         if (source.getAttacker() instanceof LivingEntity) {
             setAttacker((LivingEntity) source.getAttacker());
+            preAmount = amount + HpUtil.stackDamage(attacker.getMainHandStack());
         }
     }
 
@@ -76,8 +76,9 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
         }
 
         float damage = f - preHealth;
+        boolean isBorn = preHealth == 0;
         preHealth = f;
-        if (damage == 0 || preHealth == getMaxHealth()) {
+        if (damage == 0 || isBorn) {
             return;
         }
 
