@@ -3,12 +3,17 @@ package com.doo.xhp.util;
 import com.doo.xhp.XHP;
 import com.doo.xhp.config.XOption;
 import com.doo.xhp.interfaces.Critable;
+import com.google.common.collect.Multimap;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
 import dev.ftb.mods.ftbteams.data.ClientTeamManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.Angerable;
@@ -16,7 +21,9 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.mutable.MutableFloat;
 
 import java.text.DecimalFormat;
 
@@ -77,6 +84,25 @@ public abstract class HpUtil {
         }
 
         return isCritic;
+    }
+
+    public static float stackDamage(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+        Multimap<EntityAttribute, EntityAttributeModifier> modifiers = stack.getAttributeModifiers(EquipmentSlot.MAINHAND);
+        if (modifiers.isEmpty()) {
+            return 0;
+        }
+        MutableFloat value = new MutableFloat();
+        modifiers.forEach((a, m) -> {
+            if (a == EntityAttributes.GENERIC_ATTACK_DAMAGE) {
+                if (m.getOperation() == EntityAttributeModifier.Operation.ADDITION) {
+                    value.add(m.getValue());
+                }
+            }
+        });
+        return value.floatValue();
     }
 
     public static boolean mustCheck(LivingEntity entity) {

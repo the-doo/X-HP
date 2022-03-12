@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "x-hp",
-  "version": "1.18-7.7",
+  "version": "1.18-7.8",
 
   "name": "X-HP",
   "description": "HP展示\n(Display HP and Damage)",
