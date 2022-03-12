@@ -95,6 +95,8 @@ public interface HpRenderer {
 
         if (XHP.XOption.seeThrough) {
             RenderSystem.disableDepthTest();
+        } else {
+            RenderSystem.enableDepthTest();
         }
 
         // hp
