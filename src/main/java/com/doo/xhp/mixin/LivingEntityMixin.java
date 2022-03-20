@@ -66,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity implements Damageable {
 
     @Inject(at = @At(value = "HEAD"), method = "getHealth")
     private void getHealthH(CallbackInfoReturnable<Float> cir) {
-        if (!world.isClient() || attributes == null) {
+        if (!world.isClient() || attributes == null || dataTracker.isEmpty())  {
             return;
         }
 
