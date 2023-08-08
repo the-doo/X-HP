@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.doo.xhp.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "LivingEntityMixin",
+    "LivingEntityRendererMixin",
+    "SyncDataMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

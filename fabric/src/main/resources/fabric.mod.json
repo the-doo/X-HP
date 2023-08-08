@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "x_hp",
+  "version": "${version}",
+
+  "name": "X-HP",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "Apache 2.0",
+  "icon": "assets/xhp/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "modmenu": [
+      "com.doo.xhp.fabric.menu.ModMenu"
+    ],
+    "client": [
+      "com.doo.xhp.fabric.XHPFabric"
+    ]
+  },
+  "mixins": [
+    "x_hp.mixins.json",
+    "x_hp-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.20",
+    "minecraft": ">=1.20"
+  }
+}
