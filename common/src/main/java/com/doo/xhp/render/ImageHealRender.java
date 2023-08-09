@@ -154,7 +154,7 @@ public class ImageHealRender extends IconHealRender {
     protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
         RenderSystem.enableDepthTest();
         PoseStack posed = graphics.pose();
-        if (back != null && (drawType != ImageDrawType.COVER || process < 1)) {
+        if (back != null && (drawType == ImageDrawType.COVER || process < 1)) {
             int startX = drawType == ImageDrawType.COVER ? 0 : (int) (process * back.getWidth());
             posed.pushPose();
             posed.scale(backXScala, backYScala, 1);
