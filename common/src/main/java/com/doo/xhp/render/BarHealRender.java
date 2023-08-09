@@ -5,7 +5,7 @@ import com.doo.xhp.enums.HealthTextGetters;
 import com.doo.xhp.enums.HealthTextPosition;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -32,13 +32,17 @@ public class BarHealRender extends IconHealRender {
         options.addProperty(TEXT_KEY, HealthTextGetters.CURRENT_AND_MAX.name());
     }
 
-    protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
-        PoseStack posed = graphics.pose();
+    protected void renderCurrent(PoseStack posed, double process, int endX, int endY, LivingEntity living) {
         posed.pushPose();
         posed.scale(xScala, yScala, 1);
         RenderSystem.enableDepthTest();
-        graphics.blit(FILL_ID, 0, 0, 0, 0, (int) (T_WEIGHT * process), T_HEIGHT, T_WEIGHT, T_HEIGHT);
-        graphics.blit(BACK_ID, 0, 0, 0, 0, T_WEIGHT, T_HEIGHT, T_WEIGHT, T_HEIGHT);
+        RenderSystem.setShaderTexture(0, FILL_ID);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        GuiComponent.blit(posed, 0, 0, 0, 0, (int) (T_WEIGHT * process), T_HEIGHT, T_WEIGHT, T_HEIGHT);
+
+        RenderSystem.setShaderTexture(0, BACK_ID);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        GuiComponent.blit(posed, 0, 0, 0, 0, T_WEIGHT, T_HEIGHT, T_WEIGHT, T_HEIGHT);
         posed.popPose();
     }
 }

@@ -1,8 +1,8 @@
 package com.doo.xhp.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +14,7 @@ public class FenceHealRender extends NameTagLikeHealRender {
     }
 
     @Override
-    protected int renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
+    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -25,9 +25,9 @@ public class FenceHealRender extends NameTagLikeHealRender {
         String text = back.substring(0, len);
         float fontX = -font.width(back) / 2F;
         font.drawInBatch(Component.literal(back), fontX, 0, 0x20FFFFFF, false,
-                graphics.pose().last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, i);
+                graphics.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, i);
         font.drawInBatch(changeColor(living, Component.literal(text)), fontX, 0, -1, false,
-                graphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+                graphics.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
         return -(int) fontX;
     }
 }

@@ -27,7 +27,7 @@ public abstract class LivingEntityRendererMixin extends EntityRenderer<LivingEnt
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("TAIL"))
     private void injectRenderT(LivingEntity livingEntity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (livingEntity.getType().getCategory() != MobCategory.MISC) {
-            HealthRenderUtil.render(poseStack, entityRenderDispatcher, multiBufferSource, livingEntity, shouldShowName(livingEntity), livingEntity.getNameTagOffsetY(), i);
+            HealthRenderUtil.render(poseStack, entityRenderDispatcher, multiBufferSource, livingEntity, shouldShowName(livingEntity), livingEntity.getBbHeight() + 0.5F, i);
         }
     }
 }

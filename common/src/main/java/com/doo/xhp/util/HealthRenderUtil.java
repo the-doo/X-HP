@@ -7,7 +7,6 @@ import com.doo.xhp.render.ImageHealRender;
 import com.doo.xhp.render.TipHealRender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -86,7 +85,7 @@ public class HealthRenderUtil {
         HealthRenderUtil.render = render;
     }
 
-    public static void renderTips(GuiGraphics graphics) {
+    public static void renderTips(PoseStack graphics) {
         if (XHP.disabled() || !TIP_HEAL_RENDER.enabled()) {
             return;
         }
@@ -95,14 +94,14 @@ public class HealthRenderUtil {
             return;
         }
 
-        graphics.pose().pushPose();
+        graphics.pushPose();
         Minecraft minecraft = Minecraft.getInstance();
         int x0 = minecraft.getWindow().getGuiScaledWidth() / 2;
         int y0 = minecraft.getWindow().getGuiScaledHeight() / 2;
 
         TIP_HEAL_RENDER.render(graphics, minecraft.font, pick, x0, y0);
 
-        graphics.pose().popPose();
+        graphics.popPose();
     }
 
     public static void onClientStarted(Minecraft client) {

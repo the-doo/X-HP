@@ -4,7 +4,8 @@ import com.doo.xhp.enums.HealthRenders;
 import com.doo.xhp.enums.MenuOptType;
 import com.doo.xhp.interfaces.WithOption;
 import com.doo.xhp.screen.MenuScreen;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -37,15 +38,15 @@ public class ColorHealRender extends HealRender {
         friend = (int) WithOption.doubleV(options, BAR_FRIENDLY_KEY);
     }
 
-    protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
-        graphics.fill(0, 0, endX, endY, friendly(living) ? friend : monster);
+    protected void renderCurrent(PoseStack graphics, double process, int endX, int endY, LivingEntity living) {
+        GuiComponent.fill(graphics, 0, 0, endX, endY, friendly(living) ? friend : monster);
     }
 
-    protected void renderLost(GuiGraphics graphics, int startX, int endX, int endY, LivingEntity living) {
-        graphics.fill(startX, 0, endX, endY, FastColor.ARGB32.color(200, 255, 255, 255));
+    protected void renderLost(PoseStack graphics, int startX, int endX, int endY, LivingEntity living) {
+        GuiComponent.fill(graphics, startX, 0, endX, endY, FastColor.ARGB32.color(200, 255, 255, 255));
     }
 
-    protected void renderBack(GuiGraphics graphics, int startX, int endX, int endY) {
-        graphics.fill(startX, 0, endX, endY, FastColor.ARGB32.color(200, 0, 0, 0));
+    protected void renderBack(PoseStack graphics, int startX, int endX, int endY) {
+        GuiComponent.fill(graphics, startX, 0, endX, endY, FastColor.ARGB32.color(200, 0, 0, 0));
     }
 }

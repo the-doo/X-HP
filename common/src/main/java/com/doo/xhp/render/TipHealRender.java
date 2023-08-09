@@ -4,8 +4,9 @@ import com.doo.xhp.XHP;
 import com.doo.xhp.enums.HealthTextGetters;
 import com.doo.xhp.interfaces.WithOption;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.LivingEntity;
 
 import static com.doo.xhp.XHP.ENABLED_KEY;
@@ -46,7 +47,7 @@ public class TipHealRender implements WithOption {
         return options.get(ENABLED_KEY).getAsBoolean();
     }
 
-    public void render(GuiGraphics graphics, Font font, LivingEntity living, int centerX, int centerY) {
+    public void render(PoseStack graphics, Font font, LivingEntity living, int centerX, int centerY) {
         String interval = " ".repeat((int) (WithOption.doubleV(options, INTERVAL_KEY)));
 
         StringBuilder sb = new StringBuilder();
@@ -60,6 +61,6 @@ public class TipHealRender implements WithOption {
 
         String string = sb.toString();
         int startY = centerY - 4 + y;
-        graphics.drawCenteredString(font, string, centerX, startY, -1);
+        GuiComponent.drawCenteredString(graphics, font, string, centerX, startY, -1);
     }
 }

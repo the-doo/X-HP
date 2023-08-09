@@ -11,10 +11,10 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.components.Tooltip;
@@ -85,10 +85,10 @@ public class MenuScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        renderDirtBackground(guiGraphics);
+    public void render(PoseStack poseStack, int i, int j, float f) {
+        renderDirtBackground(poseStack);
 
-        super.render(guiGraphics, i, j, f);
+        super.render(poseStack, i, j, f);
     }
 
     public void close() {

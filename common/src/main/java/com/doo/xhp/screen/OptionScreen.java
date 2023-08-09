@@ -1,7 +1,7 @@
 package com.doo.xhp.screen;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,9 +47,9 @@ public class OptionScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        renderDirtBackground(guiGraphics);
+    public void render(PoseStack poseStack, int i, int j, float f) {
+        renderDirtBackground(poseStack);
 
-        super.render(guiGraphics, i, j, f);
+        super.render(poseStack, i, j, f);
     }
 }

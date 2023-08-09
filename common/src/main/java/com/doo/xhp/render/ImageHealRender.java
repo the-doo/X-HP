@@ -10,7 +10,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
@@ -151,21 +151,24 @@ public class ImageHealRender extends IconHealRender {
         }
     }
 
-    protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
+    protected void renderCurrent(PoseStack posed, double process, int endX, int endY, LivingEntity living) {
         RenderSystem.enableDepthTest();
-        PoseStack posed = graphics.pose();
         if (back != null && (drawType == ImageDrawType.COVER || process < 1)) {
             int startX = drawType == ImageDrawType.COVER ? 0 : (int) (process * back.getWidth());
             posed.pushPose();
             posed.scale(backXScala, backYScala, 1);
-            graphics.blit(BACK_ID, startX, 0, startX, 0, back.getWidth() - startX, back.getHeight(), back.getWidth(), back.getHeight());
+            RenderSystem.setShaderTexture(0, BACK_ID);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            GuiComponent.blit(posed, startX, 0, startX, 0, back.getWidth() - startX, back.getHeight(), back.getWidth(), back.getHeight());
             posed.popPose();
         }
 
         if (fill != null) {
             posed.pushPose();
             posed.scale(fillXScala, fillYScala, 1);
-            graphics.blit(FILL_ID, 0, 0, 0, 0, (int) (fill.getWidth() * process), fill.getHeight(), fill.getWidth(), fill.getHeight());
+            RenderSystem.setShaderTexture(0, FILL_ID);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            GuiComponent.blit(posed, 0, 0, 0, 0, (int) (fill.getWidth() * process), fill.getHeight(), fill.getWidth(), fill.getHeight());
             posed.popPose();
         }
     }

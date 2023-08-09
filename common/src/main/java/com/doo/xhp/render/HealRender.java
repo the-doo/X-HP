@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -97,27 +97,21 @@ public abstract class HealRender implements WithOption {
         return options.get(ENABLED_KEY).getAsBoolean();
     }
 
-    public final void render(PoseStack poseStack, MultiBufferSource bufferSource, LivingEntity living, int i) {
-        poseStack.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
-
-        GuiGraphics graphics = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
-        PoseStack posed = graphics.pose();
-        posed.mulPoseMatrix(poseStack.last().pose());
+    public final void render(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living, int i) {
+        graphics.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
 
         int damageStartX = renderContent(graphics, living, bufferSource, i);
 
         if (needDamageText()) {
             renderDamage(graphics, bufferSource, living, damageStartX, i);
         }
-
-        graphics.flush();
     }
 
     protected boolean needMoveCenter() {
         return true;
     }
 
-    protected int renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
+    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -143,10 +137,10 @@ public abstract class HealRender implements WithOption {
         // Wrapper
         if (needWrapper()) {
             int p = 2;
-            graphics.fill(-p, h + p, w + p, h, backColor);
-            graphics.fill(-p, h, 0, 0, backColor);
-            graphics.fill(-p, 0, w + p, -p, backColor);
-            graphics.fill(w, h, w + p, 0, backColor);
+            GuiComponent.fill(graphics, -p, h + p, w + p, h, backColor);
+            GuiComponent.fill(graphics, -p, h, 0, 0, backColor);
+            GuiComponent.fill(graphics, -p, 0, w + p, -p, backColor);
+            GuiComponent.fill(graphics, w, h, w + p, 0, backColor);
         }
 
         if (needHealthText() && enumV(options, P_KEY, HealthTextPosition.class)
@@ -165,14 +159,14 @@ public abstract class HealRender implements WithOption {
         return WithOption.boolV(options, DAMAGE_KEY);
     }
 
-    protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
+    protected void renderCurrent(PoseStack graphics, double process, int endX, int endY, LivingEntity living) {
 
     }
 
-    protected void renderLost(GuiGraphics graphics, int startX, int endX, int endY, LivingEntity living) {
+    protected void renderLost(PoseStack graphics, int startX, int endX, int endY, LivingEntity living) {
     }
 
-    protected void renderBack(GuiGraphics graphics, int startX, int endX, int endY) {
+    protected void renderBack(PoseStack graphics, int startX, int endX, int endY) {
 
     }
 
@@ -180,7 +174,7 @@ public abstract class HealRender implements WithOption {
         return true;
     }
 
-    protected void renderHealthText(GuiGraphics graphics, LivingEntity living, Font font, MultiBufferSource bufferSource, int processW) {
+    protected void renderHealthText(PoseStack graphics, LivingEntity living, Font font, MultiBufferSource bufferSource, int processW) {
         HealthTextGetters getters = WithOption.enumV(options, TEXT_KEY, HealthTextGetters.class)
                 .orElse(HealthTextGetters.ONLY_CURRENT);
         String heal = getters.formatted(living, null);
@@ -191,7 +185,7 @@ public abstract class HealRender implements WithOption {
 
         position.change(fontW, fontY, w, h, processW);
 
-        Matrix4f pose = graphics.pose().last().pose();
+        Matrix4f pose = graphics.last().pose();
         int x = fontW.intValue();
         int y = fontY.intValue();
         int color = (int) WithOption.doubleV(options, TEXT_COLOR_KEY);
@@ -206,12 +200,11 @@ public abstract class HealRender implements WithOption {
         }
     }
 
-    protected void renderDamage(GuiGraphics graphics, MultiBufferSource bufferSource, LivingEntity living, int damageStartX, int i) {
+    protected void renderDamage(PoseStack posed, MultiBufferSource bufferSource, LivingEntity living, int damageStartX, int i) {
         Minecraft minecraft = Minecraft.getInstance();
         int fps = minecraft.getFps();
         Font font = minecraft.font;
         int current = living.tickCount;
-        PoseStack posed = graphics.pose();
         double speed = WithOption.doubleV(options, DAMAGE_SPEED_KEY);
         double maxY = 2D * height();
         double xSpeed = 200 * speed;

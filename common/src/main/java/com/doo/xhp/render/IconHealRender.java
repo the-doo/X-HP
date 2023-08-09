@@ -2,7 +2,8 @@ package com.doo.xhp.render;
 
 import com.doo.xhp.enums.HealthTextPosition;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -26,9 +27,11 @@ public class IconHealRender extends HealRender {
         return false;
     }
 
-    protected void renderCurrent(GuiGraphics graphics, double process, int endX, int endY, LivingEntity living) {
+    protected void renderCurrent(PoseStack graphics, double process, int endX, int endY, LivingEntity living) {
         RenderSystem.enableDepthTest();
-        graphics.blit(ID, 0, 0, CONTAINER_IDX, 0, 9, 9);
-        graphics.blit(ID, 0, 0, friendly(living) ? FRIENDLY_IDX : MOB_IDX, 0, (int) (9 * process), 9);
+        RenderSystem.setShaderTexture(0, ID);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        GuiComponent.blit(graphics, 0, 0, CONTAINER_IDX, 0, 9, 9);
+        GuiComponent.blit(graphics, 0, 0, friendly(living) ? FRIENDLY_IDX : MOB_IDX, 0, (int) (9 * process), 9);
     }
 }

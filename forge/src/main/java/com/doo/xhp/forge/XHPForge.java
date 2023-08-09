@@ -63,6 +63,6 @@ public class XHPForge {
 
     @SubscribeEvent
     public void onGui(RenderGuiEvent event) {
-        HealthRenderUtil.renderTips(event.getGuiGraphics());
+        HealthRenderUtil.renderTips(event.getPoseStack());
     }
 }
