@@ -9,6 +9,8 @@ import java.util.function.BiFunction;
 
 public enum HealthTextGetters {
 
+    IGNORED(null),
+
     ONLY_CURRENT((living, formatter) -> formatNum(living.getHealth())),
 
     ONLY_MAX((living, formatter) -> formatNum(living.getMaxHealth())),
@@ -27,7 +29,10 @@ public enum HealthTextGetters {
         this.getter = getter;
     }
 
-    public String format(LivingEntity entity, String formatter) {
+    public String formatted(LivingEntity entity, String formatter) {
+        if (this == IGNORED) {
+            return "";
+        }
         return getter.apply(entity, formatter);
     }
 

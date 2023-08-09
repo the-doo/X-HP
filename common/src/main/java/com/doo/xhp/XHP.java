@@ -4,11 +4,13 @@ import com.doo.xhp.enums.HealthRenders;
 import com.doo.xhp.enums.MenuOptType;
 import com.doo.xhp.interfaces.WithOption;
 import com.doo.xhp.render.HealRender;
+import com.doo.xhp.render.ImageHealRender;
 import com.doo.xhp.screen.MenuScreen;
 import com.doo.xhp.util.ConfigUtil;
 import com.doo.xhp.util.HealthRenderUtil;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,7 +58,7 @@ public class XHP implements WithOption {
 
         // load config
         ConfigUtil.copyTo(XHP.MOD_NAME, CONFIG);
-        reloadConfig();
+        reloadConfig(true);
     }
 
     private static void registerSource() {
@@ -66,7 +68,7 @@ public class XHP implements WithOption {
         MenuScreen.register(MenuOptType.ENUM, null, TYPE_KEY, HealthRenders.class);
     }
 
-    public static void reloadConfig() {
+    public static void reloadConfig(boolean init) {
         OPTIONS.forEach(WithOption::reloadOpt);
 
         // reload ban
@@ -77,6 +79,11 @@ public class XHP implements WithOption {
 
         // reload render
         HealthRenderUtil.setRender(render());
+
+        // reload file
+        if (!init) {
+            ((ImageHealRender) HealthRenders.IMAGE.getRender()).reloadImage(Minecraft.getInstance());
+        }
     }
 
     public static HealRender render() {

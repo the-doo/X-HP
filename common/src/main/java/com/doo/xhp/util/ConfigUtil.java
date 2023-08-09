@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
@@ -57,10 +58,9 @@ public class ConfigUtil {
         for (Map.Entry<String, JsonElement> entry : from.entrySet()) {
             if (entry.getValue().isJsonObject()) {
                 copy(target.get(entry.getKey()).getAsJsonObject(), entry.getValue().getAsJsonObject());
-                return;
+            } else {
+                target.add(entry.getKey(), entry.getValue());
             }
-
-            target.add(entry.getKey(), entry.getValue());
         }
     }
 
@@ -75,5 +75,26 @@ public class ConfigUtil {
         } catch (Exception ignored) {
             LOGGER.warn("Write config file {} error: {}", path, value);
         }
+    }
+
+    public static NativeImage readImage(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+
+        Path p = FileSystems.getDefault().getPath("resourcepacks", name);
+        try (FileChannel open = FileChannel.open(p, StandardOpenOption.READ)) {
+            int size = (int) open.size();
+            if (size < 1) {
+                return null;
+            }
+
+            ByteBuffer bb = ByteBuffer.allocate(size);
+            open.read(bb);
+            return NativeImage.read(bb.array());
+        } catch (Exception ignored) {
+            LOGGER.warn("Read image file {} error", path);
+        }
+        return null;
     }
 }

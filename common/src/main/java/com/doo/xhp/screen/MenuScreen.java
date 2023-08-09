@@ -27,8 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -83,6 +82,19 @@ public class MenuScreen extends Screen {
 
         addRenderableWidget(list);
         addRenderableWidget(new Button.Builder(CommonComponents.GUI_BACK, b -> close()).bounds(this.width / 2 - 150 / 2, this.height - 28, 150, 20).build());
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        renderDirtBackground(guiGraphics);
+
+        super.render(guiGraphics, i, j, f);
+    }
+
+    public void close() {
+        minecraft.setScreen(prev);
+        ConfigUtil.write(WithOption.CONFIG);
+        XHP.reloadConfig(false);
     }
 
     private OptionInstance<?> opt(Map.Entry<String, JsonElement> entry) {
@@ -157,7 +169,7 @@ public class MenuScreen extends Screen {
         Class<T> opt = opt(MenuOptType.ENUM, key);
         return new OptionInstance<>(
                 nameKey,
-                OptionInstance.cachedConstantTooltip(tooltip),
+                t -> Tooltip.create(tooltip.copy().append(" - ").append(Component.translatable(WithOption.menuNameTip(t.name())))),
                 (arg, arg2) -> Component.translatable(WithOption.menuName(arg2.name())),
                 altEnum(opt.getEnumConstants()),
                 WithOption.enumV(entry, opt),
@@ -177,6 +189,9 @@ public class MenuScreen extends Screen {
         if (key.endsWith(XHP.ENABLED_KEY)) {
             return WithOption.menuName(XHP.ENABLED_KEY);
         }
+        if (key.endsWith(HealRender.BASE_Y_KEY)) {
+            return WithOption.menuName(HealRender.BASE_Y_KEY);
+        }
         if (key.endsWith(HealRender.DAMAGE_KEY)) {
             return WithOption.menuName(HealRender.DAMAGE_KEY);
         }
@@ -191,6 +206,18 @@ public class MenuScreen extends Screen {
         }
         if (key.endsWith(HealRender.HEAL_COLOR_KEY)) {
             return WithOption.menuName(HealRender.HEAL_COLOR_KEY);
+        }
+        if (key.endsWith(HealRender.TEXT_KEY)) {
+            return WithOption.menuName(HealRender.TEXT_KEY);
+        }
+        if (key.endsWith(HealRender.TEXT_SEE_KEY)) {
+            return WithOption.menuName(HealRender.TEXT_SEE_KEY);
+        }
+        if (key.endsWith(HealRender.TEXT_COLOR_KEY)) {
+            return WithOption.menuName(HealRender.TEXT_COLOR_KEY);
+        }
+        if (key.endsWith(HealRender.P_KEY)) {
+            return WithOption.menuName(HealRender.P_KEY);
         }
 
         return WithOption.menuName(key);
@@ -215,6 +242,16 @@ public class MenuScreen extends Screen {
                     if (supplier == null) {
                         return;
                     }
+
+                    // remove not exists element
+                    List<String> list = supplier.get().toList();
+                    Set<JsonElement> idx = new HashSet<>();
+                    array.forEach(e -> {
+                        if (!list.contains(e.getAsString())) {
+                            idx.add(e);
+                        }
+                    });
+                    idx.forEach(array::remove);
 
                     minecraft.setScreen(new OptionScreen(prev, () -> supplier.get()
                             .map(e -> OptionInstance.createBoolean(
@@ -261,18 +298,5 @@ public class MenuScreen extends Screen {
                                 });
                     }).toArray(OptionInstance<?>[]::new);
                 })));
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        renderDirtBackground(guiGraphics);
-
-        super.render(guiGraphics, i, j, f);
-    }
-
-    public void close() {
-        minecraft.setScreen(prev);
-        ConfigUtil.write(WithOption.CONFIG);
-        XHP.reloadConfig();
     }
 }

@@ -4,6 +4,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 public enum HealthTextPosition {
 
+    IGNORED,
+
     FOLLOW,
 
     TOP_LEFT,

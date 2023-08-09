@@ -33,6 +33,7 @@ public class XHPForge {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             XHP.init();
+            HealthRenderUtil.onClientStarted(Minecraft.getInstance());
         }
 
         // Key mapping is lazily initialized so it doesn't exist until it is registered

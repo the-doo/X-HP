@@ -19,6 +19,8 @@ public class NameTagLikeHealRender extends HealRender {
     protected static final String TEXT_KEY = "text_type";
 
     public NameTagLikeHealRender() {
+        height = 9;
+
         options.addProperty(TEXT_KEY, HealthTextGetters.PERCENTAGE.name());
     }
 
@@ -45,7 +47,7 @@ public class NameTagLikeHealRender extends HealRender {
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
 
         String text = WithOption.enumV(options, TEXT_KEY, HealthTextGetters.class)
-                .orElse(HealthTextGetters.PERCENTAGE).format(living, "%s/%s");
+                .orElse(HealthTextGetters.PERCENTAGE).formatted(living, "%s/%s");
 
         float fontX = -font.width(text) / 2F;
         Component component = changeColor(living, Component.literal(text));
@@ -71,10 +73,5 @@ public class NameTagLikeHealRender extends HealRender {
         }
 
         return component.withStyle(ChatFormatting.GREEN);
-    }
-
-    @Override
-    public int height(LivingEntity living) {
-        return 9;
     }
 }

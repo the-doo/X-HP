@@ -22,8 +22,8 @@
   "x_hp.menu.option.color.3": "Blue",
   "x_hp.menu.option.color.3.tip": "ARGB - B",
 
-  "x_hp.menu.option.preview": "Preview",
-  "x_hp.menu.option.preview.tip": "Preview is only available in-game",
+  "x_hp.menu.option.base_y": "Starting Point",
+  "x_hp.menu.option.base_y.tip": "The starting point position of the rendering, Y axis(Up and down direction) offset",
   "x_hp.menu.option.damage": "Show Damage",
   "x_hp.menu.option.damage.tip": "Whether damage is displayed",
   "x_hp.menu.option.damage_speed": "Damage Speed",
@@ -34,7 +34,14 @@
   "x_hp.menu.option.damage_color.tip": "Damage Color",
   "x_hp.menu.option.heal_color": "Healing Color",
   "x_hp.menu.option.heal_color.tip": "Healing Color",
-
+  "x_hp.menu.option.text": "Text Style",
+  "x_hp.menu.option.text.tip": "Text Style",
+  "x_hp.menu.option.text_see": "Text See Through",
+  "x_hp.menu.option.text_see.tip": "Text can be displayed through the display",
+  "x_hp.menu.option.text_color": "Text Color",
+  "x_hp.menu.option.text_color.tip": "Text Color",
+  "x_hp.menu.option.position": "Position",
+  "x_hp.menu.option.position.tip": "Text Position",
 
   "x_hp.menu.option.ONLY_CURRENT": "Only Current",
   "x_hp.menu.option.ONLY_CURRENT.tip": "Only Current",
@@ -66,8 +73,13 @@
   "x_hp.menu.option.BOTTOM_RIGHT": "Bottom Right",
   "x_hp.menu.option.BOTTOM_RIGHT.tip": "The text is fixed in the lower-right corner",
 
+  "x_hp.menu.option.COVER": "Overlay",
+  "x_hp.menu.option.COVER.tip": "Overlay the background image with a fill image when rendering, and the background image is fully rendered.",
+  "x_hp.menu.option.APPEND": "Articulated",
+  "x_hp.menu.option.APPEND.tip": "When rendering, use the background image to connect the fill image, for example: 40% fill image + 60% background image.",
+
   "x_hp.menu.option.IGNORED": "Off",
-  "x_hp.menu.option.IGNORED.tip": "Disable styles",
+  "x_hp.menu.option.IGNORED.tip": "Disable display",
 
 
   "x_hp.menu.option.TIP": "Tip",
@@ -84,29 +96,35 @@
   "x_hp.menu.option.TIP.y.tip": "Up and down offset value",
 
 
-  "x_hp.menu.option.COLOR": "Color Style",
+  "x_hp.menu.option.COLOR": "Color",
   "x_hp.menu.option.COLOR.tip": "Use simple color styles, it may not be displayed properly in shaders",
   "x_hp.menu.option.COLOR.bar_monster": "Monster Creatures",
   "x_hp.menu.option.COLOR.bar_monster.tip": "Monster Creatures",
   "x_hp.menu.option.COLOR.bar_friendly": "Friendly Creatures",
   "x_hp.menu.option.COLOR.bar_friendly.tip": "Friendly Creatures",
-  "x_hp.menu.option.COLOR.text": "Text Style",
-  "x_hp.menu.option.COLOR.text.tip": "Text Style",
-  "x_hp.menu.option.COLOR.text_color": "Text Color",
-  "x_hp.menu.option.COLOR.text_color.tip": "Text Color",
-  "x_hp.menu.option.COLOR.position": "Position",
-  "x_hp.menu.option.COLOR.position.tip": "Text Position",
 
 
-  "x_hp.menu.option.NAME_TAG": "Name Tag Style",
+  "x_hp.menu.option.NAME_TAG": "Name Tag",
   "x_hp.menu.option.NAME_TAG.tip": "Use a NameTag-like display",
   "x_hp.menu.option.NAME_TAG.text_type": "Text Style",
   "x_hp.menu.option.NAME_TAG.text_type.tip": "Text Style",
 
-  "x_hp.menu.option.ICON": "Icon Style",
+  "x_hp.menu.option.ICON": "Vanilla",
   "x_hp.menu.option.ICON.tip": "Use the health icon to show it",
 
-  "x_hp.menu.option.FENCE": "Fence Style",
+  "x_hp.menu.option.BAR": "Bar",
+  "x_hp.menu.option.BAR.tip": "Use the health bar to show it",
+
+  "x_hp.menu.option.IMAGE": "Customization",
+  "x_hp.menu.option.IMAGE.tip": "Showcase with custom images",
+  "x_hp.menu.option.IMAGE.back_file": "Background Image",
+  "x_hp.menu.option.IMAGE.back_file.tip": "Background image name, only PNG format is supported, please place the image under the /resourcepacks folder, image file name like: xxxx.png. Special note: Only the first clicked file is valid.",
+  "x_hp.menu.option.IMAGE.fill_file": "Fill Image",
+  "x_hp.menu.option.IMAGE.fill_file.tip": "Fill image name, only PNG format is supported, please place the image under the /resourcepacks folder, image file name like: xxxx.png. Special note: Only the first clicked file is valid.",
+  "x_hp.menu.option.IMAGE.draw_key": "Render Type",
+  "x_hp.menu.option.IMAGE.draw_key.tip": "How background and fill images are rendered",
+
+  "x_hp.menu.option.FENCE": "Fence",
   "x_hp.menu.option.FENCE.tip": "Use '|' character display, a kind of Name Tag Style."
 
 }

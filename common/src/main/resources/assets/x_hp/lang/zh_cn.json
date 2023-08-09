@@ -22,8 +22,8 @@
   "x_hp.menu.option.color.3": "蓝色",
   "x_hp.menu.option.color.3.tip": "ARGB的B",
 
-  "x_hp.menu.option.preview": "预览",
-  "x_hp.menu.option.preview.tip": "仅在游戏中才能预览",
+  "x_hp.menu.option.base_y": "起点",
+  "x_hp.menu.option.base_y.tip": "渲染的起点位置，Y轴(上下方向)偏移",
   "x_hp.menu.option.damage": "显示伤害",
   "x_hp.menu.option.damage.tip": "是否显示伤害",
   "x_hp.menu.option.damage_speed": "伤害速度",
@@ -34,6 +34,14 @@
   "x_hp.menu.option.damage_color.tip": "伤害颜色",
   "x_hp.menu.option.heal_color": "治疗颜色",
   "x_hp.menu.option.heal_color.tip": "治疗颜色",
+  "x_hp.menu.option.text": "文本类型",
+  "x_hp.menu.option.text.tip": "展示的文本类型",
+  "x_hp.menu.option.text_see": "文本透视",
+  "x_hp.menu.option.text_see.tip": "文本可以穿透显示",
+  "x_hp.menu.option.text_color": "文本颜色",
+  "x_hp.menu.option.text_color.tip": "展示的文本颜色",
+  "x_hp.menu.option.position": "位置",
+  "x_hp.menu.option.position.tip": "文本位置",
 
   "x_hp.menu.option.ONLY_CURRENT": "仅当前",
   "x_hp.menu.option.ONLY_CURRENT.tip": "仅展示当前生命值",
@@ -66,8 +74,14 @@
   "x_hp.menu.option.BOTTOM_RIGHT.tip": "文字固定在右下角",
 
 
-  "x_hp.menu.option.IGNORED": "禁用样式",
-  "x_hp.menu.option.IGNORED.tip": "禁用样式",
+  "x_hp.menu.option.COVER": "覆盖式",
+  "x_hp.menu.option.COVER.tip": "渲染时用填充图覆盖背景图，背景图会完全渲染，填充图部分渲染",
+  "x_hp.menu.option.APPEND": "衔接式",
+  "x_hp.menu.option.APPEND.tip": "渲染时用背景图衔接填充图，比如：40%的填充图 + 60%的背景图",
+
+
+  "x_hp.menu.option.IGNORED": "禁用",
+  "x_hp.menu.option.IGNORED.tip": "禁止显示",
 
 
   "x_hp.menu.option.TIP": "提示",
@@ -83,27 +97,33 @@
   "x_hp.menu.option.TIP.y": "偏移量",
   "x_hp.menu.option.TIP.y.tip": "上下的偏移量",
 
-  "x_hp.menu.option.COLOR": "颜色样式",
+  "x_hp.menu.option.COLOR": "颜色",
   "x_hp.menu.option.COLOR.tip": "使用简单的颜色展示，光影中可能无法正常显示",
   "x_hp.menu.option.COLOR.bar_monster": "敌对生物",
   "x_hp.menu.option.COLOR.bar_monster.tip": "敌对生物",
   "x_hp.menu.option.COLOR.bar_friendly": "友善生物",
   "x_hp.menu.option.COLOR.bar_friendly.tip": "友善颜色",
-  "x_hp.menu.option.COLOR.text": "文本类型",
-  "x_hp.menu.option.COLOR.text.tip": "展示的文本类型",
-  "x_hp.menu.option.COLOR.text_color": "文本颜色",
-  "x_hp.menu.option.COLOR.text_color.tip": "展示的文本颜色",
-  "x_hp.menu.option.COLOR.position": "位置",
-  "x_hp.menu.option.COLOR.position.tip": "文本位置",
 
-  "x_hp.menu.option.NAME_TAG": "命名牌样式",
+  "x_hp.menu.option.NAME_TAG": "命名牌",
   "x_hp.menu.option.NAME_TAG.tip": "使用类似命名牌的方式展示",
   "x_hp.menu.option.NAME_TAG.text_type": "文本类型",
   "x_hp.menu.option.NAME_TAG.text_type.tip": "展示的文本类型",
 
-  "x_hp.menu.option.ICON": "图标样式",
-  "x_hp.menu.option.ICON.tip": "使用生命值图标的方式展示",
+  "x_hp.menu.option.ICON": "原版",
+  "x_hp.menu.option.ICON.tip": "使用原版图标的方式展示",
 
-  "x_hp.menu.option.FENCE": "栅栏样式",
+  "x_hp.menu.option.BAR": "图片",
+  "x_hp.menu.option.BAR.tip": "使用内置图片展示，如想自定义图片，请选择自定义选项进行设置",
+
+  "x_hp.menu.option.IMAGE": "自定义",
+  "x_hp.menu.option.IMAGE.tip": "通过自定义图片进行展示",
+  "x_hp.menu.option.IMAGE.back_file": "背景图",
+  "x_hp.menu.option.IMAGE.back_file.tip": "背景图片名称，仅支持PNG格式，请将图片放在/resourcepacks文件夹下，文件名称如：xxxx.png。特别说明：仅第一个点击的文件有效",
+  "x_hp.menu.option.IMAGE.fill_file": "填充图",
+  "x_hp.menu.option.IMAGE.fill_file.tip": "填充图片名称，仅支持PNG格式，请将图片放在/resourcepacks文件夹下，文件名称如：xxxx.png。特别说明：仅第一个点击的文件有效",
+  "x_hp.menu.option.IMAGE.draw_key": "渲染类型",
+  "x_hp.menu.option.IMAGE.draw_key.tip": "选择背景图与填充图的渲染方式",
+
+  "x_hp.menu.option.FENCE": "栅栏",
   "x_hp.menu.option.FENCE.tip": "使用'|'字符的方式展示，命名牌样式的一种"
 }

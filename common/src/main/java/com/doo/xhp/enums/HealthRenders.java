@@ -7,8 +7,10 @@ public enum HealthRenders {
     IGNORED(null),
     COLOR(new ColorHealRender()),
     NAME_TAG(new NameTagLikeHealRender()),
-    ICON(new IconHealRender()),
     FENCE(new FenceHealRender()),
+    ICON(new IconHealRender()),
+    BAR(new BarHealRender()),
+    IMAGE(new ImageHealRender()),
 
     ;
 

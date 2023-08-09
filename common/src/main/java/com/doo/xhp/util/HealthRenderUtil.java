@@ -1,7 +1,9 @@
 package com.doo.xhp.util;
 
 import com.doo.xhp.XHP;
+import com.doo.xhp.enums.HealthRenders;
 import com.doo.xhp.render.HealRender;
+import com.doo.xhp.render.ImageHealRender;
 import com.doo.xhp.render.TipHealRender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -47,12 +49,18 @@ public class HealthRenderUtil {
             cleanPick(living);
         }
 
-        if (render == null || XHP.focus() && !staring) {
+        if (render == null || !render.enabled() || XHP.focus() && !staring) {
             return;
         }
 
-        baseH += showName ? 0.35F : 0;
-        render.render(poseStack, dispatcher.cameraOrientation(), bufferSource, living, baseH, i);
+        poseStack.pushPose();
+        poseStack.translate(0.0f, baseH + (showName ? 0.35F : 0), 0.0f);
+        poseStack.mulPose(dispatcher.cameraOrientation());
+        poseStack.scale(-0.025f, -0.025f, 0.025f);
+
+        render.render(poseStack, bufferSource, living, i);
+
+        poseStack.popPose();
     }
 
     private static void cleanPick(LivingEntity living) {
@@ -95,5 +103,9 @@ public class HealthRenderUtil {
         TIP_HEAL_RENDER.render(graphics, minecraft.font, pick, x0, y0);
 
         graphics.pose().popPose();
+    }
+
+    public static void onClientStarted(Minecraft client) {
+        ((ImageHealRender) HealthRenders.IMAGE.getRender()).reloadImage(client);
     }
 }

@@ -4,5 +4,9 @@ public enum MenuOptType {
 
     LIST,
     ENUM,
-    COLOR;
+    COLOR,
+
+    STRING,
+
+    ;
 }
