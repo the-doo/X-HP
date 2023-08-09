@@ -26,9 +26,9 @@ public class ConfigUtil {
     private ConfigUtil() {
     }
 
-    public static synchronized void copyTo(String fileName, JsonObject target) {
+    public static synchronized boolean copyTo(String fileName, JsonObject target) {
         if (fileName == null || fileName.isEmpty()) {
-            return;
+            return false;
         }
 
         if (path == null) {
@@ -38,15 +38,17 @@ public class ConfigUtil {
         try (FileChannel open = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.READ)) {
             int size = (int) open.size();
             if (size < 1) {
-                return;
+                return false;
             }
 
             ByteBuffer bb = ByteBuffer.allocate(size);
             open.read(bb);
             copy(target, JSON.fromJson(new String(bb.array(), StandardCharsets.UTF_8), JsonObject.class));
+            return true;
         } catch (Exception ignored) {
             LOGGER.warn("Read config file {} error", path);
             write(target);
+            return false;
         }
     }
 
