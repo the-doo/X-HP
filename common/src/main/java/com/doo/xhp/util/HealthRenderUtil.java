@@ -25,7 +25,7 @@ public class HealthRenderUtil {
     }
 
     public static void render(PoseStack poseStack, EntityRenderDispatcher dispatcher, MultiBufferSource bufferSource,
-                              LivingEntity living, float baseY, int i) {
+                              LivingEntity living, float baseY) {
         if (XHP.disabled()) {
             cleanPick(living);
             return;

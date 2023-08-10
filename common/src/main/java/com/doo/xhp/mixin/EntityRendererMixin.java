@@ -20,7 +20,7 @@ public abstract class EntityRendererMixin {
         LivingEntity living;
         if (entity instanceof LivingEntity && (living = (LivingEntity) entity).getType().getCategory() != MobCategory.MISC) {
             float baseY = living.getBbHeight() + 0.5F + (living.shouldShowName() ? 0.35F : 0);
-            HealthRenderUtil.render(poseStack, (EntityRenderDispatcher) (Object) this, multiBufferSource, living, baseY, i);
+            HealthRenderUtil.render(poseStack, (EntityRenderDispatcher) (Object) this, multiBufferSource, living, baseY);
         }
     }
 }
