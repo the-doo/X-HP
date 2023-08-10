@@ -14,6 +14,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
 @Mod(XHP.MOD_ID)
@@ -33,8 +34,8 @@ public class XHPForge {
         public static void onClientSetup(FMLClientSetupEvent event) {
             XHP.init();
             HealthRenderUtil.onClientStarted(Minecraft.getInstance());
-            EXAMPLE_MAPPING.get();
-            KeyMapping.resetMapping();
+
+            Minecraft.getInstance().options.keyMappings = ArrayUtils.add(Minecraft.getInstance().options.keyMappings, EXAMPLE_MAPPING.get());
         }
 
         // Key mapping is lazily initialized so it doesn't exist until it is registered
