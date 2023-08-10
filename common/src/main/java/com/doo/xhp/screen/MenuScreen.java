@@ -92,8 +92,9 @@ public class MenuScreen extends Screen {
 
         super.render(poseStack, i, j, f);
 
-        List<FormattedCharSequence> list = SimpleOptionsSubScreen.tooltipAt(this.list, i, j);
-        this.renderTooltip(poseStack, list, i, j);
+        if (list != null) {
+            renderTooltip(poseStack, SimpleOptionsSubScreen.tooltipAt(list, i, j), i, j);
+        }
     }
 
     public void close() {
