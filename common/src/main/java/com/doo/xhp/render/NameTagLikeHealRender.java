@@ -60,7 +60,7 @@ public class NameTagLikeHealRender extends HealRender {
 
     @Override
     protected void renderDamage(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living, int damageStartX) {
-        super.renderDamage(graphics, bufferSource, living, 0, i);
+        super.renderDamage(graphics, bufferSource, living, 0);
     }
 
     protected Component changeColor(LivingEntity living, MutableComponent component) {
