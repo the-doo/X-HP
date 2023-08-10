@@ -91,9 +91,7 @@ public class ConfigUtil {
                 return null;
             }
 
-            ByteBuffer bb = ByteBuffer.allocate(size);
-            open.read(bb);
-            return NativeImage.read(bb.array());
+            return NativeImage.read(ByteBuffer.allocate(size));
         } catch (Exception ignored) {
             LOGGER.warn("Read image file {} error", path);
         }

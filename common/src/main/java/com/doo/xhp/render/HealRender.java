@@ -9,16 +9,16 @@ import com.doo.xhp.interfaces.WithOption;
 import com.doo.xhp.screen.MenuScreen;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.joml.Matrix4f;
 
 import static com.doo.xhp.XHP.ENABLED_KEY;
 import static com.doo.xhp.interfaces.WithOption.enumV;
@@ -186,25 +186,23 @@ public abstract class HealRender implements WithOption {
         position.change(fontW, fontY, w, h, processW);
 
         Matrix4f pose = graphics.last().pose();
-        int x = fontW.intValue();
-        int y = fontY.intValue();
+        float x = fontW.intValue();
+        float y = fontY.intValue();
         int color = (int) WithOption.doubleV(options, TEXT_COLOR_KEY);
 
-        MutableComponent component = Component.literal(heal);
+        Component component = new TextComponent(heal);
         font.drawInBatch(component, x, y, color, false,
-                pose, bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, FONT_LIGHT);
-        font.drawInBatch(component, x, y, color, false,
-                pose, bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+                pose, bufferSource, false, 0, FONT_LIGHT);
 
         if (WithOption.boolV(options, TEXT_SEE_KEY)) {
             font.drawInBatch(component, x, y, color, false,
-                    pose, bufferSource, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
+                    pose, bufferSource, true, 0, FONT_LIGHT);
         }
     }
 
     protected void renderDamage(PoseStack posed, MultiBufferSource bufferSource, LivingEntity living, int damageStartX, int i) {
         Minecraft minecraft = Minecraft.getInstance();
-        int fps = minecraft.getFps();
+        int fps = minecraft.fpsString.isEmpty() ? 100 : Integer.parseInt(minecraft.fpsString.split(" ")[0]);
         Font font = minecraft.font;
         int current = living.tickCount;
         double speed = WithOption.doubleV(options, DAMAGE_SPEED_KEY);
@@ -227,11 +225,11 @@ public abstract class HealRender implements WithOption {
                 value = -value;
             }
 
-            MutableComponent component = Component.literal(HealthTextGetters.formatNum(value));
+            Component component = new TextComponent(HealthTextGetters.formatNum(value));
             font.drawInBatch(component, fontX, fontY, color, false,
-                    posed.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
+                    posed.last().pose(), bufferSource, true, 0, FONT_LIGHT);
             font.drawInBatch(component, fontX, fontY, color, false,
-                    posed.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+                    posed.last().pose(), bufferSource, false, 0, FONT_LIGHT);
 
             posed.popPose();
         });

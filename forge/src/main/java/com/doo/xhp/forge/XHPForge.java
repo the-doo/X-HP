@@ -7,8 +7,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
@@ -34,6 +33,8 @@ public class XHPForge {
         public static void onClientSetup(FMLClientSetupEvent event) {
             XHP.init();
             HealthRenderUtil.onClientStarted(Minecraft.getInstance());
+            EXAMPLE_MAPPING.get();
+            KeyMapping.resetMapping();
         }
 
         // Key mapping is lazily initialized so it doesn't exist until it is registered
@@ -42,12 +43,6 @@ public class XHPForge {
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_X,
                 "keybinding.key.x_hp.name"));
-
-        // Event is on the mod event bus only on the physical client
-        @SubscribeEvent
-        public static void registerBindings(RegisterKeyMappingsEvent event) {
-            event.register(EXAMPLE_MAPPING.get());
-        }
     }
 
     // Event is on the Forge event bus only on the physical client
@@ -62,7 +57,7 @@ public class XHPForge {
     }
 
     @SubscribeEvent
-    public void onGui(RenderGuiEvent event) {
-        HealthRenderUtil.renderTips(event.getPoseStack());
+    public void onGui(RenderGameOverlayEvent.Post event) {
+        HealthRenderUtil.renderTips(event.getMatrixStack());
     }
 }

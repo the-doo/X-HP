@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 
 public class NameTagLikeHealRender extends HealRender {
@@ -50,11 +51,11 @@ public class NameTagLikeHealRender extends HealRender {
                 .orElse(HealthTextGetters.PERCENTAGE).formatted(living, "%s/%s");
 
         float fontX = -font.width(text) / 2F;
-        Component component = changeColor(living, Component.literal(text));
+        Component component = changeColor(living, new TextComponent(text));
         font.drawInBatch(component, fontX, 0, 0x20FFFFFF, false,
-                graphics.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, i);
+                graphics.last().pose(), bufferSource, true, backColor, i);
         font.drawInBatch(component, fontX, 0, -1, false,
-                graphics.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+                graphics.last().pose(), bufferSource, false, 0, FONT_LIGHT);
         return -(int) fontX;
     }
 

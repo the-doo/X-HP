@@ -31,13 +31,12 @@ public abstract class SyncDataMixin implements DamageAccessor {
             .build();
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
-    private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> dataValue, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e) || !LivingEntityAccessor.isHealId(e, dataValue.id())) {
+    private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
+        if (!(entity instanceof LivingEntity e) || !LivingEntityAccessor.isHealId(e, dataItem2.getAccessor().getId())) {
             return;
         }
 
-        float change = (Float) dataValue.value() - (
-                Float) dataItem.value().value();
+        float change = (Float) dataItem2.getValue() - (Float) dataItem.getValue();
         if (change < 0.0001 && change >= 0 || change <= 0 && change > -0.0001) {
             return;
         }

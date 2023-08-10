@@ -31,7 +31,7 @@ public class IconHealRender extends HealRender {
         RenderSystem.enableDepthTest();
         RenderSystem.setShaderTexture(0, ID);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        GuiComponent.blit(graphics, 0, 0, CONTAINER_IDX, 0, 9, 9);
-        GuiComponent.blit(graphics, 0, 0, friendly(living) ? FRIENDLY_IDX : MOB_IDX, 0, (int) (9 * process), 9);
+        GuiComponent.blit(graphics, 0, 0, CONTAINER_IDX, 0, 9, 9, 256, 256);
+        GuiComponent.blit(graphics, 0, 0, friendly(living) ? FRIENDLY_IDX : MOB_IDX, 0, (int) (9 * process), 9, 256, 256);
     }
 }

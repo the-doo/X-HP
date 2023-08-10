@@ -11,7 +11,7 @@ import com.doo.xhp.util.HealthRenderUtil;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
@@ -63,7 +63,7 @@ public class XHP implements WithOption {
     }
 
     private static void registerSource() {
-        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> BuiltInRegistries.ENTITY_TYPE.stream()
+        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> Registry.ENTITY_TYPE.stream()
                 .filter(e -> e.getCategory() != MobCategory.MISC)
                 .map(EntityType::getDescriptionId));
         MenuScreen.register(MenuOptType.ENUM, null, TYPE_KEY, HealthRenders.class);
@@ -74,7 +74,7 @@ public class XHP implements WithOption {
 
         // reload ban
         BAN.clear();
-        CONFIG.get(BAN_KEY).getAsJsonArray().forEach(id -> BuiltInRegistries.ENTITY_TYPE.stream()
+        CONFIG.get(BAN_KEY).getAsJsonArray().forEach(id -> Registry.ENTITY_TYPE.stream()
                 .filter(e -> id.getAsString().equals(e.getDescriptionId()))
                 .forEach(BAN::add));
 
