@@ -57,9 +57,9 @@ public class XHP implements WithOption {
         OPTIONS.forEach(WithOption::registerOpt);
 
         // load config
-        if (ConfigUtil.copyTo(XHP.MOD_NAME, CONFIG)) {
-            reloadConfig(true);
-        }
+        ConfigUtil.copyTo(XHP.MOD_NAME, CONFIG);
+
+        reloadConfig(true);
     }
 
     private static void registerSource() {
