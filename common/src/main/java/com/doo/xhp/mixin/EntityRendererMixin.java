@@ -19,7 +19,7 @@ public abstract class EntityRendererMixin {
     private void injectRenderT(Entity entity, double d, double e, double f, float g, float h, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (entity instanceof LivingEntity living && living.getType().getCategory() != MobCategory.MISC) {
             float baseY = living.getNameTagOffsetY() + (living.shouldShowName() ? 0.35F : 0);
-            HealthRenderUtil.render(poseStack, (EntityRenderDispatcher) (Object) this, multiBufferSource, living, baseY, i);
+            HealthRenderUtil.render(poseStack, (EntityRenderDispatcher) (Object) this, multiBufferSource, living, baseY);
         }
     }
 }

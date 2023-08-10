@@ -41,7 +41,7 @@ public class NameTagLikeHealRender extends HealRender {
         return false;
     }
 
-    protected int renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
+    protected int renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -52,15 +52,15 @@ public class NameTagLikeHealRender extends HealRender {
         float fontX = -font.width(text) / 2F;
         Component component = changeColor(living, Component.literal(text));
         font.drawInBatch(component, fontX, 0, 0x20FFFFFF, false,
-                graphics.pose().last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, i);
+                graphics.pose().last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, FONT_LIGHT);
         font.drawInBatch(component, fontX, 0, -1, false,
                 graphics.pose().last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
         return -(int) fontX;
     }
 
     @Override
-    protected void renderDamage(GuiGraphics graphics, MultiBufferSource bufferSource, LivingEntity living, int damageStartX, int i) {
-        super.renderDamage(graphics, bufferSource, living, 0, i);
+    protected void renderDamage(GuiGraphics graphics, MultiBufferSource bufferSource, LivingEntity living, int damageStartX) {
+        super.renderDamage(graphics, bufferSource, living, 0);
     }
 
     protected Component changeColor(LivingEntity living, MutableComponent component) {
