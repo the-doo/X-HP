@@ -38,10 +38,10 @@ public class XHPForge {
 
         // Key mapping is lazily initialized so it doesn't exist until it is registered
         public static final Lazy<KeyMapping> EXAMPLE_MAPPING = Lazy.of(() -> new KeyMapping(
-                "keybinding.category.x_hp.name",
+                "keybinding.key.x_hp.name",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_X,
-                "keybinding.key.x_hp.name"));
+                "keybinding.category.x_hp.name"));
 
         // Event is on the mod event bus only on the physical client
         @SubscribeEvent
