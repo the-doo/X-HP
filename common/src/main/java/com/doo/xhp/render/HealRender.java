@@ -192,6 +192,8 @@ public abstract class HealRender implements WithOption {
 
         MutableComponent component = Component.literal(heal);
         font.drawInBatch(component, x, y, color, false,
+                pose, bufferSource, Font.DisplayMode.POLYGON_OFFSET, 0, FONT_LIGHT);
+        font.drawInBatch(component, x, y, color, false,
                 pose, bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
 
         if (WithOption.boolV(options, TEXT_SEE_KEY)) {
