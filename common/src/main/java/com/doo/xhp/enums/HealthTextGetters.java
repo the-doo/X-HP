@@ -15,7 +15,7 @@ public enum HealthTextGetters {
 
     ONLY_MAX((living, formatter) -> formatNum(living.getMaxHealth())),
     CURRENT_AND_MAX((living, formatter) ->
-            StringUtils.defaultString(formatter, "%s/%s").formatted(formatNum(living.getHealth()), formatNum(living.getMaxHealth()))),
+            String.format(StringUtils.defaultString(formatter, "%s/%s"), formatNum(living.getHealth()), formatNum(living.getMaxHealth()))),
     PERCENTAGE((living, formatter) ->
             formatNum(living.getHealth() / living.getMaxHealth() * 100) + "%"),
 
@@ -42,6 +42,6 @@ public enum HealthTextGetters {
 
     public static String formatNum(String formatter, Object... numbers) {
         Object[] array = Arrays.stream(numbers).map(FORMAT::format).toArray();
-        return formatter.formatted(array);
+        return String.format(formatter, array);
     }
 }

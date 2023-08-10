@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -17,7 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
 public class ConfigUtil {
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     private static Path path;
 
@@ -32,7 +32,7 @@ public class ConfigUtil {
         }
 
         if (path == null) {
-            path = FileSystems.getDefault().getPath("config", "%s.json".formatted(fileName));
+            path = FileSystems.getDefault().getPath("config", String.format("%s.json", fileName));
         }
 
         try (FileChannel open = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.READ)) {

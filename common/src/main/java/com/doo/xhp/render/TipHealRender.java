@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.LivingEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.doo.xhp.XHP.ENABLED_KEY;
 
@@ -48,7 +49,7 @@ public class TipHealRender implements WithOption {
     }
 
     public void render(PoseStack graphics, Font font, LivingEntity living, int centerX, int centerY) {
-        String interval = " ".repeat((int) (WithOption.doubleV(options, INTERVAL_KEY)));
+        String interval = StringUtils.repeat(" ", ((int) (WithOption.doubleV(options, INTERVAL_KEY))));
 
         StringBuilder sb = new StringBuilder();
         if (WithOption.boolV(options, NAME_KEY)) {

@@ -26,15 +26,15 @@ public interface WithOption {
     }
 
     static String menuName(String name) {
-        return MENU_NAME_FORMATTER.formatted(XHP.MOD_ID, name);
+        return String.format(MENU_NAME_FORMATTER, XHP.MOD_ID, name);
     }
 
     static String menuTip(String name) {
-        return MENU_TIP_FORMATTER.formatted(name);
+        return String.format(MENU_TIP_FORMATTER, name);
     }
 
     static String menuNameTip(String name) {
-        return MENU_TIP_FORMATTER.formatted(menuName(name));
+        return String.format(MENU_TIP_FORMATTER, menuName(name));
     }
 
     default boolean enabled() {

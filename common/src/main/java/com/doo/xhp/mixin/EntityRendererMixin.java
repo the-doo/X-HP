@@ -17,7 +17,8 @@ public abstract class EntityRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void injectRenderT(Entity entity, double d, double e, double f, float g, float h, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
-        if (entity instanceof LivingEntity living && living.getType().getCategory() != MobCategory.MISC) {
+        LivingEntity living;
+        if (entity instanceof LivingEntity && (living = (LivingEntity) entity).getType().getCategory() != MobCategory.MISC) {
             float baseY = living.getBbHeight() + 0.5F + (living.shouldShowName() ? 0.35F : 0);
             HealthRenderUtil.render(poseStack, (EntityRenderDispatcher) (Object) this, multiBufferSource, living, baseY, i);
         }

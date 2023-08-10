@@ -127,7 +127,7 @@ public class ImageHealRender extends IconHealRender {
 
     private String first(String key) {
         JsonArray array = options.get(key).getAsJsonArray();
-        if (array.isEmpty()) {
+        if (array.size() < 1) {
             return "";
         }
 
@@ -152,13 +152,14 @@ public class ImageHealRender extends IconHealRender {
     }
 
     protected void renderCurrent(PoseStack posed, double process, int endX, int endY, LivingEntity living) {
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         RenderSystem.enableDepthTest();
         if (back != null && (drawType == ImageDrawType.COVER || process < 1)) {
             int startX = drawType == ImageDrawType.COVER ? 0 : (int) (process * back.getWidth());
             posed.pushPose();
             posed.scale(backXScala, backYScala, 1);
-            RenderSystem.setShaderTexture(0, BACK_ID);
-            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
+            textureManager.bind(BACK_ID);
             GuiComponent.blit(posed, startX, 0, startX, 0, back.getWidth() - startX, back.getHeight(), back.getWidth(), back.getHeight());
             posed.popPose();
         }
@@ -166,8 +167,7 @@ public class ImageHealRender extends IconHealRender {
         if (fill != null) {
             posed.pushPose();
             posed.scale(fillXScala, fillYScala, 1);
-            RenderSystem.setShaderTexture(0, FILL_ID);
-            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            textureManager.bind(FILL_ID);
             GuiComponent.blit(posed, 0, 0, 0, 0, (int) (fill.getWidth() * process), fill.getHeight(), fill.getWidth(), fill.getHeight());
             posed.popPose();
         }

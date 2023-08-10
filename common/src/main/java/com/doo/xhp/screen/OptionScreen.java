@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Option;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.SimpleOptionsSubScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
@@ -43,8 +43,8 @@ public class OptionScreen extends Screen {
 
         list.addSmall(opsGetter.get());
 
-        addRenderableWidget(list);
-        addRenderableWidget(new Button(this.width / 2 - 150 / 2, this.height - 28, 150, 20, CommonComponents.GUI_BACK, b -> close()));
+        children.add(list);
+        addButton(new Button(this.width / 2 - 150 / 2, this.height - 28, 150, 20, CommonComponents.GUI_BACK, b -> close()));
     }
 
     public void close() {
@@ -55,10 +55,13 @@ public class OptionScreen extends Screen {
     public void render(PoseStack poseStack, int i, int j, float f) {
         renderDirtBackground(0);
 
+        list.render(poseStack, i, j, f);
+
         super.render(poseStack, i, j, f);
 
-        if (list != null) {
-            renderTooltip(poseStack, SimpleOptionsSubScreen.tooltipAt(list, i, j), i, j);
+        List<FormattedCharSequence> tooltip;
+        if ((tooltip = OptionsSubScreen.tooltipAt(list, i, j)) != null) {
+            renderTooltip(poseStack, tooltip, i, j);
         }
     }
 }

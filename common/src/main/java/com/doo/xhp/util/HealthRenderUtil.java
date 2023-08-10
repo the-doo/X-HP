@@ -57,7 +57,7 @@ public class HealthRenderUtil {
         poseStack.mulPose(dispatcher.cameraOrientation());
         poseStack.scale(-0.025f, -0.025f, 0.025f);
 
-        render.render(poseStack, bufferSource, living, i);
+        render.render(poseStack, bufferSource, living);
 
         poseStack.popPose();
     }

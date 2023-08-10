@@ -12,14 +12,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.CycleOption;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.Option;
-import net.minecraft.client.ProgressOption;
+import net.minecraft.client.*;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.SimpleOptionsSubScreen;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
@@ -29,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MenuScreen extends Screen {
@@ -82,18 +80,21 @@ public class MenuScreen extends Screen {
                 .toArray(Option[]::new);
         list.addSmall(opts);
 
-        addRenderableWidget(list);
-        addRenderableWidget(new Button(this.width / 2 - 150 / 2, this.height - 28, 150, 20, CommonComponents.GUI_BACK, b -> close()));
+        children.add(list);
+        addButton(new Button(this.width / 2 - 150 / 2, this.height - 28, 150, 20, CommonComponents.GUI_BACK, b -> close()));
     }
 
     @Override
     public void render(PoseStack poseStack, int i, int j, float f) {
         renderDirtBackground(0);
 
+        list.render(poseStack, i, j, f);
+
         super.render(poseStack, i, j, f);
 
-        if (list != null) {
-            renderTooltip(poseStack, SimpleOptionsSubScreen.tooltipAt(list, i, j), i, j);
+        List<FormattedCharSequence> tooltip;
+        if ((tooltip = OptionsSubScreen.tooltipAt(list, i, j)) != null) {
+            renderTooltip(poseStack, tooltip, i, j);
         }
     }
 
@@ -124,11 +125,11 @@ public class MenuScreen extends Screen {
         opt.setOpsGetter(() -> entry.getValue().getAsJsonObject().entrySet().stream()
                 .map(e -> getBaseOptionInstance(opt, MenuScreen.getNameKey(key, e.getKey()), e))
                 .toArray(Option[]::new));
-        return CycleOption.createOnOff(
+        return new BooleanOption(
                 menuName,
                 new TranslatableComponent(WithOption.menuTip(menuName)),
                 o -> withOption.enabled(),
-                (g, o, b) -> minecraft.setScreen(opt));
+                (g, b) -> minecraft.setScreen(opt));
     }
 
     @NotNull
@@ -152,34 +153,41 @@ public class MenuScreen extends Screen {
 
         try {
             double value = json.getAsDouble();
-            return new ProgressOption(nameKey, 0, 100, 0.5F,
+            ProgressOption option = new ProgressOption(nameKey, 0, 100, 0.5F,
                     v -> value,
                     (o, d) -> entry.setValue(new JsonPrimitive(d)),
-                    (g, o) -> new TranslatableComponent(nameKey).append(": ").append(String.valueOf(entry.getValue().getAsDouble())),
-                    m -> Collections.singletonList(tooltip.getVisualOrderText())
+                    (g, o) -> new TranslatableComponent(nameKey).append(": ").append(entry.getValue().getAsString())
             );
+            option.setTooltip(Collections.singletonList(tooltip.getVisualOrderText()));
+            return option;
         } catch (NumberFormatException ex) {
-            return CycleOption.createOnOff(
+            return new BooleanOption(
                     nameKey,
                     tooltip,
-                    o -> json.getAsBoolean(),
-                    (g, o, b) -> entry.setValue(new JsonPrimitive(b)));
+                    o -> entry.getValue().getAsBoolean(),
+                    (g, b) -> entry.setValue(new JsonPrimitive(b)));
         }
     }
 
     @NotNull
     private static <T extends Enum<T>> Option getEnumBtn(Map.Entry<String, JsonElement> entry, String key, String nameKey, Component tooltip) {
         Class<T> opt = opt(MenuOptType.ENUM, key);
-        return CycleOption.create(
-                        nameKey,
-                        opt.getEnumConstants(),
-                        arg -> new TranslatableComponent(WithOption.menuName(arg.name())),
-                        arg -> WithOption.enumV(entry, opt),
-                        (arg, arg2, arg3) -> entry.setValue(new JsonPrimitive(arg3.name())))
-                .setTooltip(m -> arg -> {
+        T[] constants = opt.getEnumConstants();
+        MutableInt idx = new MutableInt(WithOption.enumV(entry, opt).ordinal());
+        return new CycleOption(
+                nameKey,
+                (a, b) -> {
+                    idx.setValue(idx.incrementAndGet() % constants.length);
+                    T constant = constants[idx.intValue()];
+                    entry.setValue(new JsonPrimitive(constant.name()));
+                },
+                (o, b) -> {
+                    T t = WithOption.enumV(entry, opt);
+                    String name = WithOption.menuName(t.name());
                     MutableComponent tip = tooltip.copy().append(" - ")
-                            .append(new TranslatableComponent(WithOption.menuNameTip(arg.name())));
-                    return m.font.split(tip, 200);
+                            .append(new TranslatableComponent(WithOption.menuTip(name)));
+                    b.setTooltip(Minecraft.getInstance().font.split(tip, 200));
+                    return new TranslatableComponent(nameKey).append(": ").append(new TranslatableComponent(name));
                 });
     }
 
@@ -225,7 +233,7 @@ public class MenuScreen extends Screen {
         if (StringUtils.isEmpty(prefix)) {
             return key;
         }
-        return "%s.%s".formatted(prefix, key);
+        return String.format("%s.%s", prefix, key);
     }
 
     @NotNull
@@ -233,17 +241,17 @@ public class MenuScreen extends Screen {
         Supplier<Stream<String>> supplier = opt(MenuOptType.LIST, key);
         JsonArray array = json.getAsJsonArray();
 
-        return CycleOption.createOnOff(
+        return new BooleanOption(
                 nameKey,
                 tooltip,
-                o -> supplier != null && !array.isEmpty(),
-                (g, o, b) -> {
+                o -> supplier != null && array.size() > 0,
+                (g, b) -> {
                     if (supplier == null) {
                         return;
                     }
 
                     // remove not exists element
-                    List<String> list = supplier.get().toList();
+                    List<String> list = supplier.get().collect(Collectors.toList());
                     Set<JsonElement> idx = new HashSet<>();
                     array.forEach(e -> {
                         if (!list.contains(e.getAsString())) {
@@ -253,9 +261,9 @@ public class MenuScreen extends Screen {
                     idx.forEach(array::remove);
 
                     minecraft.setScreen(new OptionScreen(prev, () -> supplier.get()
-                            .map(e -> CycleOption.createOnOff(
+                            .map(e -> new BooleanOption(
                                     e, TextComponent.EMPTY, o1 -> array.contains(new JsonPrimitive(e)),
-                                    (g1, o1, b1) -> {
+                                    (g1, b1) -> {
                                         array.remove(new JsonPrimitive(e));
                                         if (b1) {
                                             array.add(e);
@@ -268,11 +276,11 @@ public class MenuScreen extends Screen {
     @NotNull
     private Option getColorBtn(Screen prev, String nameKey, Component tooltip, Map.Entry<String, JsonElement> kv) {
         JsonElement json = kv.getValue();
-        return CycleOption.createOnOff(
+        return new BooleanOption(
                 nameKey,
-                tooltip.copy().withStyle(s -> s.withColor(json.getAsInt())),
+                tooltip.copy().withStyle(s -> s.withColor(TextColor.fromRgb(json.getAsInt()))),
                 o -> true,
-                (g, o, b) -> minecraft.setScreen(new OptionScreen(prev, () -> {
+                (g, b) -> minecraft.setScreen(new OptionScreen(prev, () -> {
                     int color = json.getAsInt();
                     String formatted = WithOption.menuName("color.%d");
                     MutableInt idx = new MutableInt();
@@ -284,16 +292,17 @@ public class MenuScreen extends Screen {
                     };
                     return Arrays.stream(colors).map(c -> {
                         int i = idx.getAndIncrement();
-                        String name = formatted.formatted(i);
-                        return new ProgressOption(name, 0, 255, 1F,
+                        String name = String.format(formatted, i);
+                        ProgressOption option = new ProgressOption(name, 0, 255, 1F,
                                 v -> Double.valueOf(colors[i]),
                                 (o1, d) -> {
                                     colors[i] = d.intValue();
                                     kv.setValue(new JsonPrimitive(FastColor.ARGB32.color(colors[0], colors[1], colors[2], colors[3])));
                                 },
-                                (component, d) -> new TranslatableComponent(name).append(": ").append(String.valueOf(d)),
-                                m -> Collections.singletonList(new TranslatableComponent(WithOption.menuTip(name)).getVisualOrderText())
+                                (g1, o1) -> new TranslatableComponent(name).append(": ").append(o1.toString())
                         );
+                        option.setTooltip(Collections.singletonList(new TranslatableComponent(WithOption.menuTip(name)).getVisualOrderText()));
+                        return option;
                     }).toArray(Option[]::new);
                 })));
     }

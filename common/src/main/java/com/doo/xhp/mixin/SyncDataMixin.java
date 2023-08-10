@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Mixin(SynchedEntityData.class)
 public abstract class SyncDataMixin implements DamageAccessor {
@@ -27,12 +27,12 @@ public abstract class SyncDataMixin implements DamageAccessor {
 
     @Unique
     private Cache<Integer, Float> x_HP$lastDamageCached = CacheBuilder.newBuilder()
-            .expireAfterWrite(Duration.ofMillis(500))
+            .expireAfterWrite(500, TimeUnit.MILLISECONDS)
             .build();
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e) || !LivingEntityAccessor.isHealId(e, dataItem2.getAccessor().getId())) {
+        if (!(entity instanceof LivingEntity) || !LivingEntityAccessor.isHealId(entity, dataItem2.getAccessor().getId())) {
             return;
         }
 

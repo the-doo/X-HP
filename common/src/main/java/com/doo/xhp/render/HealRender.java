@@ -37,7 +37,7 @@ public abstract class HealRender implements WithOption {
     public static final String TEXT_COLOR_KEY = "text_color";
     public static final String TEXT_SEE_KEY = "text_see";
     public static final String P_KEY = "position";
-    public static final int FONT_LIGHT = 0xFF00FF;
+    public static final int FONT_LIGHT = 0xF000F0;
 
     protected final JsonObject options = new JsonObject();
 
@@ -97,13 +97,13 @@ public abstract class HealRender implements WithOption {
         return options.get(ENABLED_KEY).getAsBoolean();
     }
 
-    public final void render(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living, int i) {
+    public final void render(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living) {
         graphics.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
 
-        int damageStartX = renderContent(graphics, living, bufferSource, i);
+        int damageStartX = renderContent(graphics, living, bufferSource);
 
         if (needDamageText()) {
-            renderDamage(graphics, bufferSource, living, damageStartX, i);
+            renderDamage(graphics, bufferSource, living, damageStartX);
         }
     }
 
@@ -111,7 +111,7 @@ public abstract class HealRender implements WithOption {
         return true;
     }
 
-    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource, int i) {
+    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -200,7 +200,7 @@ public abstract class HealRender implements WithOption {
         }
     }
 
-    protected void renderDamage(PoseStack posed, MultiBufferSource bufferSource, LivingEntity living, int damageStartX, int i) {
+    protected void renderDamage(PoseStack posed, MultiBufferSource bufferSource, LivingEntity living, int damageStartX) {
         Minecraft minecraft = Minecraft.getInstance();
         int fps = minecraft.fpsString.isEmpty() ? 100 : Integer.parseInt(minecraft.fpsString.split(" ")[0]);
         Font font = minecraft.font;

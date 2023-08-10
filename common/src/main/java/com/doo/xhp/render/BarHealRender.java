@@ -5,7 +5,9 @@ import com.doo.xhp.enums.HealthTextGetters;
 import com.doo.xhp.enums.HealthTextPosition;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -33,15 +35,15 @@ public class BarHealRender extends IconHealRender {
     }
 
     protected void renderCurrent(PoseStack posed, double process, int endX, int endY, LivingEntity living) {
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+
         posed.pushPose();
         posed.scale(xScala, yScala, 1);
         RenderSystem.enableDepthTest();
-        RenderSystem.setShaderTexture(0, FILL_ID);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        textureManager.bind(FILL_ID);
         GuiComponent.blit(posed, 0, 0, 0, 0, (int) (T_WEIGHT * process), T_HEIGHT, T_WEIGHT, T_HEIGHT);
 
-        RenderSystem.setShaderTexture(0, BACK_ID);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        textureManager.bind(BACK_ID);
         GuiComponent.blit(posed, 0, 0, 0, 0, T_WEIGHT, T_HEIGHT, T_WEIGHT, T_HEIGHT);
         posed.popPose();
     }
