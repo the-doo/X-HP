@@ -4,6 +4,7 @@ import com.doo.xhp.enums.HealthRenders;
 import com.doo.xhp.enums.MenuOptType;
 import com.doo.xhp.interfaces.WithOption;
 import com.doo.xhp.screen.MenuScreen;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.util.FastColor;
@@ -39,14 +40,17 @@ public class ColorHealRender extends HealRender {
     }
 
     protected void renderCurrent(PoseStack graphics, double process, int endX, int endY, LivingEntity living) {
+        RenderSystem.enableDepthTest();
         GuiComponent.fill(graphics, 0, 0, endX, endY, friendly(living) ? friend : monster);
     }
 
     protected void renderLost(PoseStack graphics, int startX, int endX, int endY, LivingEntity living) {
+        RenderSystem.enableDepthTest();
         GuiComponent.fill(graphics, startX, 0, endX, endY, FastColor.ARGB32.color(200, 255, 255, 255));
     }
 
     protected void renderBack(PoseStack graphics, int startX, int endX, int endY) {
+        RenderSystem.enableDepthTest();
         GuiComponent.fill(graphics, startX, 0, endX, endY, FastColor.ARGB32.color(200, 0, 0, 0));
     }
 }
