@@ -26,7 +26,7 @@ public class HealthRenderUtil {
     }
 
     public static void render(PoseStack poseStack, EntityRenderDispatcher dispatcher, MultiBufferSource bufferSource,
-                              LivingEntity living, boolean showName, float baseH, int i) {
+                              LivingEntity living, float baseY, int i) {
         if (XHP.disabled()) {
             cleanPick(living);
             return;
@@ -54,7 +54,7 @@ public class HealthRenderUtil {
         }
 
         poseStack.pushPose();
-        poseStack.translate(0.0f, baseH + (showName ? 0.35F : 0), 0.0f);
+        poseStack.translate(0.0f, baseY, 0.0f);
         poseStack.mulPose(dispatcher.cameraOrientation());
         poseStack.scale(-0.025f, -0.025f, 0.025f);
 
