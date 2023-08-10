@@ -7,7 +7,7 @@
   ],
   "client": [
     "LivingEntityMixin",
-    "LivingEntityRendererMixin",
+    "EntityRendererMixin",
     "SyncDataMixin"
   ],
   "injectors": {
