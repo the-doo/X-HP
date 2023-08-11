@@ -41,7 +41,7 @@ public class XHP implements WithOption {
         CONFIG.addProperty(RANGE_KEY, 32);
         CONFIG.addProperty(FOCUS_KEY, false);
         CONFIG.add(BAN_KEY, new JsonArray());
-        CONFIG.addProperty(TYPE_KEY, HealthRenders.COLOR.name());
+        CONFIG.addProperty(TYPE_KEY, HealthRenders.ICON.name());
 
         OPTIONS.add(HealthRenderUtil.TIP_HEAL_RENDER);
         CONFIG.add(TIP_KEY, HealthRenderUtil.TIP_HEAL_RENDER.opt());
