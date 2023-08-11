@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -217,7 +218,7 @@ public abstract class HealRender implements WithOption {
         double speed = WithOption.doubleV(options, DAMAGE_SPEED_KEY);
         double maxY = 2D * height();
         double xSpeed = 200 * speed;
-        double ySpeed = 20 * speed;
+        double ySpeed = 200 * speed;
         int color1 = (int) WithOption.doubleV(options, DAMAGE_COLOR_KEY);
         int color2 = (int) WithOption.doubleV(options, HEAL_COLOR_KEY);
         boolean id = living.getId() % 2 == 0;
@@ -225,14 +226,16 @@ public abstract class HealRender implements WithOption {
         DamageAccessor.foreach(living.getEntityData(), (tick, value) -> {
             posed.pushPose();
             float p = 1F * (current - tick) / fps;
-
             int color = color2;
-            int fontX = damageStartX + ((int) ((tick % 2 == 0 || id ? 1 : -1) * p * xSpeed));
-            int fontY = -(int) Math.min((p * ySpeed), maxY);
             if (value < 0) {
                 color = color1;
                 value = -value;
             }
+
+            float xEffect = Mth.clamp(0.5F, value / 6, 3);
+            float yEffect = Mth.clamp(0.5F, value / 6, 2);
+            int fontX = damageStartX + ((int) ((tick % 2 == 0 || id ? 1 : -1) * p * xSpeed * xEffect));
+            int fontY = -(int) Math.min((p * ySpeed), maxY * yEffect);
 
             MutableComponent component = Component.literal(HealthTextGetters.formatNum(value));
             font.drawInBatch(component, fontX, fontY, color, false,
