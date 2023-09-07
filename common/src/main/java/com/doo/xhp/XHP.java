@@ -64,7 +64,7 @@ public class XHP implements WithOption {
 
     private static void registerSource() {
         MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> BuiltInRegistries.ENTITY_TYPE.stream()
-                .filter(e -> e.getCategory() != MobCategory.MISC)
+                .filter(e -> e.getCategory() != MobCategory.MISC || EntityType.VILLAGER == e || EntityType.PLAYER == e)
                 .map(EntityType::getDescriptionId));
         MenuScreen.register(MenuOptType.ENUM, null, TYPE_KEY, HealthRenders.class);
     }

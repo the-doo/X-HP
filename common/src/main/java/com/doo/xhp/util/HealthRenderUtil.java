@@ -12,6 +12,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class HealthRenderUtil {
@@ -27,7 +30,7 @@ public class HealthRenderUtil {
 
     public static void render(PoseStack poseStack, EntityRenderDispatcher dispatcher, MultiBufferSource bufferSource,
                               LivingEntity living, float baseY) {
-        if (XHP.disabled()) {
+        if (XHP.disabled() || living.getType().getCategory() == MobCategory.MISC && !(living instanceof Player) && !(living instanceof Villager)) {
             cleanPick(living);
             return;
         }
@@ -91,7 +94,8 @@ public class HealthRenderUtil {
             return;
         }
 
-        if (pick == null) {
+        if (pick == null || !pick.isAlive()) {
+            pick = null;
             return;
         }
 
