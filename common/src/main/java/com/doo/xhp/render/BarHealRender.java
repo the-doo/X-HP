@@ -24,7 +24,6 @@ public class BarHealRender extends IconHealRender {
         height = 16;
         xScala = 1F * weight / T_WEIGHT;
         yScala = 1F * height / T_HEIGHT;
-        baseY = 5;
 
         position = HealthTextPosition.BOTTOM_RIGHT;
 

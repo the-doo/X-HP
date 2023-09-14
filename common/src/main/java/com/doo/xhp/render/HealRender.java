@@ -45,7 +45,7 @@ public abstract class HealRender implements WithOption {
 
 
     protected float scale = 1;
-    protected int baseY = 10;
+    protected double baseY = 0;
     protected int weight = 80;
     protected int height = 9;
     protected HealthTextPosition position;
@@ -53,7 +53,7 @@ public abstract class HealRender implements WithOption {
     protected HealRender() {
         options.addProperty(ENABLED_KEY, true);
         options.addProperty(BASE_SCALE_KEY, 10);
-        options.addProperty(BASE_Y_KEY, 10);
+        options.addProperty(BASE_Y_KEY, 45);
         options.addProperty(WRAPPER_KEY, true);
         options.addProperty(DAMAGE_KEY, true);
         options.addProperty(DAMAGE_SPEED_KEY, 4);
@@ -87,6 +87,7 @@ public abstract class HealRender implements WithOption {
     @Override
     public void reloadOpt() {
         scale = (float) (WithOption.doubleV(options, BASE_SCALE_KEY) / 10);
+        baseY = -(WithOption.doubleV(options, BASE_Y_KEY) - 45);
 
         if (needHealthText()) {
             position = WithOption.enumV(options, P_KEY, HealthTextPosition.class).orElse(HealthTextPosition.FOLLOW);
@@ -106,7 +107,7 @@ public abstract class HealRender implements WithOption {
     public final void render(PoseStack poseStack, MultiBufferSource bufferSource, LivingEntity living) {
         poseStack.scale(scale, scale, scale);
 
-        poseStack.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
+        poseStack.translate(needMoveCenter() ? -width() / 2F : 0, incY(), 0);
 
         GuiGraphics graphics = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
         PoseStack posed = graphics.pose();
@@ -262,7 +263,7 @@ public abstract class HealRender implements WithOption {
         return height;
     }
 
-    protected int incY() {
+    protected double incY() {
         return baseY;
     }
 
