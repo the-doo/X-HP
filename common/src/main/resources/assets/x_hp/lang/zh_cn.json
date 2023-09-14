@@ -22,6 +22,8 @@
   "x_hp.menu.option.color.3": "蓝色",
   "x_hp.menu.option.color.3.tip": "ARGB的B",
 
+  "x_hp.menu.option.scale": "缩放",
+  "x_hp.menu.option.scale.tip": "缩放大小",
   "x_hp.menu.option.base_y": "起点",
   "x_hp.menu.option.base_y.tip": "渲染的起点位置，Y轴(上下方向)偏移",
   "x_hp.menu.option.damage": "显示伤害",

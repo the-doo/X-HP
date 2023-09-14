@@ -22,6 +22,8 @@
   "x_hp.menu.option.color.3": "Blue",
   "x_hp.menu.option.color.3.tip": "ARGB - B",
 
+  "x_hp.menu.option.scale": "Zoom",
+  "x_hp.menu.option.scale.tip": "Zoom size",
   "x_hp.menu.option.base_y": "Starting Point",
   "x_hp.menu.option.base_y.tip": "The starting point position of the rendering, Y axis(Up and down direction) offset",
   "x_hp.menu.option.damage": "Show Damage",

@@ -189,6 +189,9 @@ public class MenuScreen extends Screen {
         if (key.endsWith(XHP.ENABLED_KEY)) {
             return WithOption.menuName(XHP.ENABLED_KEY);
         }
+        if (key.endsWith(HealRender.BASE_SCALE_KEY)) {
+            return WithOption.menuName(HealRender.BASE_SCALE_KEY);
+        }
         if (key.endsWith(HealRender.BASE_Y_KEY)) {
             return WithOption.menuName(HealRender.BASE_Y_KEY);
         }

@@ -28,6 +28,7 @@ public abstract class HealRender implements WithOption {
 
     protected static final int GREEN_COLOR = 0xFF00FF00;
     protected static final int RED_COLOR = 0xFFFF0000;
+    public static final String BASE_SCALE_KEY = "scale";
     public static final String BASE_Y_KEY = "base_y";
     public static final String DAMAGE_KEY = "damage";
     public static final String DAMAGE_SPEED_KEY = "damage_speed";
@@ -43,6 +44,7 @@ public abstract class HealRender implements WithOption {
     protected final JsonObject options = new JsonObject();
 
 
+    protected float scale = 1;
     protected int baseY = 10;
     protected int weight = 80;
     protected int height = 9;
@@ -50,6 +52,7 @@ public abstract class HealRender implements WithOption {
 
     protected HealRender() {
         options.addProperty(ENABLED_KEY, true);
+        options.addProperty(BASE_SCALE_KEY, 10);
         options.addProperty(BASE_Y_KEY, 10);
         options.addProperty(WRAPPER_KEY, true);
         options.addProperty(DAMAGE_KEY, true);
@@ -83,6 +86,8 @@ public abstract class HealRender implements WithOption {
 
     @Override
     public void reloadOpt() {
+        scale = (float) (WithOption.doubleV(options, BASE_SCALE_KEY) / 10);
+
         if (needHealthText()) {
             position = WithOption.enumV(options, P_KEY, HealthTextPosition.class).orElse(HealthTextPosition.FOLLOW);
         }
@@ -99,6 +104,8 @@ public abstract class HealRender implements WithOption {
     }
 
     public final void render(PoseStack poseStack, MultiBufferSource bufferSource, LivingEntity living) {
+        poseStack.scale(scale, scale, scale);
+
         poseStack.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
 
         GuiGraphics graphics = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
