@@ -44,7 +44,7 @@ public abstract class HealRender implements WithOption {
     protected final JsonObject options = new JsonObject();
 
 
-    protected float scale = 1;
+    protected float scale = 0.8f;
     protected double baseY = 0;
     protected int weight = 80;
     protected int height = 9;
@@ -52,8 +52,8 @@ public abstract class HealRender implements WithOption {
 
     protected HealRender() {
         options.addProperty(ENABLED_KEY, true);
-        options.addProperty(BASE_SCALE_KEY, 10);
-        options.addProperty(BASE_Y_KEY, 45);
+        options.addProperty(BASE_SCALE_KEY, 8);
+        options.addProperty(BASE_Y_KEY, 40);
         options.addProperty(WRAPPER_KEY, true);
         options.addProperty(DAMAGE_KEY, true);
         options.addProperty(DAMAGE_SPEED_KEY, 4);
