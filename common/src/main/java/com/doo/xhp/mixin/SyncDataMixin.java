@@ -36,10 +36,11 @@ public abstract class SyncDataMixin implements DamageAccessor {
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity) || !LivingEntityAccessor.isHealId(entity, dataItem2.getAccessor().getId())) {
+        if (!(entity instanceof LivingEntity)) {
             return;
         }
 
+        LivingEntity e = (LivingEntity) entity;
         if (LivingEntityAccessor.isPoseId(e, dataItem.getAccessor().getId())) {
             putDamage(e, -lastHealth);
         } else if (LivingEntityAccessor.isHealId(e, dataItem.getAccessor().getId())) {

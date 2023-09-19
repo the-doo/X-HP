@@ -16,8 +16,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-import java.time.Duration;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static com.doo.xhp.render.HealRender.FONT_LIGHT;
 
@@ -32,7 +32,7 @@ public class DamageRender implements WithOption {
     private static final JsonObject options = new JsonObject();
 
     private static Cache<String, MutableDamage> CACHED = CacheBuilder.newBuilder()
-            .expireAfterWrite(Duration.ofMillis(1200))
+            .expireAfterWrite(1200, TimeUnit.MILLISECONDS)
             .build();
 
     private static final int KILLED = 0xFFFFFF;
