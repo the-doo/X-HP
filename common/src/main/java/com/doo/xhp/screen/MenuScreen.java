@@ -22,7 +22,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.SimpleOptionsSubScreen;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.FormattedCharSequence;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
