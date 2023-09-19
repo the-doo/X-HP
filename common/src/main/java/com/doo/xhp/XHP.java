@@ -29,7 +29,8 @@ public class XHP implements WithOption {
     private static final String TYPE_KEY = "type";
 
     public static final String ENABLED_KEY = "enabled";
-    private static final String TIP_KEY = "TIP";
+    private static final String TIP_KEY = "tips";
+    private static final String DAMAGE_KEY = "damage";
 
     private static final List<WithOption> OPTIONS = Lists.newArrayList();
 
@@ -41,10 +42,14 @@ public class XHP implements WithOption {
         CONFIG.addProperty(RANGE_KEY, 32);
         CONFIG.addProperty(FOCUS_KEY, false);
         CONFIG.add(BAN_KEY, new JsonArray());
-        CONFIG.addProperty(TYPE_KEY, HealthRenders.ICON.name());
+
+        OPTIONS.add(HealthRenderUtil.DAMAGE_RENDER);
+        CONFIG.add(DAMAGE_KEY, HealthRenderUtil.DAMAGE_RENDER.opt());
 
         OPTIONS.add(HealthRenderUtil.TIP_HEAL_RENDER);
         CONFIG.add(TIP_KEY, HealthRenderUtil.TIP_HEAL_RENDER.opt());
+
+        CONFIG.addProperty(TYPE_KEY, HealthRenders.ICON.name());
         for (HealthRenders value : HealthRenders.values()) {
             if (value.getRender() != null) {
                 CONFIG.add(value.name(), value.getRender().opt());
@@ -106,6 +111,10 @@ public class XHP implements WithOption {
 
     public static boolean isTip(String key) {
         return TIP_KEY.equals(key);
+    }
+
+    public static boolean isDamage(String key) {
+        return DAMAGE_KEY.equals(key);
     }
 
     public static boolean disabled() {

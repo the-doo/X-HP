@@ -2,11 +2,14 @@ package com.doo.xhp.util;
 
 import com.doo.xhp.XHP;
 import com.doo.xhp.enums.HealthRenders;
+import com.doo.xhp.render.DamageRender;
 import com.doo.xhp.render.HealRender;
 import com.doo.xhp.render.ImageHealRender;
 import com.doo.xhp.render.TipHealRender;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -20,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 public class HealthRenderUtil {
 
     public static final TipHealRender TIP_HEAL_RENDER = new TipHealRender();
+    public static final DamageRender DAMAGE_RENDER = new DamageRender();
 
     private static HealRender render;
 
@@ -30,7 +34,7 @@ public class HealthRenderUtil {
 
     public static void render(PoseStack poseStack, EntityRenderDispatcher dispatcher, MultiBufferSource bufferSource,
                               LivingEntity living, float baseY) {
-        if (XHP.disabled() || living.getType().getCategory() == MobCategory.MISC && !(living instanceof Player) && !(living instanceof Villager)) {
+        if (XHP.disabled() || !living.isAlive() || living.getType().getCategory() == MobCategory.MISC && !(living instanceof Player) && !(living instanceof Villager)) {
             cleanPick(living);
             return;
         }
@@ -111,5 +115,23 @@ public class HealthRenderUtil {
 
     public static void onClientStarted(Minecraft client) {
         ((ImageHealRender) HealthRenders.IMAGE.getRender()).reloadImage(client);
+    }
+
+    public static void onClientEndTick(Minecraft client) {
+        if (!client.isPaused()) {
+            DamageRender.tick();
+        }
+    }
+
+    public static void renderDamage(PoseStack poseStack, Font font, MultiBufferSource.BufferSource bufferSource, Camera camera) {
+        if (XHP.disabled() || !DAMAGE_RENDER.enabled()) {
+            return;
+        }
+
+        poseStack.pushPose();
+
+        DAMAGE_RENDER.render(poseStack, font, bufferSource, camera);
+
+        poseStack.popPose();
     }
 }

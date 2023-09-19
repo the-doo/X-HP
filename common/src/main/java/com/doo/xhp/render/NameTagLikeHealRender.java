@@ -58,11 +58,6 @@ public class NameTagLikeHealRender extends HealRender {
         return -(int) fontX;
     }
 
-    @Override
-    protected void renderDamage(GuiGraphics graphics, MultiBufferSource bufferSource, LivingEntity living, int damageStartX) {
-        super.renderDamage(graphics, bufferSource, living, 0);
-    }
-
     protected Component changeColor(LivingEntity living, MutableComponent component) {
         float v = living.getHealth() / living.getMaxHealth();
         if (v < 0.35) {
