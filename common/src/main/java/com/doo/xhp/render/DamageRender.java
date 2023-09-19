@@ -189,9 +189,9 @@ public class DamageRender implements WithOption {
         public void tick() {
             life--;
 
-            if (life > 15) {
+            if (isHeal || life > 15) {
                 y += 0.06;
-            } else if (!isHeal && life < 10) {
+            } else if (life < 10) {
                 y -= 0.03;
             }
         }

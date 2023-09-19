@@ -2,9 +2,11 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.interfaces.LivingEntityAccessor;
 import com.doo.xhp.render.DamageRender;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,9 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Mixin(SynchedEntityData.class)
 public abstract class SyncDataMixin {
@@ -28,12 +27,12 @@ public abstract class SyncDataMixin {
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity)) {
+        if (!(entity instanceof LivingEntity) || entity.getId() == Minecraft.getInstance().player.getId()) {
             return;
         }
 
         LivingEntity e = (LivingEntity) entity;
-        if (LivingEntityAccessor.isPoseId(e, dataItem.getAccessor().getId())) {
+        if (LivingEntityAccessor.isPoseId(e, dataItem.getAccessor().getId()) && Pose.DYING == dataItem2.getValue()) {
             putDamage(e, -lastHealth);
         } else if (LivingEntityAccessor.isHealId(e, dataItem.getAccessor().getId())) {
             float change = (lastHealth = (Float) dataItem2.getValue()) - (Float) dataItem.getValue();
