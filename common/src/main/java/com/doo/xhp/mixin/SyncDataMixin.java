@@ -2,6 +2,7 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.interfaces.DamageAccessor;
 import com.doo.xhp.interfaces.LivingEntityAccessor;
+import com.doo.xhp.render.DamageRender;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,8 +28,11 @@ public abstract class SyncDataMixin implements DamageAccessor {
 
     @Unique
     private Cache<Integer, Float> x_HP$lastDamageCached = CacheBuilder.newBuilder()
-            .expireAfterWrite(500, TimeUnit.MILLISECONDS)
+            .expireAfterWrite(800, TimeUnit.MILLISECONDS)
             .build();
+
+    @Unique
+    private float lastHealth;
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
@@ -36,12 +40,22 @@ public abstract class SyncDataMixin implements DamageAccessor {
             return;
         }
 
-        float change = (Float) dataItem2.getValue() - (Float) dataItem.getValue();
-        if (change < 0.0001 && change >= 0 || change <= 0 && change > -0.0001) {
+        if (LivingEntityAccessor.isPoseId(e, dataItem.getAccessor().getId())) {
+            putDamage(e, -lastHealth);
+        } else if (LivingEntityAccessor.isHealId(e, dataItem.getAccessor().getId())) {
+            float change = (lastHealth = (Float) dataItem2.getValue()) - (Float) dataItem.getValue();
+            putDamage(e, change);
+        }
+    }
+
+    @Unique
+    private void putDamage(LivingEntity e, float damage) {
+        if (damage < 0.0001 && damage >= 0 || damage <= 0 && damage > -0.0001) {
             return;
         }
 
-        x_HP$lastDamageCached.put(entity.tickCount, change);
+        x_HP$lastDamageCached.put(entity.tickCount, damage);
+        DamageRender.put(e, damage);
     }
 
     @Override

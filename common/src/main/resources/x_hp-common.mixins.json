@@ -6,8 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "LivingEntityMixin",
     "EntityRendererMixin",
+    "LevelRendererMixin",
+    "LivingEntityMixin",
     "SyncDataMixin"
   ],
   "injectors": {

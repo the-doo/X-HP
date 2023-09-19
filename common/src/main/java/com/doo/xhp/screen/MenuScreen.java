@@ -19,7 +19,6 @@ import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.FormattedCharSequence;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
@@ -111,6 +110,9 @@ public class MenuScreen extends Screen {
         if (withOption == null && XHP.isTip(key)) {
             withOption = HealthRenderUtil.TIP_HEAL_RENDER;
         }
+        if (withOption == null && XHP.isDamage(key)) {
+            withOption = HealthRenderUtil.DAMAGE_RENDER;
+        }
         if (withOption != null) {
             String menuName = WithOption.menuName(key);
             return withOpsBtn(entry, menuName, withOption, key);
@@ -195,23 +197,14 @@ public class MenuScreen extends Screen {
         if (key.endsWith(XHP.ENABLED_KEY)) {
             return WithOption.menuName(XHP.ENABLED_KEY);
         }
+        if (key.endsWith(HealRender.BASE_SCALE_KEY)) {
+            return WithOption.menuName(HealRender.BASE_SCALE_KEY);
+        }
         if (key.endsWith(HealRender.BASE_Y_KEY)) {
             return WithOption.menuName(HealRender.BASE_Y_KEY);
         }
-        if (key.endsWith(HealRender.DAMAGE_KEY)) {
-            return WithOption.menuName(HealRender.DAMAGE_KEY);
-        }
-        if (key.endsWith(HealRender.DAMAGE_SPEED_KEY)) {
-            return WithOption.menuName(HealRender.DAMAGE_SPEED_KEY);
-        }
         if (key.endsWith(HealRender.WRAPPER_KEY)) {
             return WithOption.menuName(HealRender.WRAPPER_KEY);
-        }
-        if (key.endsWith(HealRender.DAMAGE_COLOR_KEY)) {
-            return WithOption.menuName(HealRender.DAMAGE_COLOR_KEY);
-        }
-        if (key.endsWith(HealRender.HEAL_COLOR_KEY)) {
-            return WithOption.menuName(HealRender.HEAL_COLOR_KEY);
         }
         if (key.endsWith(HealRender.TEXT_KEY)) {
             return WithOption.menuName(HealRender.TEXT_KEY);

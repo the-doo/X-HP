@@ -8,9 +8,7 @@ import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.FormattedCharSequence;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class OptionScreen extends Screen {
