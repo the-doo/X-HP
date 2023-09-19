@@ -55,7 +55,7 @@ public class ConfigUtil {
             return;
         }
 
-        for (Map.Entry<String, JsonElement> entry : from.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : target.entrySet()) {
             if (entry.getValue().isJsonObject()) {
                 copy(target.get(entry.getKey()).getAsJsonObject(), entry.getValue().getAsJsonObject());
             } else {

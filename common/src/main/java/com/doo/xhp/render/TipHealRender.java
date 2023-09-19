@@ -27,9 +27,9 @@ public class TipHealRender implements WithOption {
         options.addProperty(XHP.ENABLED_KEY, false);
         options.addProperty(NAME_KEY, true);
         options.addProperty(ARMOR_KEY, true);
-        options.addProperty(INTERVAL_KEY, 0);
-        options.addProperty(Y_DIST_KEY, true);
-        options.addProperty(Y_KEY, 0);
+        options.addProperty(INTERVAL_KEY, 4);
+        options.addProperty(Y_DIST_KEY, false);
+        options.addProperty(Y_KEY, 20);
     }
 
     @Override

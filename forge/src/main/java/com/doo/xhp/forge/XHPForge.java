@@ -49,11 +49,14 @@ public class XHPForge {
     // Event is on the Forge event bus only on the physical client
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) { // Only call code once as the tick event is called twice every tick
+        if (event.phase == TickEvent.Phase.END) {
+            // Only call code once as the tick event is called twice every tick
             while (ClientModEvents.EXAMPLE_MAPPING.get().consumeClick()) {
                 // Execute logic to perform on click here
                 MenuScreen.open(Minecraft.getInstance());
             }
+
+            HealthRenderUtil.onClientEndTick(Minecraft.getInstance());
         }
     }
 
