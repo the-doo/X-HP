@@ -28,11 +28,8 @@ public abstract class HealRender implements WithOption {
 
     protected static final int GREEN_COLOR = 0xFF00FF00;
     protected static final int RED_COLOR = 0xFFFF0000;
+    public static final String BASE_SCALE_KEY = "scale";
     public static final String BASE_Y_KEY = "base_y";
-    public static final String DAMAGE_KEY = "damage";
-    public static final String DAMAGE_SPEED_KEY = "damage_speed";
-    public static final String DAMAGE_COLOR_KEY = "damage_color";
-    public static final String HEAL_COLOR_KEY = "heal_color";
     public static final String WRAPPER_KEY = "wrapper";
     public static final String TEXT_KEY = "text";
     public static final String TEXT_COLOR_KEY = "text_color";
@@ -43,19 +40,17 @@ public abstract class HealRender implements WithOption {
     protected final JsonObject options = new JsonObject();
 
 
-    protected int baseY = 10;
+    protected float scale = 0.8f;
+    protected double baseY = 0;
     protected int weight = 80;
     protected int height = 9;
     protected HealthTextPosition position;
 
     protected HealRender() {
         options.addProperty(ENABLED_KEY, true);
-        options.addProperty(BASE_Y_KEY, 10);
+        options.addProperty(BASE_SCALE_KEY, 8);
+        options.addProperty(BASE_Y_KEY, 40);
         options.addProperty(WRAPPER_KEY, true);
-        options.addProperty(DAMAGE_KEY, true);
-        options.addProperty(DAMAGE_SPEED_KEY, 4);
-        options.addProperty(DAMAGE_COLOR_KEY, RED_COLOR);
-        options.addProperty(HEAL_COLOR_KEY, GREEN_COLOR);
 
         if (needHealthText()) {
             position = HealthTextPosition.FOLLOW;
@@ -70,10 +65,6 @@ public abstract class HealRender implements WithOption {
     public void registerOpt() {
         String name = HealthRenders.name(this);
 
-        MenuScreen.register(MenuOptType.COLOR, name, DAMAGE_COLOR_KEY, 1);
-        MenuScreen.register(MenuOptType.COLOR, name, HEAL_COLOR_KEY, 1);
-
-
         if (needHealthText()) {
             MenuScreen.register(MenuOptType.COLOR, name, TEXT_COLOR_KEY, 1);
             MenuScreen.register(MenuOptType.ENUM, name, TEXT_KEY, HealthTextGetters.class);
@@ -83,6 +74,9 @@ public abstract class HealRender implements WithOption {
 
     @Override
     public void reloadOpt() {
+        scale = (float) (WithOption.doubleV(options, BASE_SCALE_KEY) / 10);
+        baseY = -(WithOption.doubleV(options, BASE_Y_KEY) - 45);
+
         if (needHealthText()) {
             position = WithOption.enumV(options, P_KEY, HealthTextPosition.class).orElse(HealthTextPosition.FOLLOW);
         }
@@ -99,13 +93,10 @@ public abstract class HealRender implements WithOption {
     }
 
     public final void render(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living) {
+        graphics.scale(scale, scale, scale);
         graphics.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
 
-        int damageStartX = renderContent(graphics, living, bufferSource);
-
-        if (needDamageText()) {
-            renderDamage(graphics, bufferSource, living, damageStartX);
-        }
+        renderContent(graphics, living, bufferSource);
     }
 
     protected boolean needMoveCenter() {
@@ -156,10 +147,6 @@ public abstract class HealRender implements WithOption {
         return WithOption.boolV(options, WRAPPER_KEY);
     }
 
-    protected boolean needDamageText() {
-        return WithOption.boolV(options, DAMAGE_KEY);
-    }
-
     protected void renderCurrent(PoseStack graphics, double process, int endX, int endY, LivingEntity living) {
 
     }
@@ -203,43 +190,6 @@ public abstract class HealRender implements WithOption {
         }
     }
 
-    protected void renderDamage(PoseStack posed, MultiBufferSource bufferSource, LivingEntity living, int damageStartX) {
-        Minecraft minecraft = Minecraft.getInstance();
-        int fps = minecraft.getFps();
-        Font font = minecraft.font;
-        int current = living.tickCount;
-        double speed = WithOption.doubleV(options, DAMAGE_SPEED_KEY);
-        double maxY = 2D * height();
-        double xSpeed = 200 * speed;
-        double ySpeed = 200 * speed;
-        int color1 = (int) WithOption.doubleV(options, DAMAGE_COLOR_KEY);
-        int color2 = (int) WithOption.doubleV(options, HEAL_COLOR_KEY);
-        boolean id = living.getId() % 2 == 0;
-
-        DamageAccessor.foreach(living.getEntityData(), (tick, value) -> {
-            posed.pushPose();
-            float p = 1F * (current - tick) / fps;
-            int color = color2;
-            if (value < 0) {
-                color = color1;
-                value = -value;
-            }
-
-            float xEffect = Mth.clamp(0.5F, value / 6, 3);
-            float yEffect = Mth.clamp(0.5F, value / 6, 2);
-            int fontX = damageStartX + ((int) ((tick % 2 == 0 || id ? 1 : -1) * p * xSpeed * xEffect));
-            int fontY = -(int) Math.min((p * ySpeed), maxY * yEffect);
-
-            MutableComponent component = Component.literal(HealthTextGetters.formatNum(value));
-            font.drawInBatch(component, fontX, fontY, color, false,
-                    posed.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
-            font.drawInBatch(component, fontX, fontY, color, false,
-                    posed.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
-
-            posed.popPose();
-        });
-    }
-
     public int width() {
         return weight;
     }
@@ -248,7 +198,7 @@ public abstract class HealRender implements WithOption {
         return height;
     }
 
-    protected int incY() {
+    protected double incY() {
         return baseY;
     }
 

@@ -56,7 +56,6 @@ public class ImageHealRender extends IconHealRender {
     public ImageHealRender() {
         weight = 80;
         height = 16;
-        baseY = 5;
 
         drawType = ImageDrawType.COVER;
         position = HealthTextPosition.BOTTOM_RIGHT;

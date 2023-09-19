@@ -2,6 +2,7 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.interfaces.DamageAccessor;
 import com.doo.xhp.interfaces.LivingEntityAccessor;
+import com.doo.xhp.render.DamageRender;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,22 +28,34 @@ public abstract class SyncDataMixin implements DamageAccessor {
 
     @Unique
     private Cache<Integer, Float> x_HP$lastDamageCached = CacheBuilder.newBuilder()
-            .expireAfterWrite(Duration.ofMillis(500))
+            .expireAfterWrite(Duration.ofMillis(800))
             .build();
+
+    @Unique
+    private float lastHealth;
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> dataValue, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e) || !LivingEntityAccessor.isHealId(e, dataValue.id())) {
+        if (!(entity instanceof LivingEntity e)) {
             return;
         }
 
-        float change = (Float) dataValue.value() - (
-                Float) dataItem.value().value();
-        if (change < 0.0001 && change >= 0 || change <= 0 && change > -0.0001) {
+        if (LivingEntityAccessor.isPoseId(e, dataValue.id())) {
+            putDamage(e, -lastHealth);
+        } else if (LivingEntityAccessor.isHealId(e, dataValue.id())) {
+            float change = (lastHealth = (Float) dataValue.value()) - (Float) dataItem.value().value();
+            putDamage(e, change);
+        }
+    }
+
+    @Unique
+    private void putDamage(LivingEntity e, float damage) {
+        if (damage < 0.0001 && damage >= 0 || damage <= 0 && damage > -0.0001) {
             return;
         }
 
-        x_HP$lastDamageCached.put(entity.tickCount, change);
+        x_HP$lastDamageCached.put(entity.tickCount, damage);
+        DamageRender.put(e, damage);
     }
 
     @Override
