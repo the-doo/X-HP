@@ -81,6 +81,8 @@
 
   "x_hp.menu.option.damage": "伤害",
   "x_hp.menu.option.damage.tip": "显示伤害",
+  "x_hp.menu.option.damage.from_head": "从头部显示",
+  "x_hp.menu.option.damage.from_head.tip": "伤害从头部显示，默认从腰间",
   "x_hp.menu.option.damage.hit_color": "伤害颜色",
   "x_hp.menu.option.damage.hit_color.tip": "伤害颜色",
   "x_hp.menu.option.damage.crit_color": "特殊伤害颜色",
