@@ -25,6 +25,8 @@ import static com.doo.xhp.render.HealRender.FONT_LIGHT;
 public class DamageRender implements WithOption {
 
     public static final String ENABLED_KEY = "enabled";
+
+    public static final String FROM_HEAD_KEY = "from_head";
     public static final String SCALE_KEY = "scale";
     public static final String DAMAGE_COLOR_KEY = "hit_color";
     public static final String HEAL_COLOR_KEY = "heal_color";
@@ -45,10 +47,13 @@ public class DamageRender implements WithOption {
 
     private static boolean enabled = true;
 
+    private static boolean fromHead = false;
+
     private static float size = 0.8F;
 
     public DamageRender() {
         options.addProperty(ENABLED_KEY, enabled);
+        options.addProperty(FROM_HEAD_KEY, fromHead);
         options.addProperty(SCALE_KEY, size * 10);
         options.addProperty(DAMAGE_COLOR_KEY, hit);
         options.addProperty(HEAL_COLOR_KEY, heal);
@@ -71,6 +76,7 @@ public class DamageRender implements WithOption {
     @Override
     public void reloadOpt() {
         enabled = WithOption.boolV(options, ENABLED_KEY);
+        fromHead = WithOption.boolV(options, FROM_HEAD_KEY);
         size = (float) (WithOption.doubleV(options, SCALE_KEY) / 10);
 
         hit = (int) WithOption.doubleV(options, DAMAGE_COLOR_KEY);
@@ -155,8 +161,13 @@ public class DamageRender implements WithOption {
         public static MutableDamage random(LivingEntity entity, float damage) {
             RandomSource random = entity.getRandom();
             MutableDamage d = new MutableDamage();
+            float bodyY = entity.isBaby() ? entity.getBbHeight() : entity.getEyeHeight();
+            if (!fromHead) {
+                bodyY /= 2;
+            }
+
             d.x = entity.getX();
-            d.y = entity.getY() + random.nextDouble() + (entity.isBaby() ? entity.getBbHeight() : entity.getEyeHeight()) / 2;
+            d.y = entity.getY() + random.nextDouble() + bodyY;
             d.z = entity.getZ();
             d.isHeal = damage > 0;
             d.damage = damage;
