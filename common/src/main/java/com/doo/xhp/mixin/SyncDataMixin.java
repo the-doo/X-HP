@@ -1,10 +1,7 @@
 package com.doo.xhp.mixin;
 
-import com.doo.xhp.interfaces.DamageAccessor;
 import com.doo.xhp.interfaces.LivingEntityAccessor;
 import com.doo.xhp.render.DamageRender;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,20 +13,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.time.Duration;
-import java.util.Map;
-
 @Mixin(SynchedEntityData.class)
-public abstract class SyncDataMixin implements DamageAccessor {
+public abstract class SyncDataMixin {
 
     @Shadow
     @Final
     private Entity entity;
-
-    @Unique
-    private Cache<Integer, Float> x_HP$lastDamageCached = CacheBuilder.newBuilder()
-            .expireAfterWrite(Duration.ofMillis(800))
-            .build();
 
     @Unique
     private float lastHealth;
@@ -54,12 +43,6 @@ public abstract class SyncDataMixin implements DamageAccessor {
             return;
         }
 
-        x_HP$lastDamageCached.put(entity.tickCount, damage);
         DamageRender.put(e, damage);
-    }
-
-    @Override
-    public Map<Integer, Float> x_HP$lastDamageMap() {
-        return x_HP$lastDamageCached.asMap();
     }
 }

@@ -4,7 +4,6 @@ import com.doo.xhp.enums.HealthRenders;
 import com.doo.xhp.enums.HealthTextGetters;
 import com.doo.xhp.enums.HealthTextPosition;
 import com.doo.xhp.enums.MenuOptType;
-import com.doo.xhp.interfaces.DamageAccessor;
 import com.doo.xhp.interfaces.WithOption;
 import com.doo.xhp.screen.MenuScreen;
 import com.google.gson.JsonObject;
@@ -121,7 +120,7 @@ public abstract class HealRender implements WithOption {
         // container
         renderCurrent(graphics, process, processW, h, living);
 
-        int inc = -(int) (DamageAccessor.sum(living.getEntityData()) / living.getMaxHealth() * w);
+        int inc = -(int) (DamageRender.sum(living.getId()) / living.getMaxHealth() * w);
         if (inc > 0) {
             renderLost(graphics, processW, processW + inc, h, living);
         } else {
