@@ -8,16 +8,16 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 import java.time.Duration;
+import java.util.Random;
 
 import static com.doo.xhp.render.HealRender.FONT_LIGHT;
 
@@ -97,7 +97,7 @@ public class DamageRender implements WithOption {
         double x = vec3.x();
         double y = vec3.y();
         double z = vec3.z();
-        Quaternionf rotation = camera.rotation();
+        Quaternion rotation = camera.rotation();
         CACHED.asMap().values().forEach(damage -> {
             stack.pushPose();
             transDamage(damage, stack, x, y, z, rotation);
@@ -106,7 +106,7 @@ public class DamageRender implements WithOption {
         });
     }
 
-    private void transDamage(MutableDamage damage, PoseStack stack, double x, double y, double z, Quaternionf rotation) {
+    private void transDamage(MutableDamage damage, PoseStack stack, double x, double y, double z, Quaternion rotation) {
         stack.translate(damage.x - x, damage.y - y, damage.z - z);
         stack.mulPose(rotation);
         stack.scale(size, size, size);
@@ -116,9 +116,7 @@ public class DamageRender implements WithOption {
 
     public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose) {
         font.drawInBatch(damage.damage, 0, 0, damage.color, false,
-                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
-        font.drawInBatch(damage.damage, 0, 0, damage.color, false,
-                pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+                pose, source, true, 0, FONT_LIGHT);
     }
 
     public static class MutableDamage {
@@ -138,7 +136,7 @@ public class DamageRender implements WithOption {
         int life = 22;
 
         public static MutableDamage random(LivingEntity entity, float damage) {
-            RandomSource random = entity.getRandom();
+            Random random = entity.getRandom();
             MutableDamage d = new MutableDamage();
             d.x = entity.getX();
             d.y = entity.getY() + random.nextDouble() + (entity.isBaby() ? entity.getBbHeight() : entity.getEyeHeight()) / 2;

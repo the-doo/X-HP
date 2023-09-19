@@ -40,10 +40,10 @@ public abstract class SyncDataMixin implements DamageAccessor {
             return;
         }
 
-        if (LivingEntityAccessor.isPoseId(e, dataValue.id())) {
+        if (LivingEntityAccessor.isPoseId(e, dataItem.getAccessor().getId())) {
             putDamage(e, -lastHealth);
-        } else if (LivingEntityAccessor.isHealId(e, dataValue.id())) {
-            float change = (lastHealth = (Float) dataValue.getValue()) - (Float) dataItem.getValue();
+        } else if (LivingEntityAccessor.isHealId(e, dataItem.getAccessor().getId())) {
+            float change = (lastHealth = (Float) dataItem2.getValue()) - (Float) dataItem.getValue();
             putDamage(e, change);
         }
     }
