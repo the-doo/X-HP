@@ -27,7 +27,7 @@ public abstract class SyncDataMixin {
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataItem<?> dataItem2, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e || entity.getId() == Minecraft.getInstance().player.getId())) {
+        if (!(entity instanceof LivingEntity e) || entity.getId() == Minecraft.getInstance().player.getId()) {
             return;
         }
 
