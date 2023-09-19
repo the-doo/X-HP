@@ -2,9 +2,11 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.interfaces.LivingEntityAccessor;
 import com.doo.xhp.render.DamageRender;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,11 +27,11 @@ public abstract class SyncDataMixin {
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> dataValue, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e)) {
+        if (!(entity instanceof LivingEntity e) || entity.getId() == Minecraft.getInstance().player.getId()) {
             return;
         }
 
-        if (LivingEntityAccessor.isPoseId(e, dataValue.id())) {
+        if (LivingEntityAccessor.isPoseId(e, dataValue.id()) && Pose.DYING == dataValue.value()) {
             putDamage(e, -lastHealth);
         } else if (LivingEntityAccessor.isHealId(e, dataValue.id())) {
             float change = (lastHealth = (Float) dataValue.value()) - (Float) dataItem.value().value();
