@@ -12,9 +12,10 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.decoration.ArmorStand;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -68,8 +69,11 @@ public class XHP implements WithOption {
     }
 
     private static void registerSource() {
-        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> Registry.ENTITY_TYPE.stream()
-                .filter(e -> e.getCategory() != MobCategory.MISC || EntityType.VILLAGER == e || EntityType.PLAYER == e)
+        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> BuiltInRegistries.ENTITY_TYPE.stream()
+                .filter(e -> {
+                    Entity entity = e.create(Minecraft.getInstance().level);
+                    return entity == null || entity instanceof LivingEntity && !(entity instanceof ArmorStand);
+                })
                 .map(EntityType::getDescriptionId));
         MenuScreen.register(MenuOptType.ENUM, null, TYPE_KEY, HealthRenders.class);
     }

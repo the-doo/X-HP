@@ -14,9 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.Vec3;
 
 public class HealthRenderUtil {
@@ -26,6 +24,8 @@ public class HealthRenderUtil {
 
     private static HealRender render;
 
+    private static long pickTime = -10;
+
     private static LivingEntity pick;
 
     private HealthRenderUtil() {
@@ -33,7 +33,7 @@ public class HealthRenderUtil {
 
     public static void render(PoseStack poseStack, EntityRenderDispatcher dispatcher, MultiBufferSource bufferSource,
                               LivingEntity living, float baseY) {
-        if (XHP.disabled() || !living.isAlive() || living.getType().getCategory() == MobCategory.MISC && !(living instanceof Player) && !(living instanceof Villager)) {
+        if (XHP.disabled() || !living.isAlive() || living instanceof ArmorStand) {
             cleanPick(living);
             return;
         }
@@ -51,6 +51,7 @@ public class HealthRenderUtil {
         boolean staring = isStaring(living);
         if (staring) {
             pick = living;
+            pickTime = living.tickCount + 10;
         } else {
             cleanPick(living);
         }
@@ -72,6 +73,7 @@ public class HealthRenderUtil {
     private static void cleanPick(LivingEntity living) {
         if (pick == living) {
             pick = null;
+            pickTime = -20;
         }
     }
 
@@ -85,7 +87,7 @@ public class HealthRenderUtil {
         Vec3 vec32 = new Vec3(target.getX() - entity.getX(), target.getEyeY() - entity.getEyeY(), target.getZ() - entity.getZ());
         double d = vec32.length();
         double e = vec3.dot(vec32.normalize());
-        return e > 1.0 - 0.025 / d;
+        return e > 1.0 - 0.035 / d;
     }
 
     public static void setRender(HealRender render) {
@@ -97,8 +99,8 @@ public class HealthRenderUtil {
             return;
         }
 
-        if (pick == null || !pick.isAlive()) {
-            pick = null;
+        if (pick == null || !pick.isAlive() || pick.tickCount > pickTime) {
+            cleanPick(null);
             return;
         }
 
