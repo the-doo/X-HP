@@ -21,6 +21,7 @@ public class NameTagLikeHealRender extends HealRender {
     public NameTagLikeHealRender() {
         height = 9;
 
+        options.remove(HealRender.TEXT_KEY);
         options.addProperty(TEXT_KEY, HealthTextGetters.PERCENTAGE.name());
     }
 
@@ -29,6 +30,11 @@ public class NameTagLikeHealRender extends HealRender {
         super.registerOpt();
 
         MenuScreen.register(MenuOptType.ENUM, HealthRenders.NAME_TAG.name(), TEXT_KEY, HealthTextGetters.class);
+    }
+
+    @Override
+    protected boolean needHealthText() {
+        return false;
     }
 
     @Override

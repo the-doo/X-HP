@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.joml.Matrix4f;
 
@@ -208,6 +209,7 @@ public abstract class HealRender implements WithOption {
     }
 
     protected final boolean friendly(LivingEntity living) {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.isAlliedTo(living) || !(living instanceof Enemy);
+        Player player = Minecraft.getInstance().player;
+        return player.isAlliedTo(living) || living.isAlliedTo(player) || !(living instanceof Enemy);
     }
 }
