@@ -17,6 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.joml.Matrix4f;
 
@@ -92,7 +93,8 @@ public abstract class HealRender implements WithOption {
     }
 
     public final void render(PoseStack graphics, MultiBufferSource bufferSource, LivingEntity living) {
-        graphics.scale(scale, scale, scale);
+        float finalScale = living.getScale() * scale;
+        graphics.scale(finalScale, finalScale, finalScale);
         graphics.translate(needMoveCenter() ? -width() / 2F : 0, incY() - 10F, 0);
 
         renderContent(graphics, living, bufferSource);
@@ -102,7 +104,7 @@ public abstract class HealRender implements WithOption {
         return true;
     }
 
-    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
+    protected void renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -139,7 +141,6 @@ public abstract class HealRender implements WithOption {
                 .orElse(true)) {
             renderHealthText(graphics, living, font, bufferSource, processW);
         }
-        return processW;
     }
 
     protected boolean needWrapper() {
@@ -202,6 +203,7 @@ public abstract class HealRender implements WithOption {
     }
 
     protected final boolean friendly(LivingEntity living) {
-        return Minecraft.getInstance().player != null && Minecraft.getInstance().player.isAlliedTo(living) || !(living instanceof Enemy);
+        Player player = Minecraft.getInstance().player;
+        return player.isAlliedTo(living) || living.isAlliedTo(player) || !(living instanceof Enemy);
     }
 }

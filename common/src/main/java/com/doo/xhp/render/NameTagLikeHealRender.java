@@ -32,6 +32,11 @@ public class NameTagLikeHealRender extends HealRender {
     }
 
     @Override
+    protected boolean needHealthText() {
+        return false;
+    }
+
+    @Override
     protected boolean needMoveCenter() {
         return false;
     }
@@ -41,7 +46,7 @@ public class NameTagLikeHealRender extends HealRender {
         return false;
     }
 
-    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
+    protected void renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -55,7 +60,6 @@ public class NameTagLikeHealRender extends HealRender {
                 graphics.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, backColor, FONT_LIGHT);
         font.drawInBatch(component, fontX, 0, -1, false,
                 graphics.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
-        return -(int) fontX;
     }
 
     protected Component changeColor(LivingEntity living, MutableComponent component) {
