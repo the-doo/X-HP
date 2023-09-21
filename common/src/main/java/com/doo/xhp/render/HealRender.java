@@ -92,7 +92,8 @@ public abstract class HealRender implements WithOption {
     }
 
     public final void render(PoseStack poseStack, MultiBufferSource bufferSource, LivingEntity living) {
-        poseStack.scale(scale, scale, scale);
+        float finalScale = living.getScale() * scale;
+        poseStack.scale(finalScale, finalScale, finalScale);
 
         poseStack.translate(needMoveCenter() ? -width() / 2F : 0, incY(), 0);
 
@@ -109,7 +110,7 @@ public abstract class HealRender implements WithOption {
         return true;
     }
 
-    protected int renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource) {
+    protected void renderContent(GuiGraphics graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -146,7 +147,6 @@ public abstract class HealRender implements WithOption {
                 .orElse(true)) {
             renderHealthText(graphics, living, font, bufferSource, processW);
         }
-        return processW;
     }
 
     protected boolean needWrapper() {
