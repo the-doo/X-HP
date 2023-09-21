@@ -69,7 +69,7 @@ public class XHP implements WithOption {
     }
 
     private static void registerSource() {
-        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> BuiltInRegistries.ENTITY_TYPE.stream()
+        MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> Registry.ENTITY_TYPE.stream()
                 .filter(e -> {
                     Entity entity = e.create(Minecraft.getInstance().level);
                     return entity == null || entity instanceof LivingEntity && !(entity instanceof ArmorStand);
