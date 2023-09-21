@@ -21,7 +21,6 @@ public class NameTagLikeHealRender extends HealRender {
     public NameTagLikeHealRender() {
         height = 9;
 
-        options.remove(HealRender.TEXT_KEY);
         options.addProperty(TEXT_KEY, HealthTextGetters.PERCENTAGE.name());
     }
 

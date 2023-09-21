@@ -25,6 +25,7 @@ import static com.doo.xhp.render.HealRender.FONT_LIGHT;
 public class DamageRender implements WithOption {
 
     public static final String ENABLED_KEY = "enabled";
+    public static final String SHADOW_KEY = "shadow";
 
     public static final String FROM_HEAD_KEY = "from_head";
     public static final String SCALE_KEY = "scale";
@@ -46,13 +47,14 @@ public class DamageRender implements WithOption {
     private static int heal = 0x00FF00;
 
     private static boolean enabled = true;
-
+    private static boolean shadow = true;
     private static boolean fromHead = false;
 
     private static float size = 0.8F;
 
     public DamageRender() {
         options.addProperty(ENABLED_KEY, enabled);
+        options.addProperty(SHADOW_KEY, shadow);
         options.addProperty(FROM_HEAD_KEY, fromHead);
         options.addProperty(SCALE_KEY, size * 10);
         options.addProperty(DAMAGE_COLOR_KEY, hit);
@@ -76,6 +78,7 @@ public class DamageRender implements WithOption {
     @Override
     public void reloadOpt() {
         enabled = WithOption.boolV(options, ENABLED_KEY);
+        shadow = WithOption.boolV(options, SHADOW_KEY);
         fromHead = WithOption.boolV(options, FROM_HEAD_KEY);
         size = (float) (WithOption.doubleV(options, SCALE_KEY) / 10);
 
@@ -134,7 +137,7 @@ public class DamageRender implements WithOption {
     }
 
     public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose) {
-        font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
+        font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow,
                 pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
         font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
                 pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
