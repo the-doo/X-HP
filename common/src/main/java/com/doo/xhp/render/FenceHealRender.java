@@ -14,7 +14,7 @@ public class FenceHealRender extends NameTagLikeHealRender {
     }
 
     @Override
-    protected int renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
+    protected void renderContent(PoseStack graphics, LivingEntity living, MultiBufferSource bufferSource) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         int backColor = (int) (minecraft.options.getBackgroundOpacity(0.25f) * 255.0f) << 24;
@@ -28,6 +28,5 @@ public class FenceHealRender extends NameTagLikeHealRender {
                 graphics.last().pose(), bufferSource, true, backColor, FONT_LIGHT);
         font.drawInBatch(changeColor(living, new TextComponent(text)), fontX, 0, -1, false,
                 graphics.last().pose(), bufferSource, false, 0, FONT_LIGHT);
-        return -(int) fontX;
     }
 }
