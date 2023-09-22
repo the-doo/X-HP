@@ -57,9 +57,9 @@ public class ConfigUtil {
 
         for (Map.Entry<String, JsonElement> entry : target.entrySet()) {
             if (entry.getValue().isJsonObject()) {
-                copy(target.get(entry.getKey()).getAsJsonObject(), entry.getValue().getAsJsonObject());
+                copy(target.get(entry.getKey()).getAsJsonObject(), from.get(entry.getKey()).getAsJsonObject());
             } else {
-                target.add(entry.getKey(), entry.getValue());
+                target.add(entry.getKey(), from.get(entry.getKey()));
             }
         }
     }
