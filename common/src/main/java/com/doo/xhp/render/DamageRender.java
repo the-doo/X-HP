@@ -29,9 +29,12 @@ public class DamageRender implements WithOption {
 
     public static final String FROM_HEAD_KEY = "from_head";
     public static final String SCALE_KEY = "scale";
+    public static final String UP_SPEED_KEY = "up_speed";
+    public static final String DOWN_SPEED_KEY = "down_speed";
     public static final String DAMAGE_COLOR_KEY = "hit_color";
     public static final String HEAL_COLOR_KEY = "heal_color";
     public static final String CRIT_COLOR_KEY = "crit_color";
+    public static final String KILLED_COLOR_KEY = "killed_color";
 
     private static final JsonObject options = new JsonObject();
 
@@ -39,7 +42,7 @@ public class DamageRender implements WithOption {
             .expireAfterWrite(Duration.ofMillis(1500))
             .build();
 
-    private static final int KILLED = 0xFFFFFF;
+    private static int killed = 0xFFFFFF;
 
     private static int crit = 0xCC33FF;
 
@@ -50,16 +53,23 @@ public class DamageRender implements WithOption {
     private static boolean shadow = true;
     private static boolean fromHead = false;
 
-    private static float size = 0.8F;
+    private static float size = 0.8F * 0.025F;
+
+    private static float upSpeed = 0.08F;
+
+    private static float downSpeed = 0.03F;
 
     public DamageRender() {
         options.addProperty(ENABLED_KEY, enabled);
         options.addProperty(SHADOW_KEY, shadow);
         options.addProperty(FROM_HEAD_KEY, fromHead);
         options.addProperty(SCALE_KEY, size * 10);
+        options.addProperty(UP_SPEED_KEY, upSpeed * 100);
+        options.addProperty(DOWN_SPEED_KEY, downSpeed * 100);
         options.addProperty(DAMAGE_COLOR_KEY, hit);
         options.addProperty(HEAL_COLOR_KEY, heal);
         options.addProperty(CRIT_COLOR_KEY, crit);
+        options.addProperty(KILLED_COLOR_KEY, killed);
     }
 
     @Override
@@ -73,6 +83,7 @@ public class DamageRender implements WithOption {
         MenuScreen.register(MenuOptType.COLOR, name, DAMAGE_COLOR_KEY, 1);
         MenuScreen.register(MenuOptType.COLOR, name, HEAL_COLOR_KEY, 1);
         MenuScreen.register(MenuOptType.COLOR, name, CRIT_COLOR_KEY, 1);
+        MenuScreen.register(MenuOptType.COLOR, name, KILLED_COLOR_KEY, 1);
     }
 
     @Override
@@ -80,11 +91,14 @@ public class DamageRender implements WithOption {
         enabled = WithOption.boolV(options, ENABLED_KEY);
         shadow = WithOption.boolV(options, SHADOW_KEY);
         fromHead = WithOption.boolV(options, FROM_HEAD_KEY);
-        size = (float) (WithOption.doubleV(options, SCALE_KEY) / 10);
+        size = (float) (WithOption.doubleV(options, SCALE_KEY) / 10 * 0.025);
+        upSpeed = (float) (WithOption.doubleV(options, UP_SPEED_KEY) / 100);
+        downSpeed = (float) (WithOption.doubleV(options, DOWN_SPEED_KEY) / 100);
 
         hit = (int) WithOption.doubleV(options, DAMAGE_COLOR_KEY);
         heal = (int) WithOption.doubleV(options, HEAL_COLOR_KEY);
         crit = (int) WithOption.doubleV(options, CRIT_COLOR_KEY);
+        killed = (int) WithOption.doubleV(options, KILLED_COLOR_KEY);
     }
 
     @Override
@@ -105,7 +119,9 @@ public class DamageRender implements WithOption {
     }
 
     public static void put(LivingEntity entity, float damage) {
-        CACHED.put(entity.getId() + ":" + entity.tickCount, MutableDamage.random(entity, damage));
+        if (entity.getMaxHealth() >= entity.getHealth()) {
+            CACHED.put(entity.getId() + ":" + entity.tickCount, MutableDamage.random(entity, damage));
+        }
     }
 
     public static void tick() {
@@ -131,16 +147,14 @@ public class DamageRender implements WithOption {
     private void transDamage(MutableDamage damage, PoseStack stack, double x, double y, double z, Quaternionf rotation) {
         stack.translate(damage.x - x, damage.y - y, damage.z - z);
         stack.mulPose(rotation);
-        stack.scale(size, size, size);
-        stack.scale(-0.025f, -0.025f, 0.025f);
-        stack.translate(0.0f, -1.501f, 0.0f);
+        stack.scale(-size, -size, size);
     }
 
     public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose) {
         font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow,
-                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
-        font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
                 pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+        font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
+                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
     }
 
     public static class MutableDamage {
@@ -159,7 +173,7 @@ public class DamageRender implements WithOption {
 
         int color = hit;
 
-        int life = 22;
+        int life = 25;
 
         public static MutableDamage random(LivingEntity entity, float damage) {
             RandomSource random = entity.getRandom();
@@ -185,7 +199,7 @@ public class DamageRender implements WithOption {
             if (isHeal) {
                 color = heal;
             } else if ((process = -damage / max) >= 1) {
-                color = KILLED;
+                color = killed;
             } else if (process >= 0.6) {
                 color = crit;
             }
@@ -194,10 +208,10 @@ public class DamageRender implements WithOption {
         public void tick() {
             life--;
 
-            if (isHeal || life > 15) {
-                y += 0.06;
-            } else if (life < 10) {
-                y -= 0.03;
+            if (isHeal || life > 18) {
+                y += upSpeed;
+            } else if (life < 8) {
+                y -= downSpeed;
             }
         }
     }
