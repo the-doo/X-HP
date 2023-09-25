@@ -24,9 +24,11 @@ public class BarHealRender extends IconHealRender {
         height = 16;
         xScala = 1F * weight / T_WEIGHT;
         yScala = 1F * height / T_HEIGHT;
+        scale = 0.6F;
 
         position = HealthTextPosition.BOTTOM_RIGHT;
 
+        options.addProperty(BASE_SCALE_KEY, scale * 10);
         options.addProperty(P_KEY, position.name());
         options.addProperty(TEXT_KEY, HealthTextGetters.CURRENT_AND_MAX.name());
     }
