@@ -74,7 +74,7 @@ public class XHP implements WithOption {
                     Entity entity = e.create(Minecraft.getInstance().level);
                     boolean b = entity == null || entity instanceof LivingEntity && !(entity instanceof ArmorStand);
                     if (entity != null) {
-                        entity.discard();
+                        entity.remove();
                     }
                     return b;
                 })
