@@ -72,7 +72,11 @@ public class XHP implements WithOption {
         MenuScreen.register(MenuOptType.LIST, null, BAN_KEY, (Supplier<?>) () -> BuiltInRegistries.ENTITY_TYPE.stream()
                 .filter(e -> {
                     Entity entity = e.create(Minecraft.getInstance().level);
-                    return entity == null || entity instanceof LivingEntity && !(entity instanceof ArmorStand);
+                    boolean b = entity == null || entity instanceof LivingEntity && !(entity instanceof ArmorStand);
+                    if (entity != null) {
+                        entity.discard();
+                    }
+                    return b;
                 })
                 .map(EntityType::getDescriptionId));
         MenuScreen.register(MenuOptType.ENUM, null, TYPE_KEY, HealthRenders.class);
