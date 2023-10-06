@@ -139,7 +139,7 @@ public class DamageRender implements WithOption {
         CACHED.asMap().values().forEach(damage -> {
             stack.pushPose();
             transDamage(damage, stack, x, y, z, rotation);
-            draw(damage, font, source, stack.last().pose());
+            draw(damage, font, source, stack.last().pose(), damage.shadows);
             stack.popPose();
         });
     }
@@ -150,11 +150,11 @@ public class DamageRender implements WithOption {
         stack.scale(-size, -size, size);
     }
 
-    public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose) {
-        font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow,
-                pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
+    public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose, boolean shadows) {
         font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
                 pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
+        font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow && shadows,
+                pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
     }
 
     public static class MutableDamage {
@@ -164,6 +164,8 @@ public class DamageRender implements WithOption {
         String damageStr;
 
         boolean isHeal;
+
+        boolean shadows;
 
         double x;
 
@@ -210,8 +212,10 @@ public class DamageRender implements WithOption {
 
             if (isHeal || life > 18) {
                 y += upSpeed;
-            } else if (life < 8) {
+            } else if (downSpeed > 0 && life < 8) {
                 y -= downSpeed;
+            } else if (!shadows) {
+                shadows = true;
             }
         }
     }
