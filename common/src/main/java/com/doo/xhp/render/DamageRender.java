@@ -56,8 +56,10 @@ public class DamageRender implements WithOption {
     private static float size = 0.8F * 0.025F;
 
     private static float upSpeed = 0.08F;
-
+    private static int upTick = 18;
     private static float downSpeed = 0.03F;
+    private static int downTick = 8;
+
 
     public DamageRender() {
         options.addProperty(ENABLED_KEY, enabled);
@@ -139,7 +141,7 @@ public class DamageRender implements WithOption {
         CACHED.asMap().values().forEach(damage -> {
             stack.pushPose();
             transDamage(damage, stack, x, y, z, rotation);
-            draw(damage, font, source, stack.last().pose(), damage.shadows);
+            draw(damage, font, source, stack.last().pose(), damage.life > downTick && damage.life < upTick);
             stack.popPose();
         });
     }
@@ -164,8 +166,6 @@ public class DamageRender implements WithOption {
         String damageStr;
 
         boolean isHeal;
-
-        boolean shadows;
 
         double x;
 
@@ -210,12 +210,10 @@ public class DamageRender implements WithOption {
         public void tick() {
             life--;
 
-            if (isHeal || life > 18) {
+            if (isHeal || life >= upTick) {
                 y += upSpeed;
-            } else if (downSpeed > 0 && life < 8) {
+            } else if (downSpeed > 0 && life <= downTick) {
                 y -= downSpeed;
-            } else if (!shadows) {
-                shadows = true;
             }
         }
     }
