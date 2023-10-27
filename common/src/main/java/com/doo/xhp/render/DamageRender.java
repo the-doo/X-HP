@@ -53,7 +53,7 @@ public class DamageRender implements WithOption {
     private static boolean shadow = true;
     private static boolean fromHead = false;
 
-    private static float size = 0.8F * 0.025F;
+    private static float size = 1.2F;
 
     private static float upSpeed = 0.08F;
     private static int upTick = 18;
@@ -72,6 +72,8 @@ public class DamageRender implements WithOption {
         options.addProperty(HEAL_COLOR_KEY, heal);
         options.addProperty(CRIT_COLOR_KEY, crit);
         options.addProperty(KILLED_COLOR_KEY, killed);
+
+        size *= 0.025F;
     }
 
     @Override
@@ -141,7 +143,7 @@ public class DamageRender implements WithOption {
         CACHED.asMap().values().forEach(damage -> {
             stack.pushPose();
             transDamage(damage, stack, x, y, z, rotation);
-            draw(damage, font, source, stack.last().pose(), damage.life > downTick && damage.life < upTick);
+            draw(damage, font, source, stack.last().pose(), damage.isStop());
             stack.popPose();
         });
     }
@@ -153,9 +155,9 @@ public class DamageRender implements WithOption {
     }
 
     public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose, boolean shadows) {
-        font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
-                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
         font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow && shadows,
+                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
+        font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
                 pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
     }
 
@@ -210,11 +212,15 @@ public class DamageRender implements WithOption {
         public void tick() {
             life--;
 
-            if (isHeal || life >= upTick) {
+            if (life >= upTick) {
                 y += upSpeed;
             } else if (downSpeed > 0 && life <= downTick) {
                 y -= downSpeed;
             }
+        }
+
+        public boolean isStop() {
+            return life > downTick && life < upTick;
         }
     }
 }

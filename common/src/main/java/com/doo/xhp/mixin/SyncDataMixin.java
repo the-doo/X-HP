@@ -2,7 +2,6 @@ package com.doo.xhp.mixin;
 
 import com.doo.xhp.interfaces.LivingEntityAccessor;
 import com.doo.xhp.render.DamageRender;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +26,7 @@ public abstract class SyncDataMixin {
 
     @Inject(method = "assignValue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;setValue(Ljava/lang/Object;)V"))
     private <T> void injectSetHealT(SynchedEntityData.DataItem<T> dataItem, SynchedEntityData.DataValue<?> dataValue, CallbackInfo ci) {
-        if (!(entity instanceof LivingEntity e) || entity.getId() == Minecraft.getInstance().player.getId()) {
+        if (!(entity instanceof LivingEntity e)) {
             return;
         }
 
