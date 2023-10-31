@@ -56,7 +56,7 @@ public class DamageRender implements WithOption {
     private static float size = 1.2F;
 
     private static float upSpeed = 0.08F;
-    private static int upTick = 18;
+    private static int upTick = 20;
     private static float downSpeed = 0.03F;
     private static int downTick = 8;
 
@@ -155,9 +155,9 @@ public class DamageRender implements WithOption {
     }
 
     public void draw(MutableDamage damage, Font font, MultiBufferSource.BufferSource source, Matrix4f pose, boolean shadows) {
-        font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow && shadows,
-                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
         font.drawInBatch(damage.damageStr, 0, 0, damage.color, false,
+                pose, source, Font.DisplayMode.SEE_THROUGH, 0, FONT_LIGHT);
+        font.drawInBatch(damage.damageStr, 0, 0, damage.color, shadow && shadows,
                 pose, source, Font.DisplayMode.NORMAL, 0, FONT_LIGHT);
     }
 
@@ -220,7 +220,7 @@ public class DamageRender implements WithOption {
         }
 
         public boolean isStop() {
-            return life > downTick && life < upTick;
+            return life > downTick + 1 && life < upTick - 1;
         }
     }
 }
